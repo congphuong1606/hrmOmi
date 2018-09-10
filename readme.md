@@ -1,7 +1,7 @@
 # [Paper Dashboard PRO Angular](https://www.creative-tim.com/product/paper-dashboard-pro-angular) [![version][version-badge]][CHANGELOG]
  <!-- [![license][license-badge]][LICENSE] -->
 
-![alt text](https://s3.amazonaws.com/creativetim_bucket/products/59/opt_pdp_angular_thumbnail.jpg "Paper Dashboard PRO Angular")
+!
 
 **[Paper Dashboard PRO Angular](https://www.creative-tim.com/product/paper-dashboard-pro-angular/)** is the premium version for the [Paper Dashboard Angular](https://www.creative-tim.com/product/paper-dashboard-angular), which is available for free download.
 
@@ -40,6 +40,20 @@ Quick start options:
 5. Then: ```npm install```
 6. And: ```ng serve```
 7. Navigate to: [http://localhost:4200/](http://localhost:4200/)
+
+
+
+
+
+
+database nằm trong thư mục SQL, cài đặt xampp và clone git đặt trong thư mục htdocs , npm install , install laravel , sau đó chạy https://localhost:4433/ hoặc http://localhost:4433/
+
+
+
+
+
+
+
 
 ### What's included
 
