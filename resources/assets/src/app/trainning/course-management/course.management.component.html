@@ -1,0 +1,218 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title col-xs-12 col-sm-6 col-md-4">Danh sách</h4>
+            <div class="dropdown col-xs-12 col-sm-4 col-md-3 col-lg-2 float-r" style="min-width: 250px;">
+                <a href="#" class="btn btn-success btn-fill dropdown-toggle custom-dropdown" data-toggle="dropdown">
+                    {{textDefault}}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu  w-100">
+                    <li><a (click)="getData('','Tất cả khóa học')">Tất cả khóa học</a></li>
+                    <li><a (click)="getData('0', 'Chưa hoàn thành')">Chưa hoàn thành</a></li>
+                    <li><a (click)="getData('1', 'Đã hoàn thành')">Đã hoàn thành</a></li>
+                </ul>
+            </div>
+            <form class="float-r padding-left-15px">
+                <input class="btn btn-info  btn-fill" type="text" placeholder="Tìm kiếm" name="search"
+                       style="border-radius: 20px 0px 0px 20px; background-color: #f9f9f9;cursor: text"
+                       id="search-input-request-course">
+                <button class="btn btn-info btn-fill" (click)="searchCourse()" id="btn-search-input-request-statistics">
+                    <i class="fa fa-search"></i></button>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th style="color: #68B3C8;padding-right: 0px;padding-left: 15px!important;"></th>
+                    <th style="padding-left: 15px!important;">Tên khóa hoc</th>
+                    <th>Lần tổ chức</th>
+                    <th>Phòng học</th>
+                    <th>Số buổi học</th>
+                    <th>bắt đầu</th>
+                    <th>Kết thúc</th>
+                    <th class="text-center">Quản lý</th>
+                    <th class="text-center">Tùy chỉnh</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td class="align-center" style="color:gray" colspan="9">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="9">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows" class="course-status-{{row.status?'1':'0'}}" >
+                    <td *ngIf="row.status" style="padding-right: 0px;padding-left: 15px!important;"><span
+                            class="ti-check text-success" style="color: #68B3C8;"        rel="tooltip" title="Đã hoàn thành"></span></td>
+                    <td *ngIf="!row.status"
+                        style="color: #68B3C8;padding-right: 0px;padding-left: 15px!important;"></td>
+                    <td style="padding-left: 15px!important;"><span rel="tooltip" title="{{row.description}}">{{row.course_name}}</span>
+                    </td>
+
+
+                    <!--<td >{{row.course_name}}</td>-->
+                    <!--<td>{{row.description}}</td>-->
+                    <td>{{row.current_order}}</td>
+                    <td>{{row.room_name}}</td>
+                    <td>{{row.sessions_number}}</td>
+                    <td>{{row.start_date}}</td>
+                    <td>{{row.end_date}}</td>
+                    <td class="text-center">
+                        <img rel="tooltip" title="Xem mã điểm danh" (click)="showQrCode(row)"
+                             style="width: 20px;height: 20px;cursor: pointer"
+                             src="js/assets/img/icon-training/icon-qr.png">
+                        <img rel="tooltip" title="Xem/Cập nhật điểm" (click)="showCore(row.id)"
+                             style="width: 20px;height: 20px;cursor: pointer;margin-left: 7px"
+                             src="js/assets/img/icon-training/icon-view-scores.png"/>
+                    </td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Cập nhật" class="btn btn-success btn-simple btn-xs"
+                           (click)="gotoUpdateCourse(row.id)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Xóa" class="btn btn-danger btn-simple btn-xs"
+                           (click)="deleteCourse(row)">
+                            <i class="fa fa-trash" style="font-size: 15px"></i>
+                        </a>
+                        <!--<a rel="tooltip" title="Bạn không có quyền xóa mục này" *ngIf="!isAdmin"-->
+                        <!--class="btn btn-success btn-simple btn-xs">-->
+                        <!--<i class="fa fa-trash" style="font-size: 15px;color:dimgray"></i>-->
+                        <!--</a>-->
+
+
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <fieldset class="pagination" *ngIf="total > perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray">Hiển thị
+                                {{perPage}}
+                                trên {{total}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1)"
+                        >
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="currentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+
+                                (click)="onChangPage(currentPage-1)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage"
+                             style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent"
+                                    *ngIf="pageIndex===currentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;"
+                                    *ngIf="pageIndex!==currentPage"
+                                    (click)="onChangPage(pageIndex)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+                        <button *ngIf="currentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(currentPage+1)">
+                            Tiếp
+                            <span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage)"
+                        >Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+
+</div>
+
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" [disabled]="!allowAdd" (click)="goToCreateCourse()">Thêm mới
+            </button>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="qrOfCourse">
+    <div class="modal-dialog" style="width: 60%">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Mã điểm danh của khóa học {{' '+ curentCourse}}</h5>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row custom">
+                    <div class="col-md-4" *ngFor="let item of this.sessionQrs;let i=index" id="sessionQrs{{item.id}}">
+                        <h4><span>Buổi{{' '}}{{(i+1)}}</span> <span> {{item.start_datetime | date:'dd/MM/yyyy'}}</span>
+                        </h4>
+                        <img class="image-code" rel="tooltip" title="In mã điểm danh này"
+                             (click)="print('sessionQrs'+item.id)"
+                             src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl={{item.qr_code}}&choe=UTF-8">
+                        <h5 style="padding-top: 5px;margin-top: -10px;"><span>{{item.start_datetime | date :'HH:mm'}}{{' đến '}}{{' '}}{{item.end_datetime| date :'HH:mm'}}</span>
+                        </h5>
+
+                        <style>
+                            .image-code {
+                                cursor: none;
+                                max-width: 100%;
+                                -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+                                filter: blur(5px);
+                            }
+
+                            .image-code:hover {
+                                -webkit-filter: blur(0px); /* Safari 6.0 - 9.0 */
+                                filter: blur(0px);
+                            }
+                        </style>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-fill" type="button" data-dismiss="modal">Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

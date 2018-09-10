@@ -1,0 +1,16 @@
+<div class="col-md-12" style="padding-left: 15px;">
+
+    <div class="col-md-4" style="padding-left: 0px;">
+        <div *ngFor="let item of listOtherCategories">
+            <div class="card" (click)="goToOtherCategories(item)" style="cursor:pointer">
+                <div class="card-header">
+                    <h4 class="card-title">{{item.name}}</h4>
+                </div>
+                <div class="card-content">
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

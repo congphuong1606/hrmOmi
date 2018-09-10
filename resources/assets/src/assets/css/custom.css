@@ -1,0 +1,546 @@
+.form-control {
+    background-color: #F3F2EE;
+    border: 1px solid #e8e7e3;
+    border-radius: 4px;
+    color: #66615b;
+    font-size: 14px;
+    padding: 7px 18px;
+    height: 40px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .card .category, .card label, .control-label {
+    color: #252422;
+  }
+
+@media (min-width: 992px)
+{
+  .card form [class*="col-"]:last-child {
+      padding-right: 6px;
+  }
+}
+@media (min-width: 992px)
+{
+  .card form [class*="col-"]:last-child {
+      padding-right: 6px;
+  }
+}
+
+.m-t {
+  margin-top:15px;
+}
+.m-b {
+  margin-bottom:15px;
+}
+
+.main-panel .content {
+  padding-top: 15px;
+}
+.pagination-page {
+  text-align: left;
+  border:none;
+  color:rgb(0, 126, 199);
+  background:transparent;
+  float:left;
+  margin-left:5px
+}
+.pagination-page-disable, button[disabled].pagination-page-disable {
+  cursor: not-allowed;
+  color: #66615b;
+}
+.pagination-number {
+  float:left;
+  margin-left: 15px;
+  color:rgb(0, 126, 199);
+  font-weight: bold;
+  cursor: pointer;
+}
+.pagination-number-disable {
+  cursor: not-allowed;
+  color: #429cb6;
+  font-weight: normal;
+}
+.slide {
+  display: none;
+}
+.table .radio, .table .checkbox{
+  margin-bottom: 0;
+}
+.main-panel {
+  position: relative!important;
+}
+.change-color .control-label, .change-color span {
+  color: #b50227!important;
+}
+/* 
+th {
+  white-space: nowrap;
+} */
+
+.table-row-danger {
+  background-color: #F8BBD0!important;
+}
+.table-row-warning {
+  background-color: #FFECB3!important;
+}
+.select-alert {
+  border: 2px solid #F44336!important;
+}
+
+.form-control[readonly] {
+  background-color: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.c-table .unpin {
+  border: none;
+}
+
+.c-table .unpin table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family: 'Times New Roman', Times, serif;
+  table-layout: fixed;
+  margin-bottom: 50px;
+}
+/* .c-table td, .c-table th, .c-table .table>thead:first-child>tr:first-child>th {
+  border: 1px solid rgb(66, 64, 61)
+} */
+.c-table .unpin table td, .c-table .unpin table th {
+  border: 1px solid black;
+  font-family: 'Times New Roman', Times, serif;
+  padding: 10px;
+}
+
+.td-default {
+  background-color: #ffffff;
+}
+
+.td-no-data {
+  background-color: gray;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,.5) 2px, rgba(255,255,255,.5) 4px);
+}
+
+.td-weekend {
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background-color: #92d050;
+  color: #000080;
+  text-transform: uppercase;
+  background-color: #92d050;
+}
+
+.td-holiday {
+  background-color: #002662;
+}
+
+.td-late-without-permit {
+  background-color: #00ff00
+}
+
+.td-late-permit {
+  background-color: #fe9500
+}
+
+.td-without-permit {
+  background-color: #CC0000
+}
+
+.td-go-out {
+  background-color: #be4e4d
+}
+
+.td-late-ot {
+  background-color: #ffe293
+}
+
+.td-leave-early {
+  background-color: #fffa00
+}
+.td-leave-early-without-permit {
+  background-color: #176200
+}
+
+.td-full-permit {
+  background-color: #6a3ba4
+}
+
+.td-multi-permit {
+  background-color: cadetblue
+}
+
+.thead-1 {
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background-color: #ffff00;
+  color: #000080;
+  text-transform: uppercase
+}
+
+.thead-2 {
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background-color: #92d050;
+  color: #000080;
+  text-transform: uppercase
+}
+
+.thead-3 {
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background-color: #f4cccc;
+  color: #000080;
+  text-transform: uppercase
+}
+
+.thead-4 {
+  font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  background-color: #ffffff;
+  color: #000080;
+  text-transform: uppercase
+}
+
+.thead-nodata {
+  background-color: gray;
+background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,.5) 2px, rgba(255,255,255,.5) 4px);
+}
+
+.lower {
+  text-transform: none
+}
+
+.td-1 {
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.td-2 {
+  text-align: center;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #ff0000;
+  font-style: italic
+}
+
+.td-3 {
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #ff0000;
+  font-style: italic
+}
+
+.td-4 {
+  text-align: center;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #000000;
+}
+.td-salary {
+  background-color: #ffff00;
+}
+
+.td-content-full-width {
+  float: left; width: 100%; height: 100%; top: 0; left: 0; position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.td-content {
+  position: relative; width: 100%; height: 100%;
+}
+#timekeeping-container {
+}
+#popup-container {
+  visibility: hidden;
+  width: 500px;
+  height: 220px;
+}
+.popuptext {
+  width: 500px;
+  height: 220px;
+  background-color: #f5f5f5;
+  color: #000000;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  border-radius: 6px;
+  padding: 8px 8px;
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  bottom: 10px;
+}
+.popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+#popup-container.show {
+  visibility: visible;
+  -webkit-animation: fadeIn 0.5s;
+  animation: fadeIn 0.5s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+#timekeeping-container {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 800px;
+}
+
+.popuptext table {
+  margin: 0 auto!important;
+  margin-top: 0!important;
+  margin-bottom: 0!important;
+}
+.popuptext table th, .popuptext table td {
+  padding-left: 10px!important;
+  padding-right: 10px!important;
+}
+.popuptext-container:last-child {
+  overflow-y: auto;
+  width: 492px;
+  height: 212px;
+  justify-content: center;
+  align-items: center;
+}
+.color-row {
+  margin-bottom: 10px;
+}
+
+.color-row div div {
+  width: 45px;
+  height: 28px;
+}
+
+#table-timekeeping-file-detail {
+}
+.display-none {
+  display: none;
+}
+.timesheet-data-override {
+  background-color: cornflowerblue;
+  color: #ffffff;
+}
+.form-change .help-block {
+  margin-top: 10px;
+}
+.table-detail, .table-detail th, .table-detail td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+}
+.table-detail th, .table-detail td {
+  padding: 10px;
+}
+
+.form-personnel-detail .form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 22px;
+  border-bottom: 1px dashed #eee;
+}
+
+.form-personnel-detail .form-group label, .form-personnel-detail .form-group span {
+  padding-top: 0!important;
+  padding-bottom: 0!important;
+  margin-top: 0!important;
+  margin-bottom: 0!important;
+}
+
+.checkbox-all-change-list {
+  margin-left: 0;
+  margin-top: 0;
+}
+.checkbox-all-change-list label {
+  padding-left: 35px;
+  font-weight: 300;
+  margin-bottom: 2px;
+}
+.checkbox-all-change-list label::before {
+  left: 30px;
+  top: 3px;
+}
+
+.checkbox-all-change-list label::after {
+  left: 30px;
+  top: 1px;
+}
+.checkbox-all-change-list input {
+  left: 30px;
+  top: 1px;
+}
+.required-validate {
+  color: red;
+}
+
+@media (max-width: 1200px) {
+  .table-responsive {
+      overflow: visible;
+  }
+}
+.popup-timeon-title {
+  text-align: left;
+  width: 100%;
+  padding: 5px;
+  padding-left: 20px;
+}
+
+.group-action-resource {
+  position: absolute;
+  top: calc(50% - 12px);
+  right: 10px;
+  display: none;
+}
+
+.table-resource .tr-main .td-direct-manager {
+  position: relative;
+}
+.table-resource .tr-main .td-project-manager {
+  position: relative;
+}
+.table-resource .tr-main:hover .group-action-resource, .table-resource .tr-main:active .group-action-resource {
+  display: block;
+}
+.group-action-resource i {
+  position: relative;
+  color: green;
+  font-size: 24px;
+}
+.group-action-resource i::before {
+  z-index: 2;
+  position: relative;
+}
+.group-action-resource div{
+  visibility: hidden;
+  position: absolute;
+  content: '';
+  top: -10px;
+  left: -10px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.1);
+}
+.group-action-resource i:hover div {
+  visibility: visible;
+}
+.group-action-resource:hover {
+  cursor: pointer;
+}
+.table-direct-manager tbody tr td {
+    padding: 0;
+}
+.table-direct-manager tbody tr td {
+  text-align: left;
+}
+.table-direct-manager thead th:first-child {
+  padding-left: 15px!important;
+}
+.table-direct-manager tbody input[type="radio"] {
+  width: 20px;
+}
+.table-direct-manager tbody tr td:first-child {
+  padding-left: 15px!important;
+}
+.tr-direct-manager-selected {
+  background-color: #c1ddff!important;
+}
+.table-direct-manager tbody tr {
+  display: none;
+}
+.table-direct-manager tbody tr.searched-direct-manager {
+  display: table-row;
+}
+
+
+.table-project-manager tbody tr td {
+  padding: 8px;
+}
+.table-project-manager tbody tr td {
+text-align: left;
+}
+.table-project-manager thead th:first-child {
+padding-left: 15px!important;
+}
+.table-project-manager tbody input[type="radio"] {
+width: 20px;
+}
+.table-project-manager tbody tr td:first-child {
+padding-left: 15px!important;
+}
+.tr-project-manager-selected {
+background-color: #c1ddff!important;
+}
+.table-project-manager tbody tr {
+display: none;
+}
+.table-project-manager tbody tr.searched-project-manager {
+display: table-row;
+}
+
+.popup-label-resource {
+  position: absolute;
+  top: -10px;
+  right: -40px;
+  background-color: green;
+  color: white;
+  padding: 1px 7px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 12px;
+}
+.tr-accumulated-timeon {
+  background-color: antiquewhite!important;
+}
+.tr-accumulated-ot {
+  background-color: cadetblue!important;
+  color: white;
+}
+.edit-note_td {
+  padding-left: 5px!important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.edit-note_td:hover .edit-note_container{
+  display: block;
+}
+.edit-note_container {
+  cursor: pointer;
+  display: none;
+}
+.edit-note_icon:hover {
+  color: green;
+}

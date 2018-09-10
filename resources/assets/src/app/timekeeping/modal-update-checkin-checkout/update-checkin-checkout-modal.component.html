@@ -1,0 +1,83 @@
+<!-- Modal -->
+<div class="modal" role="dialog" #modal style="display: block; background-color: rgba(0, 0, 0, 0.3)">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="border-radius: 0">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="closeModal()">&times;</button>
+                <!-- <h4 class="modal-title">Chọn kỹ năng chuyên môn</h4> -->
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="" [formGroup]="checkInCheckOutForm">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label col-sm-offset-1" style="text-align: center; font-size: 25px; margin-left: 0;">Chi tiết ngày {{checkInCheckOut?.date | dateFormatVn}}</label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Tên</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" [value]="checkInCheckOut?.employee.full_name" readonly>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Mã nhân viên</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" [value]="checkInCheckOut?.employee.employee_code" readonly>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Check-in</label>
+                                <div class="col-sm-3">
+                                    <datepicker-form-input-cmp formControlName="check_in" ngDefaultControl [format]="'HH:mm'"></datepicker-form-input-cmp>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Check-out</label>
+                                <div class="col-sm-3">
+                                    <datepicker-form-input-cmp formControlName="check_out" ngDefaultControl [format]="'HH:mm'"></datepicker-form-input-cmp>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <!-- <fieldset>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                                            Thời gian OT</label>
+                                        <div class="col-sm-3">
+                                            <input class="form-control" type="text" formControlName="ot">
+                                            <span class="help-block text-danger" *ngIf="checkInCheckOutForm.get('ot').hasError('required') && checkInCheckOutForm.get('ot').touched">Thời gian OT không được bỏ trống.</span>
+                                            <span class="help-block text-danger" *ngIf="checkInCheckOutForm.get('ot').hasError('isNumberFrom0') && checkInCheckOutForm.get('ot').touched && !checkInCheckOutForm.get('ot').hasError('required')">Thời gian OT phải là số</span>
+                                            <span class="help-block text-danger" *ngIf="checkInCheckOutForm.get('ot').hasError('maxlength') && checkInCheckOutForm.get('ot').touched">Thời gian OT quá nhiều</span>
+                                        </div>
+                                    </div>
+                                </fieldset> -->
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="col-sm-12 control-label" style="text-align: center;">
+                                    <button class="btn btn-warning btn-fill btn-wd" style="min-width: 200px" (click)="reset()">Xóa</button>
+                                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="submit()" [disabled]="checkInCheckOutForm.invalid">Cập nhật</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

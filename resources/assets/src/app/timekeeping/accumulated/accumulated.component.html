@@ -1,0 +1,197 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Tìm kiếm</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Tên nhân viên</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" [(ngModel)]="employee_name" [ngModelOptions]="{standalone: true}" (keyup.enter)="search()">
+                            <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Mã nhân viên</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" [(ngModel)]="employee_code" [ngModelOptions]="{standalone: true}" (keyup.enter)="search()">
+                            <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            <i class="fa fa-calendar"></i> Chọn năm</label>
+                        <div class="col-sm-3">
+                            <select [(ngModel)]="selectedYear" class="form-control" id="select3" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let year of listYears" [ngValue]="year">{{year}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <!-- BUTTON TÌM KIẾM NÂNG CAO  -->
+                <fieldset>
+                    <div class="form-group">
+                        <span class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;border:none;color:rgb(0, 126, 199); background:#fff;font-size: 15px"
+                            (click)="toggle()" id="bt-show-advanced">Tìm kiếm nâng cao
+                            <i class="fa" [ngClass]="{'fa-chevron-up': advanced_search === 'true', 'fa-chevron-down': advanced_search !== 'true'}"></i>
+                        </span>
+                    </div>
+                </fieldset>
+                <div class="slide">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                Trạng thái công việc</label>
+                            <div class="col-sm-2">
+                                <select [(ngModel)]="job_status" class="form-control" id="select1" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let job of listJobStatus" [ngValue]="job">{{job.name}}</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                Tình trạng làm việc</label>
+                            <div class="col-sm-2">
+                                <select [(ngModel)]="working_status" class="form-control" id="select2" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let working of listWorkingStatus" [ngValue]="working">{{working.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                Chức danh</label>
+                            <div class="col-sm-2">
+                                <select [(ngModel)]="position" class="form-control" id="select4" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let pos of listPositions" [ngValue]="pos">{{pos.name}}</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                Phòng ban</label>
+                            <div class="col-sm-2">
+                                <select [(ngModel)]="department" class="form-control" id="select3" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let de of listDepartments" [ngValue]="de">{{de.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left">Số lượng hiển thị</label>
+                            <div class="col-sm-2">
+                                <select [(ngModel)]="limit" class="form-control" id="select5" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let l of listLimit" [ngValue]="l">{{l}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-offset-1">
+                            <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="search()">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+        <div class="card-content table-responsive table-full-width table-resource">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã</th>
+                        <th>Tên nhân viên</th>
+                        <th>Nghỉ phép</th>
+                        <th>OT</th>
+                        <th>Nghỉ phép năm trước</th>
+                        <!-- <th>OT năm trước</th> -->
+                        <!-- <th>Từ tháng</th>
+                        <th>Đến tháng</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let acc of accumulated; let i = index" class="tr-main">
+                        <td style="text-align: center">{{i + 1}}</td>
+                        <td>{{acc.employee.employee_code}}</td>
+                        <td style="white-space: nowrap;" class="td-project-manager">
+                            {{acc.employee.full_name}}
+                            <div class="group-action-project-manager group-action-resource" rel="tooltip" title="Tùy chỉnh">
+                                <i class="fa fa-edit" (click)="openModalAccumulated(acc)">
+                                    <div></div>
+                                </i>
+                            </div>
+                        </td>
+                        <td style="white-space: nowrap;" class="td-direct-manager">
+                            {{acc.day_off_remain_permit}}
+                        </td>
+                        <td style="white-space: nowrap;" class="td-direct-manager">
+                            {{acc.day_off_remain_ot}}
+                        </td>
+                        <td style="white-space: nowrap;" class="td-direct-manager">
+                            {{acc.day_off_accumulated_permit_previous_year}}
+                        </td>
+                        <!-- <td style="white-space: nowrap;" class="td-direct-manager">
+                            {{acc.day_off_accumulated_ot_previous_year}}
+                        </td> -->
+                        <!-- <td style="white-space: nowrap;" class="td-direct-manager">
+                            {{acc.from_month}}
+                        </td>
+                        <td style="white-space: nowrap;" class="td-direct-manager">
+                            {{acc.end_month}}
+                        </td> -->
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row" style="padding: 20px">
+                <div class="col-md-12" style="margin-bottom: 20px">
+                    <div style="padding-left:10px;font-size: 15px">
+                        <div class="form-group">
+                            <div style="float:left;margin-left:10px">
+                                <label style="margin-left:10">Hiển thị mục</label>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="gotoFirstPage()">
+                                <span class="ti-angle-double-left" (click)="gotoFirstPage()"></span>Đầu tiên
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="prevPage()">
+                                <span class="ti-angle-left" (click)="prevPage()"></span>Trước
+                            </button>
+                            <div style="float:left">
+                                <button class="pagination-number" *ngFor="let pn of paginationListPage" (click)="paginate(pn)" [disabled]="pn === paginationCurrentPage"
+                                    style="background-color: transparent; border: none;" [ngClass]="paginationCurrentPage === pn ? 'pagination-number-disable' : ''">{{pn}}</button>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="nextPage()">
+                                Tiếp
+                                <span class="ti-angle-right"></span>
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="gotoLastPage()">Cuối cùng
+                                <span class="ti-angle-double-right"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<update-accumulated-modal-cmp *ngIf="showModalAccumulated" (close)="onCloseModalAccumulated($event)" [currentSelected]="selectedAccumulated"></update-accumulated-modal-cmp>

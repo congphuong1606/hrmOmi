@@ -1,0 +1,137 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Cập
+                            nhật {{ this.typeCategory.category_name.replace('Các', '')}}</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Tên
+                                {{this.typeCategory.category_name.replace('Các', '')}}</label>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" maxlength="191" [(ngModel)]="bodyParam.name"
+                                   name="name">
+                        </div>
+                    </div>
+
+                </fieldset>
+                <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate=""
+                      [formGroup]="formUpdateTimeReasons" *ngIf="this.typeCategory.category_type==='reasons'">
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                <label>
+                                    <span style="color:red;width:5px;">*</span>Buổi sáng
+                                </label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control input-time " type="text"
+                                       formControlName="start_morning_update"
+                                       placeholder="{{numDate | date :'HH:mm'}} " id="start-morning-update">
+                                {{initTimeInput('start-morning-update')}}
+                            </div>
+                            <div class="col-sm-1 control-label " style="text-align: left;">
+                                <label>
+                                    <span style="color:red;width:5px;">*</span>Đến
+                                </label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control input-time " type="text"
+                                       formControlName="end_morning_update"
+                                       placeholder="{{numDate | date :'HH:mm'}} " id="end-morning-update">
+                                {{initTimeInput('end-morning-update')}}
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                <label>
+                                    <span style="color:red;width:5px;">*</span>Buổi chiều
+                                </label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control input-time " type="text"
+                                       formControlName="start_afternoon_update"
+                                       placeholder="{{numDate | date :'HH:mm'}} " id="start-afternoon-update">
+                                {{initTimeInput('start-afternoon-update')}}
+                            </div>
+                            <div class="col-sm-1 control-label " style="text-align: left;">
+                                <label>
+                                    <span style="color:red;width:5px;">*</span>Đến
+                                </label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control input-time " type="text"
+                                       formControlName="end_afternoon_update"
+                                       placeholder="{{numDate | date :'HH:mm'}} " id="end-afternoon-update">
+                                {{initTimeInput('end-afternoon-update')}}
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label style="margin-left:5px">Mô tả</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-7 control-label col-sm-offset-1" style="text-align: left;">
+                                    <textarea class="form-control"
+                                              placeholder="Chi tiết về {{' '+ this.typeCategory.category_name}}"
+                                              maxlength="191" rows="3" [(ngModel)]="bodyParam.description"
+                                              name="description"></textarea>
+
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-3 control-label col-sm-offset-1" style="text-align: left;">
+                            <span style="color:red">{{errorMsg}}</span>
+
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-offset-1" style="margin-bottom: 20px">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="saveUpdate()"
+                                            [disabled]="this.dataGlobalService.btnIsloading()">Lưu thay
+                                        đổi
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 loader-custom-import"
+                                     *ngIf="this.dataGlobalService.btnIsloading()"></div>
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="onQuit()">Bỏ qua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

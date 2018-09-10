@@ -1,0 +1,31 @@
+<!-- Modal -->
+<div class="modal" role="dialog" #modal style="display: block; background-color: rgba(0, 0, 0, 0.3)">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="border-radius: 0">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chọn kỹ năng chuyên môn</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [limit]="5"
+                        [selected]="selected" [selectionType]="'checkbox'" [selectAllRowsOnPage]="false" [rowHeight]="'auto'"
+                        [displayCheck]="displayCheck" (activate)="onActivate($event)" (select)='onSelect($event)'>
+                        <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="true"
+                            [checkboxable]="true">
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Id"></ngx-datatable-column>
+                        <ngx-datatable-column name="Name"></ngx-datatable-column>
+                        <ngx-datatable-column name="Description"></ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" (click)="gotoEditSkills()" *ngIf="hasPermissionEditSkills">Tùy chỉnh</button>
+                <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

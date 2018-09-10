@@ -1,0 +1,185 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Chi tiết File</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Tên File</label>
+                        <div class="col-sm-5">
+                            <!-- <input class="form-control" type="file"> -->
+                            <span class="help-block" *ngIf="file.name">{{file.name}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Người tải</label>
+                        <div class="col-sm-5">
+                            <!-- <input class="form-control" type="file"> -->
+                            <span class="help-block" *ngIf="file.user">{{file.user.name}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Download</label>
+                        <div class="col-sm-5">
+                            <!-- <input class="form-control" type="file"> -->
+                            <a [href]="'/api/time-on-excel/files/' + file.id + '/download?token=' + token" target="_blank" *ngIf="file.name">{{file.name}}</a>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Tình trạng</label>
+                        <div class="col-sm-5">
+                            <span class="help-block text-danger" *ngIf="file.status === 0">Đã xóa</span>
+                            <span class="help-block text-success" *ngIf="file.status === 1">Đã import thành công</span>
+                            <span class="help-block text-warning" *ngIf="file.status === 2">Chưa import</span>
+                            <span class="help-block text-warning" *ngIf="file.status === 3">Đang chờ xử lý</span>
+                            <span class="help-block text-warning" *ngIf="file.status === 4">Đang import</span>
+                            <span class="help-block text-danger" *ngIf="file.status === 5">Lỗi</span>
+                            <span class="help-block text-danger" *ngIf="file.status === 6">Đã hủy</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%">
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="parse()" [disabled]="file.status !== 2">Kiểm tra File</button>
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px; margin-left: 30px" (click)="apply()" [disabled]="!listChecked.length">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+        <div class="card-content">
+            <div class="table-responsive table-full-width" style="overflow-x:auto;">
+                <table class="table table-striped" id="table-timekeeping-file-detail" style="table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; width: 80px">
+                                <div class="checkbox checkbox-inline col-sm-2" style="margin-left: 20px; width: 80px">
+                                    <input id="checkbox-all-1" type="checkbox" [(ngModel)]="isCheckAllOverride" (change)="checkAllOverride()">
+                                    <label for="checkbox-all-1 control-label ">
+                                        Chọn
+                                    </label>
+                                </div>
+                            </th>
+                            <th style="text-align: center;width: 100px;">
+                                <div class="checkbox checkbox-inline col-sm-2" style="width: 100px; margin-left: 20px">
+                                    <input id="checkbox-all-2" type="checkbox" [(ngModel)]="isCheckAllUnOverride" (change)="checkAllUnOverride()">
+                                    <label for="checkbox-all-2 control-label ">
+                                        Ghi đè
+                                    </label>
+                                </div>
+                            </th>
+                            <th style="width: 60px">STT</th>
+                            <th style="width: 60px">Mã NV</th>
+                            <th style="width: 150px">Tên nhân viên</th>
+                            <th style="width: 150px">Phòng ban</th>
+                            <th style="width: 150px">Chức danh</th>
+                            <th style="width: 150px">Ngày làm việc</th>
+                            <th style="width: 150px">Vào</th>
+                            <th style="width: 150px">Ra</th>
+                            <th style="width: 150px">Ngày công</th>
+                            <th style="width: 150px">Giờ</th>
+                            <th style="width: 150px">Nghỉ phép</th>
+                            <th style="width: 150px">Duyệt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of file.data; let i = index" [ngClass]="{'table-row-warning': data.is_duplicate, 'display-none': !data.showing, 'timesheet-data-override': data.time_on_id !== null && !data.is_accepted}">
+                            <td>
+                                <div class="checkbox checkbox-inline col-sm-2 col-sm-offset-1" style="padding-left: 20px" *ngIf="!data.is_accepted && data.time_on_id === null">
+                                    <input [id]="'checkbox' + i" type="checkbox" [(ngModel)]="data.is_checked" (change)="checkOne(data)">
+                                    <label [for]="'checkbox' + i + ' control-label'">
+
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="checkbox checkbox-inline col-sm-2 col-sm-offset-1" style="padding-left: 20px" *ngIf="data.time_on_id !== null && !data.is_accepted">
+                                    <input [id]="'checkbox' + i" type="checkbox" [(ngModel)]="data.is_checked" (change)="checkOne(data)">
+                                    <label [for]="'checkbox' + i + ' control-label'">
+                                    </label>
+                                </div>
+                            </td>
+                            <td>{{i + 1}}</td>
+                            <td>{{data?.employee.employee_code}}</td>
+                            <td>{{data?.employee.full_name}}</td>
+                            <td>{{data?.employee.department.name}}</td>
+                            <td>{{data?.employee.position.name}}</td>
+                            <td>{{data?.date}}</td>
+                            <td>{{data?.check_in}}</td>
+                            <td>{{data?.check_out}}</td>
+                            <td>{{data?.working_time}}</td>
+                            <td>{{data?.hour}}</td>
+                            <td>{{data?.day_off}}</td>
+                            <td>
+                                <span class="label label-success" *ngIf="data?.is_accepted">Đã duyệt</span>
+                                <span class="label label-default" *ngIf="!data?.is_accepted">Chưa duyệt</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row" style="padding: 20px">
+                <div class="checkbox checkbox-inline col-sm-2" style="margin-left: 20px; margin-top: 20px">
+                    <input id="checkbox-all" type="checkbox" [(ngModel)]="isCheckAll" (change)="checkAll()">
+                    <label for="checkbox-all control-label ">
+                        Chọn tất
+                    </label>
+                </div>
+            </div>
+
+            <div class="row" style="padding: 20px">
+                <div class="col-md-12" style="margin-bottom: 20px">
+                    <div style="padding-left:10px;font-size: 15px">
+                        <div class="form-group">
+                            <div style="float:left;margin-left:10px">
+                                <label style="margin-left:10">Hiển thị mục</label>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="gotoFirstPage()">
+                                <span class="ti-angle-double-left" (click)="gotoFirstPage()"></span>Đầu tiên
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="prevPage()">
+                                <span class="ti-angle-left" (click)="prevPage()"></span>Trước
+                            </button>
+                            <div style="float:left">
+                                <button class="pagination-number" *ngFor="let pn of paginationListPage" (click)="paginate(pn)" [disabled]="pn === paginationCurrentPage"
+                                    style="background-color: transparent; border: none;" [ngClass]="paginationCurrentPage === pn ? 'pagination-number-disable' : ''">{{pn}}</button>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="nextPage()">
+                                Tiếp
+                                <span class="ti-angle-right"></span>
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="gotoLastPage()">Cuối cùng
+                                <span class="ti-angle-double-right"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

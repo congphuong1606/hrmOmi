@@ -1,0 +1,439 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid row" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Tìm kiếm</label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-md-offset-1" style="text-align: left;">
+                            Chọn tháng</label>
+                        <div class="col-sm-6">
+                            <select [(ngModel)]="selectedMonth" class="form-control" id="select3" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let month of listMonths" [ngValue]="month">{{month}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-md-offset-1" style="text-align: left;">
+                            Tên Nhân viên</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-md-offset-1" style="text-align: left;">
+                            Mã Nhân viên</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" [(ngModel)]="employeeCode" [ngModelOptions]="{standalone: true}">
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-md-offset-1" style="text-align: left;">
+                            Phòng ban</label>
+                        <div class="col-sm-6">
+                            <select [(ngModel)]="department" class="form-control" id="select3" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let de of listDepartments" [ngValue]="de">{{de.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-md-offset-1" style="text-align: left;">
+                            Trạng thái công việc</label>
+                        <div class="col-sm-6">
+                            <select [(ngModel)]="job_status" class="form-control" id="select1" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let job of listJobStatus" [ngValue]="job">{{job.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-sm-12">
+                    <div style="margin: 0 auto; width: fit-content">
+                        <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="getTimeOn()">Tìm kiếm</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+            <button class="btn btn-success" style="min-width: 200px" (click)="calculating()">Tính</button>
+            <a class="btn btn-success" style="min-width: 200px" [href]="'/api/time-on/total/months/download/excel?token=' + token 
+                + '&month=' + (selectedMonth === null ? '' : selectedMonth)  + '&employee_name=' 
+                + employeeName + '&employee_code=' + employeeCode + '&department_id=' + (department === null ? '' : department.id)"
+                target="_blank">Export Excel</a>
+        </div>
+        <div class="card-content">
+            <div class="c-table">
+                <div class="unpin" id="timekeeping-container">
+                    <div id="color-table">
+                        <h3 style="text-align: center">Ghi chú</h3>
+
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+                                <div class="col-sm-6">
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: cadetblue"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Nghỉ nhiều ngày (có phép)</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #6a3ba4"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Nghỉ cả ngày (có phép)</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #ca0000"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Nghỉ không phép</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #48fa00"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Đến muộn không phép</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #fe9500"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Đến muộn có phép</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #be4e4d"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Ra ngoài trong giờ làm việc</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #fffa00"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Về sớm có phép</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #176200"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Về sớm không phép</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #002662"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Ngày lễ</span>
+                                        </div>
+                                    </div>
+                                    <div class="row color-row">
+                                        <div class="col-sm-2">
+                                            <div style="background-color: #ffe293"></div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <span>Đi muộn do OT</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered" id="table-timeon">
+                        <tr>
+                            <th rowspan="3" class="thead-1" style="width: 60px;">STT</th>
+                            <th rowspan="3" class="thead-1" style="width: 60px;">Mã NV</th>
+                            <th rowspan="3" class="thead-1" style="width: 200px;">Họ tên</th>
+                            <th [attr.colspan]="daysInMonth.length" class="thead-2" style="width: 1500px">Ngày chấm công trong tháng {{currentMonth + '-' + currentYear}}</th>
+                            <th rowspan="3" class="thead-3 lower" style="width: 70px;">Số ngày nghỉ trong tháng</th>
+                            <th rowspan="2" colspan="2" class="thead-4 lower" style="width: 140px;">Số ngày được nghỉ có lương</th>
+                            <th rowspan="2" colspan="2" class="thead-4 lower" style="width: 140px;">Ngày nghỉ bù trừ giữa các tháng</th>
+                            <th rowspan="2" colspan="2" class="thead-4 lower" style="width: 140px;">Tích lũy còn lại đến tháng {{currentMonth === '1' ? 12 : (currentMonth - 1)}}</th>
+                            <th rowspan="3" class="thead-4 lower" style="width: 70px;">Bị trừ lương</th>
+                            <th rowspan="3" class="thead-4 lower" style="width: 70px;">Số ngày công hưởng lương</th>
+                            <th rowspan="2" colspan="2" class="thead-4 lower" style="width: 140px;">Còn lại</th>
+                            <th rowspan="3" class="thead-3 lower" style="width: 70px;">Số lần vắng mặt có phép</th>
+                            <th rowspan="3" class="thead-3 lower" style="width: 70px;">Số lần vắng mặt không phép</th>
+                            <th rowspan="3" class="thead-4 lower" style="width: 70px;">Số lần phạt chuyên cần</th>
+                            <th rowspan="3" class="thead-4 lower" style="width: 200px;">Notes</th>
+                        </tr>
+                        <tr class="c-day">
+                            <td *ngFor="let day of daysInMonth" class="thead-2">
+                                <span>{{day.day_in_month}}</span>
+                            </td>
+                        </tr>
+                        <tr class="c-day">
+                            <td *ngFor="let day of daysInMonth" class="thead-2">
+                                <span style="width:100px" *ngIf="day.day_of_week === 0">CN</span>
+                                <span style="width:100px" *ngIf="day.day_of_week === 1">T2</span>
+                                <span style="width:100px" *ngIf="day.day_of_week === 2">T3</span>
+                                <span style="width:100px" *ngIf="day.day_of_week === 3">T4</span>
+                                <span style="width:100px" *ngIf="day.day_of_week === 4">T5</span>
+                                <span style="width:100px" *ngIf="day.day_of_week === 5">T6</span>
+                                <span style="width:100px" *ngIf="day.day_of_week === 6">T7</span>
+                            </td>
+                            <td class="thead-3 lower">
+                                <span>Phép</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>OT</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>Phép</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>OT</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>Phép</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>OT</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>Phép</span>
+                            </td>
+                            <td class="thead-4 lower">
+                                <span>OT</span>
+                            </td>
+                        </tr>
+                        <tr class="c-day" *ngFor="let timeOn of timeOns, let k = index">
+                            <td style="font-weight: bold">
+                                <span style="padding-left: 5px;">{{k + 1}}</span>
+                            </td>
+                            <td style="font-weight: bold">
+                                <span style="padding-left: 5px;">{{timeOn.employee.employee_code}}</span>
+                            </td>
+                            <td style="font-weight: bold">
+                                <span style="white-space: nowrap" style="text-decoration: underline; color: slateblue; padding-left: 5px; cursor: pointer"
+                                    (click)="showDetail(timeOn)">{{timeOn.employee.full_name}}</span>
+                            </td>
+                            <td *ngFor="let day of timeOn.time_ons, let i = index" class="td-content text-center" (click)="showPopup('parent-popup-' + k + '_' +  i, day)"
+                                data-container="body" [id]="'parent-popup-' + k + '_' +  i" [ngClass]="day.data.class" rel="tooltip"
+                                title="{{day.data.title}}">
+                                {{day.data.time}}
+                            </td>
+                            <td class="td-1">{{timeOn.day_off}}</td>
+                            <td class="td-1">{{timeOn.day_off_with_pay_permit}}</td>
+                            <td class="td-1">{{timeOn.day_off_with_pay_ot}}</td>
+                            <td class="td-2">{{timeOn.day_off_remain_in_month_permit}}</td>
+                            <td class="td-2">{{timeOn.day_off_remain_in_month_ot}}</td>
+                            <td class="td-2">{{timeOn.day_off_accumulated_permit}}{{timeOn.day_off_addition_permit !== 0 ? ' (' + timeOn.day_off_addition_permit
+                                + ')' : ''}}</td>
+                            <td class="td-2">{{timeOn.day_off_accumulated_ot}}{{timeOn.day_off_addition_ot !== 0 ? ' (' + timeOn.day_off_addition_ot
+                                + ')' : ''}}</td>
+                            <td class="td-2" [ngClass]="{'td-salary': (timeOn.day_off_subtract_salary < 0)}">{{timeOn.day_off_subtract_salary >= 0 ? '0': timeOn.day_off_subtract_salary}}</td>
+                            <td class="td-2">{{timeOn.actual_work_day}}</td>
+                            <td class="td-2">{{timeOn.day_off_remain_permit}}</td>
+                            <td class="td-2">{{timeOn.day_off_remain_ot}}</td>
+                            <td class="td-3">{{timeOn.absent_permit}}</td>
+                            <td class="td-3">{{timeOn.absent_without_permit}}</td>
+                            <td class="td-2">{{timeOn.diligence}}</td>
+                            <td class="td-4" style="position: relative;" class="edit-note_td">
+                                {{timeOn.note}}
+                                <div style="position: absolute;width: 24px;height: 24px;top: 4px;right: 0;" class="edit-note_container" (click)="openModalAccumulated(timeOn)">
+                                    <i class="fa fa-edit edit-note_icon" style="
+                                    font-size: 18px;
+                                "></i>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="popup-container" style="position: absolute">
+                        <div style="position: relative; width: 100%; height: 100%;">
+                            <div class="popuptext">
+                                <div class="popuptext-container">
+                                    <div *ngIf="timeOffs.length" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Nghỉ phép:</div>
+                                    <div *ngIf="timeOffs.length">
+                                        <div style="width: 100%">
+                                            <a style="padding: 5px; width: 100%; display: block; padding-left: 40px; text-align: left" *ngFor="let timeoff of timeOffs">
+                                                - {{timeoff.status | timeoffStatus}} / {{timeoff.detailed_reason}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="holidays.length" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Nghỉ lễ:</div>
+                                    <div *ngIf="holidays.length">
+                                        <div style="width: 100%">
+                                            <a style="padding: 5px; width: 100%; display: block; padding-left: 40px; text-align: left" *ngFor="let holiday of holidays">
+                                                - {{holiday.description}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="overTimes.length" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Đăng ký OT:</div>
+                                    <div *ngIf="overTimes.length">
+                                        <div style="width: 100%">
+                                            <a style="padding: 5px; width: 100%; display: block; padding-left: 40px; text-align: left" *ngFor="let overtime of overTimes">
+                                                - {{overtime.content}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="day_off_late_without_permit" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Đi muộn không phép: {{day_off_late_without_permit}} phút</div>
+                                    <div *ngIf="day_off_late_permit" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Đi muộn có phép: {{day_off_late_permit}} phút</div>
+                                    <div *ngIf="day_off_without_permit" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Vắng mặt không phép: {{day_off_without_permit}} phút</div>
+                                    <div *ngIf="day_off_late_ot" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Đi muộn do OT: {{day_off_late_ot}} phút</div>
+                                    <div *ngIf="day_off_leave_early" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Về sớm có phép: {{day_off_leave_early}} phút</div>
+                                    <div *ngIf="day_off_leave_early_without_permit" class="popup-timeon-title">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Về sớm không phép: {{day_off_leave_early_without_permit}} phút</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal" role="dialog" id="timeon-detail" style="background-color: rgba(0, 0, 0, 0.3)">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="border-radius: 0">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Chi tiết chấm công</h4>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="timeOn !== null" style="width: 100%">
+                        <div class="row" style="margin-bottom: 15px">
+                            <div class="col-sm-6" style="text-align: right">
+                                Nhân viên:
+                            </div>
+                            <div class="col-sm-6" style="text-align: left"> {{timeOn.employee.full_name}}</div>
+                        </div>
+                        <div class="row" style="margin-bottom: 15px">
+                            <div class="col-sm-6" style="text-align: right">
+                                Mã nhân viên:
+                            </div>
+                            <div class="col-sm-6" style="text-align: left"> {{timeOn.employee.employee_code}}</div>
+                        </div>
+                        <div class="row" style="margin-bottom: 15px">
+                            <div class="col-sm-6" style="text-align: right">
+                                Tháng:
+                            </div>
+                            <div class="col-sm-6" style="text-align: left"> {{timeOn.month + ' - ' + timeOn.year}}</div>
+                        </div>
+                        <table class="table-detail" style="width: 100%">
+                            <tr>
+                                <th style="width: 100px; text-align: center">
+                                    Ngày
+                                </th>
+                                <th style="width: 60px; text-align: center">
+                                    Thứ
+                                </th>
+                                <th style="width: 100px; text-align: center">
+                                    Chấm công
+                                </th>
+                                <th style="width: calc(100% - 260px); text-align: center">
+                                    Nghỉ phép
+                                </th>
+                            </tr>
+                            <tr *ngFor="let day of timeOn.time_ons, let i = index">
+                                <td>{{day.date | dateFormatVn}}</td>
+                                <td>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 0">CN</span>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 1">T2</span>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 2">T3</span>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 3">T4</span>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 4">T5</span>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 5">T6</span>
+                                    <span style="width:100px" *ngIf="dayOfWeek(day.date) === 6">T7</span>
+                                </td>
+                                <td>
+                                    <div *ngIf="!isWeekend(day.date) && !day.holidays.length && day.is_imported === 0" class="thead-nodata" rel="tooltip" title="Không có dữ liệu checkin/checkout"></div>
+                                    <div *ngIf="!isWeekend(day.date) && !day.holidays.length" class=""></div>
+                                    <div *ngIf="isWeekend(day.date)" class="thead-2" rel="tooltip" title="Ngày cuối tuần">
+
+                                    </div>
+                                    <div *ngIf="!isWeekend(day.date) && day.holidays.length" class="" style="background-color: #002662" rel="tooltip" title="{{'Nghỉ lễ'}}"></div>
+                                    <div *ngIf="!isWeekend(day.date) && !day.holidays.length && day.status === 1 && day.day_off_late_without_permit" class=""
+                                        style="background-color: #00ff00" rel="tooltip" title="{{'Đi muộn:\n' + day.day_off_late_without_permit}}">{{day.day_off_late_without_permit}}</div>
+                                    <div *ngIf="!isWeekend(day.date) && !day.holidays.length && day.status === 1 && day.day_off_late_permit" class="" style="background-color: #fe9500"
+                                        rel="tooltip" title="{{'Muộn có phép:\n' + day.day_off_late_permit}}">{{day.day_off_late_permit}}</div>
+                                    <div *ngIf="!isWeekend(day.date) && !day.holidays.length && day.day_off_without_permit" rel="tooltip" title="Vắng mặt không phép"
+                                        class="" style="color: #000000; background-color: #CC0000">{{day.day_off_without_permit}}</div>
+                                </td>
+                                <td>
+                                    <p *ngIf="day.time_offs.length">Nghỉ phép:</p>
+                                    <div *ngIf="day.time_offs.length">
+                                        <div style="width: 100%">
+                                            <a style="padding: 5px; width: 100%; display: block" *ngFor="let timeoff of day.time_offs">
+                                                {{timeoff.detailed_reason}}
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <p *ngIf="day.holidays.length">Nghỉ lễ:</p>
+                                    <div *ngIf="day.holidays.length">
+                                        <div style="width: 100%">
+                                            <a style="padding: 5px; width: 100%; display: block" *ngFor="let holiday of day.holidays">
+                                                {{holiday.description}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <p *ngIf="day.over_times.length">Đăng ký OT:</p>
+                                    <div *ngIf="day.over_times.length">
+                                        <div style="width: 100%">
+                                            <a style="padding: 5px; width: 100%; display: block" *ngFor="let overtime of day.over_times">
+                                                {{overtime.content}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <p *ngIf="day.day_off_late_without_permit">Đi muộn không phép: {{day.day_off_late_without_permit}} phút</p>
+                                    <p *ngIf="day.day_off_late_permit">Đi muộn có phép: {{day.day_off_late_permit}} phút</p>
+                                    <p *ngIf="day.day_off_without_permit">Vắng mặt không phép: {{day.day_off_without_permit}} phút</p>
+                                    <p *ngIf="day_off_go_out">Ra ngoài: {{day_off_go_out}} phút</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<update-note-modal-cmp *ngIf="showModalNote" (close)="onCloseModalNote($event)" [currentSelected]="selectedTimeOn"></update-note-modal-cmp>

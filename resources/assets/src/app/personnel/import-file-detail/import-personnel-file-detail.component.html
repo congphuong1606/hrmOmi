@@ -1,0 +1,160 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Chi tiết File</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Tên File</label>
+                        <div class="col-sm-5">
+                            <!-- <input class="form-control" type="file"> -->
+                            <span class="help-block" *ngIf="file.name">{{file.name}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Người tải</label>
+                        <div class="col-sm-5">
+                            <!-- <input class="form-control" type="file"> -->
+                            <span class="help-block" *ngIf="file.user">{{file.user.name}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Download</label>
+                        <div class="col-sm-5">
+                            <!-- <input class="form-control" type="file"> -->
+                            <a [href]="'/api/employee-excel/files/' + file.id + '/download?token=' + token" target="_blank" *ngIf="file.name">{{file.name}}</a>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <i class="fa fa-user"></i> Tình trạng</label>
+                        <div class="col-sm-5">
+                            <span class="help-block text-danger" *ngIf="file.status === 0">Đã xóa</span>
+                            <span class="help-block text-success" *ngIf="file.status === 1">Đã import thành công</span>
+                            <span class="help-block text-warning" *ngIf="file.status === 2">Chưa import</span>
+                            <span class="help-block text-warning" *ngIf="file.status === 3">Đang chờ xử lý</span>
+                            <span class="help-block text-warning" *ngIf="file.status === 4">Đang import</span>
+                            <span class="help-block text-danger" *ngIf="file.status === 5">Lỗi</span>
+                            <span class="help-block text-danger" *ngIf="file.status === 6">Đã hủy</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%">
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="parse()" [disabled]="file.status !== 2">Kiểm tra File</button>
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px; margin-left: 30px" (click)="apply()" [disabled]="!listChecked.length">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+        <div class="card-content">
+            <div class="table-responsive table-full-width" style="overflow-x:auto;">
+                <table class="table table-striped" style="table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Chọn</th>
+                            <th style="width: 150px;">Họ và tên</th>
+                            <th style="width: 150px;">Trạng Thái CV</th>
+                            <th style="width: 150px;">Chức danh</th>
+                            <th style="width: 150px;">Phòng ban</th>
+                            <th style="width: 150px;">Ngày sinh</th>
+                            <th style="width: 100px;">SDT</th>
+                            <th style="width: 300px;">Email cá nhân</th>
+                            <th style="width: 300px;">Email công ty</th>
+                            <th style="width: 150px;">Skype</th>
+                            <th style="width: 150px;">Facebook</th>
+                            <th style="width: 150px;">Ngày check in</th>
+                            <th style="width: 150px;">Ngày bắt đầu thử việc</th>
+                            <th style="width: 150px;">Ngày bắt đầu chính thức</th>
+                            <th style="width: 100px;">Vân tay</th>
+                            <th style="width: 150px;">Số CMND</th>
+                            <th style="width: 150px;">Ngày cấp</th>
+                            <th style="width: 150px;">Nơi cấp</th>
+                            <th style="width: 150px;">Mã Số Thuế TNCN</th>
+                            <th style="width: 150px;">Địa chỉ thường trú</th>
+                            <th style="width: 150px;">Địa chỉ hiện tại</th>
+                            <th style="width: 150px;">Số tài khoản</th>
+                            <th style="width: 150px;">Ghi chú</th>
+                            <th style="width: 150px;">Chứng chỉ tiếng Nhật</th>
+                            <th style="width: 150px;">Trùng NV hiện có</th>
+                            <th style="width: 150px;">Trùng trong file</th>
+                            <th style="width: 150px;">Đã chấp nhận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let employee of file.data; let i = index" [ngClass]="{'table-row-warning': employee.is_duplicate, 'table-row-danger': employee.employee_id !== null}">
+                            <td>
+                                <div class="checkbox checkbox-inline col-sm-2 col-sm-offset-1" style="padding-left: 20px" *ngIf="!employee.is_duplicate && employee.employee_id === null &&  !employee.is_accepted">
+                                    <input [id]="'checkbox' + i" type="checkbox" [(ngModel)]="employee.is_checked" (change)="checkOne(employee)">
+                                    <label [for]="'checkbox' + i + ' control-label'">
+
+                                    </label>
+                                </div>
+                            </td>
+                            <td>{{employee?.name}}</td>
+                            <td>{{employee?.job_status}}</td>
+                            <td>{{employee?.position}}</td>
+                            <td>{{employee?.department}}</td>
+                            <td>{{employee?.birthday}}</td>
+                            <td>{{employee?.phone}}</td>
+                            <td>{{employee?.personal_email}}</td>
+                            <td>{{employee?.email}}</td>
+                            <td>{{employee?.skype}}</td>
+                            <td style="word-wrap: break-word;">{{employee?.facebook}}</td>
+                            <td>{{employee?.checkin_date}}</td>
+                            <td>{{employee?.training_start_date}}</td>
+                            <td>{{employee?.employee_start_date}}</td>
+                            <td>{{employee?.fingerprint_id}}</td>
+                            <td>{{employee?.identification_number}}</td>
+                            <td>{{employee?.identification_date}}</td>
+                            <td>{{employee?.identification_place}}</td>
+                            <td>{{employee?.tax_code}}</td>
+                            <td>{{employee?.permanent_address}}</td>
+                            <td>{{employee?.temporary_address}}</td>
+                            <td>{{employee?.bank_number}}</td>
+                            <td>{{employee?.note}}</td>
+                            <td>{{employee?.japanese_certificate}}</td>
+                            <td>
+                                <a *ngIf="employee && employee.employee_id !== null" [routerLink]="['/danh-sach-nhan-su/thong-tin-nhan-su/', employee.employee_id]">{{employee.employee === null ? employee.employee_id : employee.employee.full_name}}</a>
+                            </td>
+                            <td>{{employee?.is_duplicate}}</td>
+                            <td>{{employee?.is_accepted}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row" style="padding: 20px">
+                <div class="checkbox checkbox-inline col-sm-2" style="margin-left: 20px; margin-top: 20px">
+                    <input id="checkbox-all" type="checkbox" [(ngModel)]="isCheckAll" (change)="checkAll()">
+                    <label for="checkbox-all control-label ">
+                        Chọn tất
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

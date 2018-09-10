@@ -1,0 +1,101 @@
+<div class="col-md-12" *ngIf="numDate!==undefined">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate=""
+                  [formGroup]="form_holiday">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Cập nhật các ngày nghỉ lễ</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Ngày bắt đầu</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;" type="text"
+                                   placeholder="{{numDate | date :'dd-MM-yyyy'}}"
+                                   formControlName="start_time_holiday"
+                                   id="start-time-holiday">
+                            {{initDatePicker('startDate')}}
+                        </div>
+                        <div class="col-sm-1 control-label " style="text-align: center;">
+                            <label>
+                                <span style="color:red;width:5px;">* </span> Đến </label>
+                        </div>
+                        <div class="col-sm-2" style="padding-left:24px">
+                            <input class="form-control"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;" type="text"
+                                   placeholder="{{numDate | date :'dd-MM-yyyy'}}"
+                                   formControlName="end_time_holiday"
+
+
+                                   id="end-time-holiday">
+
+                            {{initDatePicker('endDate')}}
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label style="margin-left:5px">Mô tả</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-7 control-label col-sm-offset-1" style="text-align: left;">
+                                    <textarea class="form-control"
+                                              placeholder="Mô tả chi tiết, thông tin cho dịp nghỉ lễ"
+                                              maxlength="191"
+                                              formControlName="holiday_description"
+                                              name="holiday-description" rows="3"></textarea>
+
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-3 control-label col-sm-offset-1" style="text-align: left;">
+                            <span style="color:red">
+                                {{errorMsg}}
+                            </span>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-offset-1" style="margin-bottom: 20px">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="saveHoliday()">Lưu thay đổi
+                                    </button>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Bỏ qua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+
+</div>

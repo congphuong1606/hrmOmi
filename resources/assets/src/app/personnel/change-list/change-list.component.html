@@ -1,0 +1,102 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Quản lý thay đổi</h4>
+
+        </div>
+        <div class="card-content table-responsive table-full-width">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <!---->
+                        <th style="width: 100px;">
+                            <div class="checkbox checkbox-inline col-sm-2 checkbox-all-change-list" style="width: 100px;">
+                                <input id="checkbox-all" type="checkbox" [(ngModel)]="isCheckAll" (change)="checkAll()">
+                                <label for="checkbox-all control-label ">
+                                    Chọn
+                                </label>
+                            </div>
+                        </th>
+                        <th>Mã nhân viên</th>
+                        <th>Tên nhân viên</th>
+                        <th>Phòng ban</th>
+                        <th>Chức danh</th>
+                        <th>Trạng thái công việc</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let changeList of changeLists, let i = index">
+                        <td>
+                            <div class="checkbox checkbox-inline col-sm-2 col-sm-offset-1" style="padding-left: 20px">
+                                <input [id]="'checkbox' + i" type="checkbox" [(ngModel)]="changeList.checked" (change)="checkOne(changeList)">
+                                <label [for]="'checkbox' + i + ' control-label'">
+
+                                </label>
+                            </div>
+                        </td>
+                        <td>{{changeList.employee_code}}</td>
+                        <td>{{changeList.full_name}}</td>
+                        <td rel="tooltip" title="{{changeList.department !== null ? changeList.department.name : ''}}" data-container="body">{{changeList.department !== null ? changeList.department.code : ''}}</td>
+                        <td rel="tooltip" title="{{changeList.position !== null ? changeList.position.name : ''}}" data-container="body">{{changeList.position !== null ? changeList.position.code : ''}}</td>
+                        <td>{{changeList.job_status !== null ? changeList.job_status.name : ''}}</td>
+
+                        <td>
+                            <a [routerLink]="['../chi-tiet-thay-doi', changeList.id]" rel="tooltip" title="Chi tiết" class="btn btn-info btn-simple btn-xs">
+                                <i class="fa fa-user" style="font-size: 24px"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="row" style="padding: 20px">
+                <div class="col-md-12" style="margin-bottom: 20px">
+                    <div style="padding-left:10px;font-size: 15px">
+                        <div class="form-group">
+                            <div style="float:left;margin-left:10px">
+                                <label style="margin-left:10">Hiển thị {{pagination.per_page}} trên {{pagination.total}} mục</label>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" [disabled]="pagination.current_page === 0 || pagination.current_page === 1"
+                                [ngClass]="pagination.current_page === 0 || pagination.current_page === 1 ? 'pagination-page-disable' : ''">
+                                <span class="ti-angle-double-left"></span>Đầu tiên
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" [ngClass]="pagination.current_page === 0 || pagination.current_page === 1 ? 'pagination-page-disable' : ''">
+                                <span class="ti-angle-left"></span>Trước
+                            </button>
+                            <div style="float:left">
+                                <a [routerLink]="['../quan-ly-thay-doi/']" [queryParams]="i.queryParam" class="pagination-number" *ngFor="let i of listPage"
+                                    [ngClass]="pagination.current_page === i.name ? 'pagination-number-disable' : ''">{{i.name}}</a>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" [ngClass]="pagination.last_page === 0 || pagination.last_page === pagination.current_page ? 'pagination-page-disable' : ''">
+                                Tiếp
+                                <span class="ti-angle-right"></span>
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" [ngClass]="pagination.last_page === 0 || pagination.last_page === pagination.current_page ? 'pagination-page-disable' : ''">Cuối cùng
+                                <span class="ti-angle-double-right"></span>
+                            </button>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row" style="padding: 20px">
+
+            </div>
+
+            <div class="row" style="padding: 20px">
+                <div style="padding: 0; float: left;">
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="approve()" [disabled]="!listChecked.length">Phê duyệt</button>
+                </div>
+                <div style="padding: 0; float: left; margin-left: 20px">
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="reject()" [disabled]="!listChecked.length">Từ chối</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

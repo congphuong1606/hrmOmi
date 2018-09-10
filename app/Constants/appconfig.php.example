@@ -1,0 +1,12 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Ominext
+ * Date: 3/21/2018
+ * Time: 3:25 PM
+ */
+
+//define('DOMAIN', 'http://timesheet.ominext.info/');
+define('DOMAIN', 'http://localhost:4433/');
+define('BUILD_PROD', false);
+define('BUILD_VERSION', '1.0');

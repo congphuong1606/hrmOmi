@@ -1,0 +1,48 @@
+<!-- Modal -->
+<div class="modal" role="dialog" #modal style="display: block; background-color: rgba(0, 0, 0, 0.3)">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="border-radius: 0">
+            <div class="modal-body">
+                <div>
+                    <form class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="" [formGroup]="updateForm">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label col-sm-offset-1" style="text-align: center; font-size: 25px; margin-left: 0;">Sửa ghi chú {{currentSelected?.month + ' - ' + currentSelected?.year}}</label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Tên</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="text" [value]="currentSelected?.employee.full_name" readonly>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Ghi chú</label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" rows="4" type="text" formControlName="note"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="col-sm-12 control-label" style="text-align: center; padding-top: 0!important">
+                                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="submit()" [disabled]="updateForm.invalid">Lưu</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

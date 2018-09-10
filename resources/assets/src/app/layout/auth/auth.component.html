@@ -1,0 +1,16 @@
+<div class="wrapper" *ngIf="isLoadedData">
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <sidebar-cmp></sidebar-cmp>
+    </div>
+    <div class="main-panel">
+        <navbar-cmp></navbar-cmp>
+
+        <div class="content" id="main-panel-content">
+            {{setMinHeight()}}
+            <router-outlet></router-outlet>
+        </div>
+        <footer-cmp></footer-cmp>
+        <loader-cmp></loader-cmp>
+    </div>
+</div>
+<fixedplugin-cmp></fixedplugin-cmp>

@@ -1,0 +1,446 @@
+<div class="main-content" id="homePage" *ngIf="check1&&check2" style="padding-top: 0px">
+    <!--<p>{{ message | async | json }}</p>-->
+    <!--<div *ngIf="fcmService.isNotiNew">-->
+    <!--{{this.getListNotification()}}-->
+
+    <!--</div>-->
+    <div class="row" *ngIf="!isAdvancedAdmin">
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="ti-server"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-11">
+                            <div class="numbers">
+                                <p>Số lần xin phép tháng {{homepageInfo?.month}}</p>
+                                {{homepageInfo?.day_off_number}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="ti-calendar"></i> {{homepageInfo?.date | dateFormatVn}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-wallet"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-11">
+                            <div class="numbers">
+                                <p>Số ngày đã nghỉ trong tháng </p>
+                                {{homepageInfo?.day_off}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="ti-calendar"></i> {{homepageInfo?.date | dateFormatVn}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="icon-big icon-danger text-center">
+                                <i class="ti-pulse"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-11">
+                            <div class="numbers">
+                                <p>Ngày phép năm còn lại</p>
+                                {{homepageInfo?.day_off_permit_remain}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="ti-calendar"></i> năm {{homepageInfo?.year}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="icon-big icon-info text-center">
+                                <i class="ti-pie-chart"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-11">
+                            <div class="numbers">
+                                <p>Ngày phép OT còn lại</p>
+                                {{homepageInfo?.day_off_ot_remain}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="ti-calendar"></i> năm {{homepageInfo?.year}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-7">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="numbers pull-left">
+                                Tin mới
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="pull-right">
+                                <span class="label label-info" style="background-color: #f0f0f1e3;color: #424242">
+                                    {{notifications.length}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="news-content">
+                        <table class="table">
+                            <tbody>
+                            <ng-template ngFor let-noti [ngForOf]="notifications" let-i="index">
+                                <tr class="cusor-point">
+                                    <td class="title-news text-right td-noti-{{noti.read}}" (click)="showNews(noti)">
+                                        <span class="notice-label timeoff" data-notify="message" *ngIf="noti.type===0"
+                                              style="">Thông báo</span>
+                                        <span class="notice-label timeoff" data-notify="message" *ngIf="noti.type===1"
+                                              style="">Xin phép mới</span>
+                                        <span class="notice-label ot" data-notify="message" *ngIf="noti.type===2"
+                                              style="">Đơn OT mới</span>
+                                        <span class="notice-label training" data-notify="message" *ngIf="noti.type===3"
+                                              style="">Khóa học</span>
+                                        <span class="notice-label tmtraining" data-notify="message"
+                                              *ngIf="noti.type===4" style="">Ban đào tạo</span>
+                                        <span class="notice-label approved" data-notify="message"
+                                              *ngIf="noti.type===5||noti.type===7"
+                                              style="">Đơn được duyệt</span>
+                                        <span class="notice-label refused" data-notify="message"
+                                              *ngIf="noti.type===8||noti.type===6"
+                                              style="">Đơn bị từ chối</span>
+                                    </td>
+                                    <td class="notice-content td-noti-{{noti.read}}" (click)="showNews(noti)">
+                                        <p>{{' '+ noti.title}} </p>
+                                        <p style="margin: 5px!important;">{{noti.body[0]}}</p>
+                                    </td>
+                                    <td class="read td-noti-{{noti.read}}">
+                                        <button (click)="updateNewsRead(noti)" [disabled]="updateReadIsLoading">
+                                            {{noti.read===1? 'Đã đọc' : 'Đọc'}}
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            </ng-template>
+                            <tr class="btn-more" *ngIf="noticePage<lastPage">
+                                <td class=" text-center cusor-point " colspan="3" (click)="loadNewsMore()">Thông báo cũ
+                                    hơn
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="footer-title"></div>
+                    <div class="pull-right">
+                        <!-- <button class="btn btn-info btn-fill btn-icon btn-sm">
+                            <i class="ti-plus"></i>
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-5">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="numbers pull-left" style="text-align: left">
+                                Sinh nhật trong tháng
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="pull-right">
+                                <span class="label label-success" style="background-color: #b9ebec;color: #424242">
+                                    {{employeeBirthDays.length}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div style="overflow: auto;min-height: 400px;max-height: 500px">
+                        <div *ngIf="employeeBirthDays.length>0">
+                            <div class="alert alert-success" *ngFor="let birthday of employeeBirthDays"
+                                 style="background-color: #b9ebec;color: #5a5858">
+                                <!--<button type="button" aria-hidden="true" class="close">×</button>-->
+                                <span>
+                                    <b> - </b>{{'Ngày ' + birthday.birth_day.split('-')[2] +'/'+ birthday.birth_day.split('-')[1]
+                                    + ' là ngày sinh nhật ' +birthday.full_name }}
+                                    <br> {{' Phòng ' + birthday.department}} </span>
+
+                            </div>
+                        </div>
+                        <div *ngIf="employeeBirthDays.length===0" class="align-center">
+                            Không có sinh nhật trong tháng này
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="footer-title"></div>
+                    <div class="pull-right">
+                        <!-- <button class="btn btn-info btn-fill btn-icon btn-sm">
+                            <i class="ti-plus"></i>
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="modalNews">
+    <div class="modal-dialog" *ngIf="news!== undefined" style="word-break: break-all;">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="text-center" data-notify="message">Thông báo mới</h5>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body  col-xs-12" style="margin: 20px;">
+                <p>
+                    <span class="align-left " style="font-weight: bold;"> {{ news.title}}</span>
+                </p>
+                <p *ngFor="let item of news.body">
+                <td class="align-left">{{item}}</td>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info btn-fill" type="button"
+                        (click)="gotoApproveTimeoff(news.time_off_id,news.type)" data-dismiss="modal"
+                        *ngIf="news.type===1||news.type===6||news.type===5">Chi tiết
+                </button>
+                <button class="btn btn-default btn-fill" type="button" data-dismiss="modal">Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Home-inforTimeOff">
+    <div class="modal-dialog" style="width:50%" *ngIf="inforTimeOff!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin vắng mặt</h5>
+                <!--<p class="modal-title text-danger">(CR 06/07/2018: Cần thêm thời gian để desgin giao diện)</p>-->
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table width="100%">
+                    <tbody>
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Người gửi đơn:</h5></td>-->
+                    <!--</tr>-->
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Họ tên</td>
+                        <td class="infor-content">{{inforTimeOff.employee_full_name}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Email</td>
+                        <td class="infor-content">{{inforTimeOff.employee_email}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <br>
+
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Thông tin đơn:</h5></td>-->
+                    <!--</tr>-->
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Kiểu loại</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===4&&inforTimeOff.forget_type===0">Quên
+                            check-in
+                        </td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===4&&inforTimeOff.forget_type===1">Quên
+                            check-out
+                        </td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===5">Một ngày</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===6">Nhiều ngày</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===1">Đi muộn</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===2">Về sớm</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===3">Ra ngoài</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="inforTimeOff.status!==4&&inforTimeOff.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Từ lúc</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status!==6">
+                            {{ inforTimeOff.start_datetime}}
+                        </td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===6">
+                            {{ inforTimeOff.start_datetime.split(' ')[0]}}
+                        </td>
+
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="inforTimeOff.status!==4&&inforTimeOff.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Đến lúc</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status!==6">
+                            {{ inforTimeOff.end_datetime}}
+                        </td>
+                        <td class="infor-content" *ngIf="inforTimeOff.status===6">
+                            {{ inforTimeOff.end_datetime.split(' ')[0]}}
+                        </td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="inforTimeOff.status===4 || inforTimeOff.status===5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Ngày</td>
+                        <td class="infor-content">{{inforTimeOff.end_datetime.split(' ')[0]}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Trạng thái</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.approved===0">Đang chờ duyệt</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.approved===1">Đã được chấp nhận</td>
+                        <td class="infor-content" *ngIf="inforTimeOff.approved===2">Đã bị từ chối</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="inforTimeOff.approved===2">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Thông báo từ chối</td>
+                        <td class="infor-content">{{inforTimeOff.approved_reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Loại lí do</td>
+                        <td class="infor-content">{{inforTimeOff.reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Chi tiết lí do</td>
+                        <td class="infor-content">{{inforTimeOff.detailed_reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Thời gian vắng mặt</h5></td>-->
+                    <!--</tr>-->
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Tổng thời gian</td>
+                        <td class="infor-content">{{inforTimeOff.number_of_times}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="inforTimeOff.status!==4">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Người làm thay công việc</td>
+                        <td class="infor-content">{{inforTimeOff.backup_person}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    </tbody>
+                    <style>
+                        td.infor-lable {
+                            width: 30%;
+                            color: #504b4b;
+                            font-weight: bold;
+                        }
+
+                        td.infor-content {
+                            width: 50%;
+                        }
+
+                    </style>
+                </table>
+            </div>
+
+
+            <div class="modal-footer">
+                <div *ngIf="inforTimeOff.approved===0&&news.type===1">
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button"
+                            (click)="homeApproveTimeOff()">
+                        Phê
+                        duyệt
+                    </button>
+                    <button class="btn btn-danger btn-fill " data-dismiss="modal" type="button"
+                            (click)="homeRefuseTimeOff()">Từ chối
+                    </button>
+                    <button class="btn btn-default btn-fill" type="button" data-dismiss="modal">Đóng
+                    </button>
+                </div>
+                <div *ngIf="inforTimeOff.approved===2&&news.type===6">
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button"
+                            (click)="homeUpdateTimeOff()">
+                        Chỉnh sửa
+                    </button>
+                    <button class="btn btn-danger btn-fill " data-dismiss="modal" type="button"
+                            (click)="homeDeleteTimeOff()">Xóa
+                    </button>
+                    <button class="btn btn-default btn-fill" type="button" data-dismiss="modal">Đóng
+                    </button>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

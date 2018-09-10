@@ -1,0 +1,302 @@
+<div class="col-md-12" *ngIf="!check1||!check2||!check3">
+    <div class="loader"></div>
+</div>
+<div class="col-md-12" *ngIf="check1&&check2&&check3">
+    <div class="card">
+        <div class="card-content table-responsive table-full-width" style="margin-left:2%">
+            <div class="row" style="margin-top:1%">
+                <h4 class="card-title" style="float:left">Thêm tài khoản {{roleName}}</h4>
+            </div>
+            <fieldset class="header-searche-user margin-left-0px">
+                <div class="dropdown col-xs-12 col-sm-6 col-md-4 margin-top-15 float-l">
+                    <a href="#" class="btn form-control dropdown-toggle custom w-100"
+                       data-toggle="dropdown">
+                        {{departmentsName}}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu " style="width: 100%">
+                        <li><a (click)="setDataOption('departments','')">Tất cả phòng ban</a>
+                        </li>
+                        <li><a *ngFor="let department of departments"
+                               (click)="setDataOption('departments',department)">{{department.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown col-xs-12 col-sm-6 col-md-4 margin-top-15 float-l">
+                    <a href="#" class="btn form-control dropdown-toggle custom w-100"
+                       data-toggle="dropdown">
+                        {{officePositionName}}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu " style="width: 100%">
+                        <li><a (click)="setDataOption('positions','')">Tất cả chức danh</a>
+                        <li><a *ngFor="let positions of officePositions"
+                               (click)="setDataOption('positions',positions)">{{positions.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-4 margin-top-15 float-l">
+                    <form class="input-group " (submit)="getListEmployees()">
+                        <input class="form-control " placeholder="Tìm kiếm" type="text " style=" background: #fff;"
+                               (input)="onSearchValueChange($event.target.value)">
+                        <span class="input-group-addon" style="cursor: pointer;background: #fff;"
+                              (click)="getListEmployees()">
+                            <i class="fa fa-search ">
+                           </i>
+                            </span>
+                    </form>
+                </div>
+
+            </fieldset>
+
+            <div class="table-responsive">
+                <table class="table tableBodyScroll course" style="padding: 25px;max-height: 800px;">
+                    <thead class="the">
+                    <tr class="tre">
+                        <th style="padding-left: 15px;">
+                            <div class="checkbox checkbox-custom"
+                                 *ngIf="dataRows.length>0">
+                                <input rel="tooltip" title="Chọn tất cả" data-original-title="Chọn tất cả"
+                                       type="checkbox"
+                                       *ngIf="isAll" checked
+                                       (change)="selectAllItem()">
+                                <input rel="tooltip" title="Chọn tất cả" data-original-title="Chọn tất cả"
+                                       type="checkbox"
+                                       *ngIf="!isAll"
+                                       (change)="selectAllItem()">
+                                <label></label>
+                                <!--{{initToolTip()}}-->
+                            </div>
+                        </th>
+
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Phòng ban</th>
+                        <th>Chức danh</th>
+
+                    </tr>
+                    </thead>
+                    <tbody *ngIf="!refreshListUser" style="width: 100%;height:100px">
+                    <tr class="tre">
+                        <td style="text-align:center;color:gray" colspan="5">
+                            <div class="loader"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody *ngIf="refreshListUser&&dataRows.length==0"
+                           style="width: 100%;height:100px">
+                    <tr class="tre">
+                        <td style="text-align:center;color:gray" colspan="5">
+                            <h5>Danh sách trống</h5>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                    <tbody *ngIf="refreshListUser&&dataRows.length>0">
+                    <tr class="tre" *ngFor="let row of dataRows; let i=index ">
+                        <td>
+                            <div class="checkbox checkbox-custom"
+                                 style="vertical-align: middle">
+                                <input style="vertical-align: middle" type="checkbox" checked
+                                       *ngIf="row.is_selected"
+                                       (change)="selectItemEmployee(row)">
+                                <input style="vertical-align: middle" type="checkbox" *ngIf="!row.is_selected"
+                                       (change)="selectItemEmployee(row)">
+                                <label style="vertical-align: middle"></label>
+                            </div>
+                        </td>
+                        <td style="text-align: left;">{{row.name}}</td>
+                        <td style="text-align: left;">{{row.email}}</td>
+                        <td style="text-align: left;">{{row.department}}</td>
+                        <td style="text-align: left;">{{row.position}}</td>
+                        <!--<td style="text-align: left;">{{row.job_status}}</td>-->
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <fieldset>
+                <div class="col-md-12" style="margin-bottom: 20px;margin-top: 20px">
+                    <div class="form-group">
+                        <fieldset>
+                            <div class="col-xs-6 col-sm-3 col-md-2">
+                                <button class="btn btn-info btn-fill btn-block" (click)="this.addRoleForUsers()">Lưu
+                                    thay
+                                    đổi
+                                </button>
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-2">
+                                <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+            </fieldset>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<!--<div class="col-md-12">-->
+<!--<div class="card">-->
+<!--<div class="card-content table-responsive table-full-width" style="margin-left:2%">-->
+<!--<div class="row" style="margin-top:1%">-->
+<!--<h4 class="card-title" style="float:left">Thêm tài khoản {{roleName}}</h4>-->
+<!--<div class="col-md-3 " style="float:left ">-->
+<!--<div class="input-group ">-->
+<!--<input class="form-control " placeholder="Search... " value=" " type="text "-->
+<!--(input)="onSearchChange($event.target.value)">-->
+<!--<span class="input-group-addon" style="cursor: pointer;"-->
+<!--(click)="actionSearch()">-->
+<!--<i class="fa fa-search "></i>-->
+<!--</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="table-responsive">-->
+<!--<table class="table" style="padding:20px">-->
+<!--<thead>-->
+<!--<tr>-->
+<!--<th class="col-md-1 ">-->
+<!--<div class="checkbox" style="margin-bottom: 0px;" *ngIf="UserTableData.dataRows.length>0">-->
+<!--<input id="checkbox2" type="checkbox" *ngIf="isAll" checked-->
+<!--(change)="selectItemIsAdmin(-1)">-->
+<!--<input id="checkbox2" type="checkbox" *ngIf="!isAll" (change)="selectItemIsAdmin(-1)">-->
+<!--<label style="margin-bottom: 0px;">All</label>-->
+<!--</div>-->
+<!--</th>-->
+
+<!--<th class="col-md-3 ">Mã nhân viên</th>-->
+<!--<th class="col-md-3 ">Email</th>-->
+<!--<th class="col-md-3 ">Tên nhân viên</th>-->
+<!--<th class="col-md-2"></th>-->
+
+
+<!--</tr>-->
+<!--</thead>-->
+<!--<tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">-->
+<!--<tr>-->
+<!--<td style="text-align:center;color:gray" colspan="5">-->
+<!--<div class="loader"></div>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--<tbody *ngIf="isLoadSuccess()&&UserTableData.dataRows.length==0" style="width: 100%;height:100px">-->
+<!--<tr>-->
+<!--<td style="text-align:center;color:gray" colspan="5">-->
+<!--<h5>Danh sách trống</h5>-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</tbody>-->
+<!--<tbody *ngIf="isLoadSuccess()&&UserTableData.dataRows.length>0">-->
+<!--<tr *ngFor="let u of UserTableData.dataRows; let i=index ">-->
+<!--<td class="col-md-1" *ngIf="isAll">-->
+<!--<div class="checkbox" style="vertical-align: middle">-->
+<!--<input id="checkbox2" style="vertical-align: middle" type="checkbox" checked-->
+<!--(change)="selectItemIsAdmin(u.id)">-->
+<!--<label style="vertical-align: middle"></label>-->
+<!--</div>-->
+<!--</td>-->
+<!--<td class="col-md-1" *ngIf="!isAll">-->
+<!--<div class="checkbox" style="vertical-align: middle">-->
+<!--<input id="checkbox2" style="vertical-align: middle" type="checkbox"-->
+<!--(change)="selectItemIsAdmin(u.id)">-->
+<!--<label style="vertical-align: middle"></label>-->
+<!--</div>-->
+<!--</td>-->
+<!--<td class="col-md-3 ">{{u.employee_code}}</td>-->
+<!--<td class="col-md-3 ">{{u.email}}</td>-->
+<!--<td class="col-md-3 ">{{u.name}}</td>-->
+<!--<td>-->
+<!--<div *ngIf="this.UserTableData.isThisRole[i].isThisRole ; then admin; else elseAdmin"></div>-->
+<!--<ng-template #admin>-->
+
+<!--<b class="col-md-2 ">{{roleName}}</b>-->
+<!--</ng-template>-->
+<!--<ng-template #elseAdmin>-->
+<!--<b class="col-md-2 "></b>-->
+<!--</ng-template>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--</table>-->
+<!--</div>-->
+<!--<fieldset class="pagination" *ngIf="totalUser > perPage">-->
+<!--<div class="col-md-12 " style="margin-bottom: 20px ">-->
+<!--<div style="padding-left:10px;font-size: 15px ">-->
+<!--<div class="form-group ">-->
+<!--<div style="float:left;margin-left:10px ">-->
+
+<!--<p style="margin-right:10px;color:gray">Hiển thị {{perPage}} trên {{totalUser}} mục</p>-->
+<!--</div>-->
+<!--<button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"-->
+<!--(click)="onChangPage(1,searchData)"-->
+<!--id="bt-show-advanced ">-->
+<!--<span class="ti-angle-double-left "></span>Đầu tiên-->
+<!--</button>-->
+<!--<button *ngIf="curentPage!==1"-->
+<!--style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"-->
+<!--id="bt-show-advanced " (click)="onChangPage(curentPage-1,searchData)">-->
+<!--<span class="ti-angle-left "></span>Trước-->
+<!--</button>-->
+
+<!--<div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">-->
+<!--<button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">-->
+<!--<span style="color:gray">{{pageIndex}}</span>-->
+<!--</button>-->
+<!--<button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"-->
+<!--(click)="onChangPage(pageIndex,searchData)">-->
+<!--<span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>-->
+<!--</button>-->
+
+<!--</div>-->
+<!--<button *ngIf="curentPage!==lastPage"-->
+<!--style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"-->
+<!--(click)="onChangPage(curentPage+1,searchData)">-->
+<!--Tiếp-->
+<!--<span class="ti-angle-right "></span>-->
+<!--</button>-->
+<!--<button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "-->
+<!--(click)="onChangPage(lastPage,searchData)"-->
+<!--id="bt-show-advanced ">Cuối cùng-->
+<!--<span class="ti-angle-double-right "></span>-->
+<!--</button>-->
+
+
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--</fieldset>-->
+<!--<fieldset>-->
+<!--<div class="col-md-12" style="margin-bottom: 20px;margin-top: 20px">-->
+<!--<div class="form-group">-->
+<!--<fieldset>-->
+<!--<div class="col-xs-6 col-sm-3 col-md-2" *ngIf="isChange">-->
+<!--<button class="btn btn-info btn-fill btn-block" (click)="addRoleForUsers()">Lưu thay-->
+<!--đổi-->
+<!--</button>-->
+<!--</div>-->
+<!--<div class="col-xs-6 col-sm-3 col-md-2">-->
+<!--<button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>-->
+<!--</div>-->
+
+<!--</fieldset>-->
+
+<!--</div>-->
+<!--</div>-->
+<!--</fieldset>-->
+
+
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+

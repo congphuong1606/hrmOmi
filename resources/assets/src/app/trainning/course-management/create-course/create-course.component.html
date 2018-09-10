@@ -1,0 +1,512 @@
+<div class="col-xs-12 align-center" *ngIf="!check1||!check2||!check3||!check4||!check5||!check6">
+    <div class="loader"></div>
+</div>
+<div class="col-md-12" *ngIf="check1&&check2&&check3&&check4&&check5&&check6">
+    <div class="card">
+        <div class="card-content">
+            <fieldset class="form-horizontal ng-untouched ng-pristine ng-valid">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-xs-12 control-label col-sm-offset-1"
+                               style="text-align: left; font-size: 25px">Thêm
+                            khóa học</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;widht:5px;">*</span>Khóa học</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-3 col-md-4 col-lg-3">
+                            <button class="form-control custom-focus" (click)="showModal('listCategoryCourse')">
+                                <span itemprop="name" style="float: left;">{{categoryCoursename}}</span>
+                                <span class="ti-angle-down" style="float: right;"></span></button>
+                            <span class="help-block text-danger">{{errorCourseCategory}}</span>
+                            <!--<input class="form-control" type="text" formControlName="course_name">-->
+                        </div>
+                        <div class="col-xs-6 col-sm-1 control-label">
+                            <label>
+                                <span style="color:red;widht:5px;">*</span>Phòng</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-3 col-md-4 col-lg-3">
+                            <button class="form-control custom-focus" (click)="showModal('rooms')">
+                                <span itemprop="name" style="float: left;">{{roomName}}</span>
+                                <span class="ti-angle-down" style="float: right;"></span></button>
+                            <span class="help-block text-danger">{{errorRoomCategory}}</span>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="nav-tabs-navigation" style="text-align: left">
+                        <div class="form-group" style="margin-bottom: 0px">
+                            <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                <label>
+                                    <span style="color:red;widht:5px;">*</span>Buổi học</label>
+                            </div>
+                            <div class="nav-tabs-wrapper"
+                                 style="float: left;margin-left: 0px;margin-right: 0px;margin-bottom: 0px;">
+                                <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+
+                                    <li *ngFor="let item of formG;let indexx=index"
+                                        [class.active]="item.session.active">
+                                        <a style="float: left">
+                                            <i data-toggle="tab" (click)="changeTab(item.id)"
+                                               style="font-style: normal;cursor: pointer">
+                                                <span class="text-danger" *ngIf="
+                                           item.session.error.errorStartTime !== '' ||
+                                           item.session.error.errorEndTime !== '' ||
+                                            item.session.error.errorUserIds !== ''||
+                                            (item.form.get('trainer').hasError('email') && item.form.get('trainer').touched)||
+                                           (!item.form.get('supporter').hasError('required')&&item.form.get('supporter').hasError('email') &&item.form.get('supporter').touched)" >
+                                                    !
+                                                </span>
+                                                {{item.session.name}}</i>
+                                            <i class="ti-close" style="color: red;margin-left: 5px;cursor: pointer"
+                                               (click)="removeSessionForm(item.id)"
+                                               *ngIf="item.session.id!=='session1'&&indexx===(formG.length-1)"></i>
+                                        </a>
+
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="nav-tabs-wrapper"
+                                 style="float: left;margin-top: 8px; margin-bottom: 0px;">
+                                <a class="btn btn-info  btn-icon btn-fill btn-xs"
+                                   style="margin-top: 0px;text-align: center;"
+                                   (click)="createFormG()" rel="tooltip" title="" *ngIf="formG.length<5"
+                                   data-original-title="">
+                                    <i class="ti-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="my-tab-content" class="tab-content text-center">
+                        <form action="/" class="tab-pane" *ngFor="let item of formG;let index=index " autocomplete="off"
+                              [class.active]="item.session.active"
+                              id="{{item.session.id}}" method="get" novalidate=""
+                              [formGroup]="item.form">
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-xs-6 col-sm-2 col-md-2 control-label col-sm-offset-1 align-left">
+                                        <label>
+                                            <span style="color:red;width:5px;">*</span>Từ lúc</label>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-md-4 col-lg-3">
+                                        <input class="form-control"
+                                               style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                               type="text"
+                                               placeholder="{{numDate | date :'dd-MM-yyyy HH:mm'}}"
+                                               formControlName="start_datetime"
+                                               id="start_datetime_{{item.session.id}}">
+                                        <span class="help text-danger" style="float: left">{{item.session.error.errorStartTime}}</span>
+                                        {{initDatePicker('start_datetime_', item.session.id,item.id)}}
+                                    </div>
+
+                                    <div class=" col-xs-6 col-sm-2 col-md-1 control-label col-sm-offset-1 col-md-offset-0 align-left">
+                                        <label>
+                                            <span style="color:red;width:5px;">*</span>Đến</label>
+                                    </div>
+                                    <div class=" col-xs-12  col-sm-7 col-md-4 col-lg-3">
+                                        <input class="form-control"
+                                               style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                               type="text"
+                                               placeholder="{{numDate | date :'dd-MM-yyyy HH:mm'}}"
+                                               formControlName="end_datetime"
+                                               id="end_datetime_{{item.session.id}}">
+                                        <span class="help text-danger" style="float: left">{{item.session.error.errorEndTime}}</span>
+                                        {{initDatePicker('end_datetime_', item.session.id,item.id)}}
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                        <label>
+                                            <span style="color:red;widht:5px;">*</span>Người thực hiện</label>
+                                    </div>
+                                    <div class="col-sm-10 col-md-9 col-lg-7">
+                                        <input class="form-control" type="text"
+                                               placeholder="@ex: phuongnv@ominext.com"
+                                               formControlName="trainer"
+                                        list="datalist-trainer"
+                                        (input)="dataService.searchEmail($event.target.value)" >
+                                        <datalist id="datalist-trainer">
+                                            <option  *ngFor="let email of dataService.datalistEmail" value="{{email.email}}">
+                                        </datalist>
+                                        <span class="help-block text-danger text-left"
+                                              *ngIf="item.form.get('trainer').hasError('required') && item.form.get('trainer').touched">Email không được bỏ trống.</span>
+                                        <span class="help-block text-danger text-left"
+                                              *ngIf="!item.form.get('trainer').hasError('required') &&item.form.get('trainer').hasError('email') && item.form.get('trainer').touched">Email không đúng định dạng.</span>
+
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                        <label>
+                                            <span style="color:red;widht:5px;"></span>Người hỗ trợ</label>
+                                    </div>
+                                    <div class="col-sm-10 col-md-9 col-lg-7">
+                                        <input class="form-control" type="text"
+                                               placeholder="@ex: phuongnv@ominext.com; vietnq@ominext.com"
+                                               formControlName="supporter">
+                                        <span class="help-block text-danger text-left"
+                                              *ngIf="!item.form.get('supporter').hasError('required') &&item.form.get('supporter').hasError('email') && item.form.get('supporter').touched">Email không đúng định dạng.</span>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-xs-12 control-label col-sm-offset-1" style="text-align: left;">
+                                        <label style="margin-left:5px">Nội dung buổi học</label>
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-sm-9 col-md-11 col-lg-9 control-label col-sm-offset-1"
+                                         style="text-align: left;">
+                                    <textarea class="form-control"
+                                              placeholder="Thêm nội dung chi tiết , người dùng sẽ biết được thông tin của khóa học này"
+                                              maxlength="191"
+                                              formControlName="content"
+                                              name="content" rows="3"></textarea>
+                                        <!--<span class="help text-danger">{{item.session.error.errorContent}}</span>-->
+
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group" style="text-align: left;">
+                                    <div class="control-label col-sm-offset-1"
+                                         style="text-align: left;display: inline-block">
+                                        <label style="margin-left:5px">Học viên tham gia</label>
+                                    </div>
+                                    <span>(</span>
+                                    <span>{{item.userSelecteds.length}}</span>
+                                    <span>)</span>
+
+                                    <a class="btn btn-info  btn-icon btn-fill btn-sm"
+                                       style="margin-left:15px;margin-top: 0px;text-align: center"
+                                       (click)="showModalSelect(item.id)"
+                                       rel="tooltip" title=""
+                                       data-original-title="Tùy chỉnh">
+                                        <i class="ti-pencil"></i>
+                                    </a>
+                                    <span class="help text-danger" style="margin-left: 60px">{{item.session.error.errorUserIds}}</span>
+
+                                </div>
+
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-sm-10 control-label col-sm-offset-1">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+
+                                                <tr>
+                                                    <th class="padding-left-5px align-left">STT</th>
+                                                    <th class="padding-left-5px align-left">Họ tên</th>
+                                                    <th class="padding-left-5px align-left">Email</th>
+                                                    <th class="padding-left-5px align-left">Phòng ban</th>
+                                                    <!--<th class="col-md-2 ">trạng thái</th>-->
+                                                    <!--<th class="col-md-1 " style="text-align: center">Xóa</th>-->
+
+                                                </tr>
+                                                </thead>
+                                                <tbody *ngIf="item.userSelecteds.length==0"
+                                                       style="width: 100%;height:100px">
+                                                <tr>
+                                                    <td style="text-align:center;color:gray" colspan="4">
+                                                        <h5>Danh sách trống</h5>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                                <tbody *ngIf="item.userSelecteds.length>0">
+
+                                                <tr *ngFor="let row of item.userSelecteds;let i = index">
+                                                    <td class="padding-left-5px align-left">
+                                                        {{i+1}}
+                                                    </td>
+                                                    <td class="padding-left-5px align-left">
+                                                        {{row.name}}
+                                                    </td>
+                                                    <td class="padding-left-5px align-left">{{row.email}}
+                                                    </td>
+                                                    <td class="padding-left-5px align-left">{{row.department}}
+                                                    </td>
+
+
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <fieldset class="pagination" *ngIf="total > perPage">
+                                            <div class="col-md-12 " style="margin-bottom: 20px ">
+                                                <div style="padding-left:10px;font-size: 15px ">
+                                                    <div class="form-group ">
+                                                        <div style="float:left;margin-left:10px ">
+
+                                                            <p style="margin-right:10px;color:gray">Hiển thị
+                                                                {{perPage}}
+                                                                trên {{total}} mục</p>
+                                                        </div>
+                                                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                                                (click)="onChangPage(1,searchData)"
+                                                        >
+                                                            <span class="ti-angle-double-left "></span>Đầu tiên
+                                                        </button>
+                                                        <button *ngIf="curentPage!==1"
+                                                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+
+                                                                (click)="onChangPage(curentPage-1,searchData)">
+                                                            <span class="ti-angle-left "></span>Trước
+                                                        </button>
+
+                                                        <div *ngFor="let pageIndex of arrayPage"
+                                                             style="float:left;margin-left:10px">
+                                                            <button style="border:none;   background:transparent"
+                                                                    *ngIf="pageIndex===curentPage">
+                                                                <span style="color:gray">{{pageIndex}}</span>
+                                                            </button>
+                                                            <button style="border:none; background:transparent;"
+                                                                    *ngIf="pageIndex!==curentPage"
+                                                                    (click)="onChangPage(pageIndex,searchData)">
+                                                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                                                            </button>
+
+                                                        </div>
+                                                        <button *ngIf="curentPage!==lastPage"
+                                                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                                                (click)="onChangPage(curentPage+1,searchData)">
+                                                            Tiếp
+                                                            <span class="ti-angle-right "></span>
+                                                        </button>
+                                                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                                                (click)="onChangPage(lastPage,searchData)"
+                                                        >Cuối cùng
+                                                            <span class="ti-angle-double-right "></span>
+                                                        </button>
+
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+
+                    </div>
+
+
+                </fieldset>
+
+
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-12 col-sm-offset-1" style="margin-bottom: 20px">
+        <div class="row">
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <button class="btn btn-info btn-fill btn-block" (click)="createCourse()">Thêm mới
+                </button>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Bỏ qua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="selectEmployees" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 75%">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm đối tượng đào tạo cho khóa học</h4>
+            </div>
+            <div class="modal-body">
+                <fieldset
+                        style="margin-left: 1%;margin-right: 1%;background-color: #f4f4f4 ;border: 1px solid #cacaca;border-radius: 5px;padding: 20px">
+
+                    <div class="dropdown col-xs-12 col-sm-6 col-md-4" style="float: left">
+                        <a href="#" class="btn form-control dropdown-toggle custom   "
+                           data-toggle="dropdown">
+                            {{departmentsName}}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu w-100">
+                            <li><a (click)="setDataOption('departments','')">Tất cả phòng ban</a>
+                            </li>
+                            <li><a *ngFor="let department of departments"
+                                   (click)="setDataOption('departments',department)">{{department.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown col-xs-12 col-sm-6 col-md-4" style="float: left">
+                        <a href="#" class="btn form-control dropdown-toggle custom" style="width: 100%"
+                           data-toggle="dropdown">
+                            {{officePositionName}}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu " style="width: 100%">
+                            <li><a (click)="setDataOption('positions','')">Tất cả chức danh</a>
+                            <li><a *ngFor="let positions of officePositions"
+                                   (click)="setDataOption('positions',positions)">{{positions.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4" style="float: left;">
+                        <form class="input-group" (submit)="actionSearchValue()">
+                            <input class="form-control " placeholder="Tìm kiếm" type="text " style=" background: #fff;"
+                                   (input)="onSearchValueChange($event.target.value)">
+                            <span class="input-group-addon" style="cursor: pointer;background: #fff;"
+                                  (click)="actionSearchValue()">
+                            <i class="fa fa-search ">
+                           </i>
+                            </span>
+                        </form>
+                    </div>
+
+                </fieldset>
+
+                <div class="table-responsive">
+                    <table class="table tableBodyScroll course" style="padding: 25px">
+                        <thead class="the">
+                        <tr class="tre">
+                            <th class="checkt">
+                                <div class="checkbox checkbox-custom"
+                                     *ngIf="dataRows.length>0">
+                                    <input type="checkbox" *ngIf="isAll" checked
+                                           (change)="selectAllItem()">
+                                    <input type="checkbox" *ngIf="!isAll"
+                                           (change)="selectAllItem()">
+                                    <label></label>
+                                </div>
+                            </th>
+
+                            <th class="padding-left-5px">Họ tên</th>
+                            <th class="padding-left-5px">Email</th>
+                            <th class="padding-left-5px">Phòng ban</th>
+                            <th class="padding-left-5px"> Chức danh</th>
+                            <!--<th> Trạng thái</th>-->
+
+
+                        </tr>
+                        </thead>
+                        <tbody *ngIf="!loadUsersSuccess" style="width: 100%;height:100px">
+                        <tr class="tre">
+                            <td style="text-align:center;color:gray" colspan="5">
+                                <div class="loader"></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody *ngIf="loadUsersSuccess&&dataRows.length==0"
+                               style="width: 100%;height:100px">
+                        <tr class="tre">
+                            <td style="text-align:center;color:gray" colspan="5">
+                                <h5>Danh sách trống</h5>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                        <tbody *ngIf="loadUsersSuccess&&dataRows.length>0" style="max-height: 700px;overflow: auto">
+                        <tr *ngFor="let row of dataRows; let i=index " class="tre">
+                            <td class="checkt">
+                                <div class="checkbox checkbox-custom"
+                                     style="vertical-align: middle">
+                                    <input style="vertical-align: middle" type="checkbox" checked
+                                           *ngIf="row.is_selected"
+                                           (change)="selectItemEmployee(row)">
+                                    <input style="vertical-align: middle" type="checkbox" *ngIf="!row.is_selected"
+                                           (change)="selectItemEmployee(row)">
+                                    <label style="vertical-align: middle"></label>
+                                </div>
+                            </td>
+                            <td class="padding-left-5px align-left">{{row.name}}</td>
+                            <td class="padding-left-5px align-left">{{row.email}}</td>
+                            <td class="padding-left-5px align-left">{{row.department}}</td>
+                            <td class="padding-left-5px align-left">{{row.position}}</td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-fill" data-dismiss="modal"
+                        (click)="saveUserSelected()">Lưu
+                    lại
+                </button>
+
+                <button type="button" class="btn btn-default btn-fill" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalList">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" *ngIf="typeModal==='listCategoryCourse'">Chọn loại khóa học</h5>
+                <h5 class="modal-title" *ngIf="typeModal==='rooms'">Chọn phòng học</h5>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" style="height:400px">
+                <div *ngIf="listOfmodal.length===0" style="width:100%;height:100%;text-align:center">
+                    <h5 class="modal-title" style="margin-top:50px;color:rgb(185, 184, 184)">Chưa có khóa học được
+                        tạo</h5>
+                </div>
+                <div class="vertical-menu" *ngIf="listOfmodal.length>0" style="height: 400px;">
+                    <ul class="list-group" style="margin:3px;" *ngFor="let item of listOfmodal; let i = index">
+                        <li class="list-group-item" style="cursor:pointer;text-align:left" (click)="selectItem(item)"
+                            data-dismiss="modal">
+                            {{item.name}}
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info btn-fill" type="button" *ngIf="typeModal==='rooms'" data-dismiss="modal"
+                        (click)="gotoCateGoryOther('room')">Tùy chỉnh
+                </button>
+                <button class="btn btn-info btn-fill" type="button" *ngIf="typeModal==='listCategoryCourse'"
+                        data-dismiss="modal"
+                        (click)="gotoCateGoryOther('course')">Tùy chỉnh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

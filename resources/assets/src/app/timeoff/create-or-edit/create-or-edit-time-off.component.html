@@ -1,0 +1,646 @@
+<div class="align-center loader" *ngIf="loadDataTimeOff"></div>
+<div class="col-md-12" *ngIf="!loadDataTimeOff">
+    <div class="card" *ngIf="this.pramRouter.type==='di-muon-ve-som'">
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate=""
+                  autocomplete="off"
+                  [formGroup]="formTimeOffLate">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-8 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Đi
+                            muộn/Về sớm/Ra ngoài</label>
+                        <span class="col-xs-12 col-sm-offset-1" *ngIf="this.showAnTimOff.id !== undefined"
+                              style="color: #d58512">(Cập nhật đơn xin phép của {{' '+ this.showAnTimOff.employee_full_name}})</span>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left" style="text-align: left;">
+                            <label><span style="color:red;width:5px;">*</span>Kiểu loại</label>
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="timeOffType1" type="radio" [value]="1" formControlName="status">
+                            <label for="timeOffType1">Đi muộn</label>
+                        </div>
+
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="timeOffType2" type="radio" [value]="2" formControlName="status">
+                            <label for="timeOffType2">Về sớm</label>
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="timeOffType3" type="radio" [value]="3" formControlName="status">
+                            <label for="timeOffType3">Ra ngoài</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Ngày vắng mặt</label>
+                        </div>
+
+                        <div class="col-xs-8 col-sm-4 col-md-3" style="padding-right: 5px;">
+                            <input class="form-control datetimepicker" type="text"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                   placeholder="{{numDate | date :'yyyy/MM/dd'}}" formControlName="day_of_absence"
+                                   id="day-of-absence">
+                            {{dataGlobalService.initInputDatePicker('day-of-absence',[0, 6])}}
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Từ lúc</label>
+                        </div>
+                        <div class="col-xs-8 col-sm-3 col-md-2" style="padding-right: 5px;">
+                            <input class="form-control datetimepicker" type="text"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                   placeholder="{{numDate | date :'HH:mm'}}" formControlName="time_start_of_absence"
+                                   id="time-start-of-absence">
+                            {{dataGlobalService.initInputTimePicker('time-start-of-absence')}}
+                        </div>
+
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Đến lúc</label>
+                        </div>
+                        <div class="col-xs-8 col-sm-3 col-md-2" style="padding-right: 5px;">
+                            <input class="form-control datetimepicker" type="text"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                   placeholder="{{numDate | date :'HH:mm'}}" formControlName="time_end_of_absence"
+                                   id="time-end-of-absence">
+                            {{dataGlobalService.initInputTimePicker('time-end-of-absence')}}
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- <fieldset>
+                     <div class="form-group">
+                         <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                             <label>
+                                 <span style="color:red;width:5px;">*</span>Email của trưởng dự án</label>
+                         </div>
+                         <div class="col-xs-8 col-sm-6 col-md-4 ">
+                             <input class="form-control" type="text" placeholder="@ex:phuongnv@ominext.com"
+
+                                    formControlName="project_manger" (focus)="focusFuntion(1)"
+                                    id="pemail"
+                                    (keyup)="focusOutFunctionblur(1,$event)"
+                                    (focusout)="focusOutFunction(1)"
+                                    maxlength="191"
+                                    list="data-list-project_manger"
+                                    (input)="dataGlobalService.searchEmail($event.target.value)">
+                             <datalist id="data-list-project_manger">
+                                 <option *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">
+                             </datalist>
+
+                             <span *ngIf="focusOut1&&name1!==''"
+                                   style="color: #d58512;margin-left: 18px">({{name1}})</span>
+                             <span *ngIf="focusOut1&&name1===''&&!formTimeOffLate.get('project_manger').hasError('email')"
+                                   class="text-danger">Email không tồn tại!</span>
+                             <span class="help-block text-danger"
+                                   *ngIf="formTimeOffLate.get('project_manger').hasError('required') && formTimeOffLate.get('project_manger').touched">Email không được bỏ trống!</span>
+                             <span class="help-block text-danger"
+                                   *ngIf="!formTimeOffLate.get('project_manger').hasError('required') &&formTimeOffLate.get('project_manger').hasError('email') && formTimeOffLate.get('project_manger').touched">Email không đúng định dạng!</span>
+
+                         </div>
+                     </div>
+
+                 </fieldset>
+                 <fieldset>
+                     <div class="form-group">
+                         <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                             <label>
+                                 <span style="color:red;width:5px;">*</span>Email của trưởng nhóm</label>
+                         </div>
+
+                         <div class="col-xs-8 col-sm-6 col-md-4 ">
+                             <input class="form-control" type="text" placeholder="@ex:phuongnv@ominext.com"
+                                    formControlName="team_leader"
+                                    (focus)="focusFuntion(2)"
+                                    id="lemail"
+                                    (keyup)="focusOutFunctionblur(2,$event)"
+                                    (focusout)="focusOutFunction(2)"
+                                    maxlength="191"
+                                    list="data-list-team_leader"
+                                    (input)="dataGlobalService.searchEmail($event.target.value)">
+                             <datalist id="data-list-team_leader">
+                                 <option *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">
+                             </datalist>
+
+                             <span *ngIf="focusOut2&&name2!==''"
+                                   style="color: #d58512;margin-left: 18px">({{name2}})</span>
+                             <span *ngIf="focusOut2&&name2===''&&!formTimeOffLate.get('team_leader').hasError('email')"
+                                   class="text-danger">Email không tồn tại!</span>
+                             <span class="help-block text-danger"
+                                   *ngIf="formTimeOffLate.get('team_leader').hasError('required') && formTimeOffLate.get('team_leader').touched">Email không được bỏ trống.</span>
+                             <span class="help-block text-danger"
+                                   *ngIf="!formTimeOffLate.get('team_leader').hasError('required') &&formTimeOffLate.get('team_leader').hasError('email') && formTimeOffLate.get('team_leader').touched">Email không đúng định dạng.</span>
+
+                         </div>
+                     </div>
+
+                 </fieldset>-->
+                <fieldset>
+                    <div class="form-group">
+
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Người làm thay công việc</label>
+                        </div>
+
+                        <div class="col-xs-8 col-sm-6 col-md-4">
+                            <input class="form-control" type="text" placeholder="@ex:phuongnv@ominext.com"
+                                   formControlName="backup_person"
+                                   id="bemail"
+                                   (keyup)="focusOutFunctionblur(3,$event)"
+                                   (focus)="focusFuntion(3)"
+                                   (focusout)="focusOutFunction(3)"
+                                   maxlength="191"
+                                   list="data-list-backup_person"
+                                   (input)="dataGlobalService.searchEmail($event.target.value)">
+                            <datalist id="data-list-backup_person">
+                                <option *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">
+                            </datalist>
+
+                            <span *ngIf="focusOut3&&name3!==''"
+                                  style="color: #d58512;margin-left: 15px">({{name3}})</span>
+                            <span *ngIf="focusOut3&&name3===''&&!formTimeOffLate.get('backup_person').hasError('email')"
+                                  class="text-danger">Email không tồn tại!</span>
+                            <span class="help-block text-danger"
+                                  *ngIf="formTimeOffLate.get('backup_person').hasError('required') && formTimeOffLate.get('backup_person').touched">Email không được bỏ trống.</span>
+                            <span class="help-block text-danger"
+                                  *ngIf="!formTimeOffLate.get('backup_person').hasError('required') &&formTimeOffLate.get('backup_person').hasError('email') && formTimeOffLate.get('backup_person').touched">Email không đúng định dạng.</span>
+
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Lý do vắng mặt</label>
+                        </div>
+
+                        <div class=" dropdown col-xs-8 col-sm-6 col-md-4">
+                            <a href="#" class="btn form-control dropdown-toggle custom " style="width: 100%"
+                               data-toggle="dropdown">
+                                <b style=" left: 15px;right: 15%!important;font-weight:  unset;float: left;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{showAnTimOff.reason===undefined
+                                    ? listReason[0]:showAnTimOff.reason}}</b>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu w-100">
+                                <li><a *ngFor="let reson of listReason"
+                                       (click)="setReason(reson)">{{reson}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Điền rõ lý do</label>
+                        </div>
+
+                        <div class="col-sm-7" style="text-align: left;">
+                                    <textarea class="form-control" placeholder="Chi tiểt lý do vắng mặt" maxlength="191"
+                                              formControlName="detailed_reason" rows="2">
+                                    </textarea>
+                            <span class="help-block text-danger"
+                                  *ngIf="formTimeOffLate.get('detailed_reason').hasError('required') && formTimeOffLate.get('detailed_reason').touched">Không thể bỏ trống.</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset *ngIf="this.formTimeOffLate.get('status').value!==4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                        </div>
+                        <div class="radio control-label  col-xs-12  col-sm-4  align-left margin-left-15px">
+                            <input id="flow-ot" type="radio" [value]="0" formControlName="flow_type">
+                            <label for="flow-ot">Trừ vào phép OT (Số ngày còn lại {{dayOffAccumulatedOtTemp}})</label>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.formTimeOffLate.get('status').value!==4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                        </div>
+
+                        <div class="radio control-label col-xs-12  col-sm-4  align-left margin-left-15px">
+                            <input id="flow-nghi-phep" type="radio" [value]="1" formControlName="flow_type">
+                            <label for="flow-nghi-phep">Trừ vào phép năm (Số ngày còn lại
+                                {{dayOffAccumulatedPermitTemp}})</label>
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="listApproverEmail.trim()!==''">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                            <label>
+                                Người duyệt đơn</label>
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-8 align-left">
+                            <p>{{listApproverEmail}}</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+            </form>
+        </div>
+
+        <fieldset>
+            <div class="form-group">
+                <div class="col-md-12 col-sm-offset-3 " style=" margin-bottom: 170px;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-2  col-lg-1 margin-top-15" style="min-width: 150px">
+                            <button class="btn btn-success btn-fill btn-block"
+                                    [disabled]="formTimeOffLate.invalid||this.dataGlobalService.btnIsloading()||name3===''"
+                                    (click)="submit()">{{pramRouter.id===''? 'Gửi đơn': 'Cập nhật'}}
+                            </button>
+                        </div>
+                        <div class="col-xs-12 loader-custom-import margin-top-15"
+                             *ngIf="this.dataGlobalService.btnIsloading()"></div>
+
+                        <div class="col-xs-12 col-sm-2  col-lg-1 margin-top-15" style="min-width: 150px">
+                            <button class="btn btn-info btn-fill btn-block" (click)="deleteTimeOff()"
+                                    [disabled]="pramRouter.id===''||this.isDeleteTimeOff">Xóa
+                            </button>
+                        </div>
+                        <div class="col-xs-12 loader-custom-import margin-top-15" *ngIf="this.isDeleteTimeOff"></div>
+                        <div class="col-xs-12 col-sm-2  col-lg-1 margin-top-15" style="min-width: 150px">
+                            <button class="btn btn-default btn-fill btn-block" (click)="goToBeforeScreen()">Bỏ qua
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+
+    <div class="card" *ngIf="this.pramRouter.type==='nghi-phep'">
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate=""
+                  autocomplete="off"
+                  [formGroup]="formTimeOffLate2">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-8 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Đăng
+                            ký nghỉ theo ngày</label>
+                        <span class="col-xs-12 col-sm-offset-1" *ngIf="this.showAnTimOff.id !== undefined"
+                              style="color: #d58512">(Cập nhật đơn xin phép của {{' '+ this.showAnTimOff.employee_full_name}})</span>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Kiểu loại</label>
+                        </div>
+
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="timeOffType5" type="radio" [value]="5" formControlName="status2">
+                            <label for="timeOffType5">Một ngày</label>
+                        </div>
+
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="timeOffType6" type="radio" [value]="6" formControlName="status2">
+                            <label for="timeOffType6">Nhiều ngày</label>
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="timeOffType4" type="radio" [value]="4" formControlName="status2">
+                            <label for="timeOffType4">Quên chấm công</label>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label *ngIf="this.formTimeOffLate2.get('status2').value===5">
+                                <span style="color:red;width:5px;">*</span>Ngày vắng mặt</label>
+                            <label *ngIf="this.formTimeOffLate2.get('status2').value===4">
+                                <span style="color:red;width:5px;">*</span>Ngày quên</label>
+                            <label *ngIf="this.formTimeOffLate2.get('status2').value===6">
+                                <span style="color:red;width:5px;">*</span>Vắng mặt từ ngày</label>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3" style="padding-right: 5px;"
+                             *ngIf="this.formTimeOffLate2.get('status2').value!==6">
+                            <input class="form-control" type="text" placeholder="{{numDate | date :'dd/MM/yyyy'}}"
+                                   formControlName="start_time_of_absence2"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                   id="start-time-of-absence245">
+                            {{dataGlobalService.initInputDatePicker('start-time-of-absence245',[0, 6])}}
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3" style="padding-right: 5px;"
+                             *ngIf="this.formTimeOffLate2.get('status2').value===6">
+                            <input class="form-control" type="text" placeholder="{{numDate | date :'dd/MM/yyyy'}}"
+                                   formControlName="start_time_of_absence2"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                   id="start-time-of-absence26">
+                            {{dataGlobalService.initInputDatePicker('start-time-of-absence26',[0, 6])}}
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.formTimeOffLate2.get('status2').value===6">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                            <label class="text-left">
+                                <span style="color:red;width:5px;">*</span>Vắng mặt đến ngày</label>
+                        </div>
+
+                        <div class="col-xs-6 col-sm-4 col-md-3" style="padding-right: 5px;">
+                            <input class="form-control " type="text"
+                                   placeholder="{{numDate | date :'dd/MM/yyyy'}}"
+                                   formControlName="end_time_of_absence2"
+                                   style="text-align: left;cursor: pointer;background-color: #F3F2EE;"
+                                   id="end-time-of-absence2">
+                            {{dataGlobalService.initInputDatePicker('end-time-of-absence2',[0, 6])}}
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.formTimeOffLate2.get('status2').value===4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+
+                        </div>
+
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="forget_type0" type="radio" [value]="0" formControlName="forget_type">
+                            <label for="forget_type0">Quên check-in</label>
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-2 align-left margin-left-15px">
+                            <input id="forget_type1" type="radio" [value]="1" formControlName="forget_type">
+                            <label for="forget_type1">Quên check-out</label>
+                        </div>
+
+                    </div>
+                    <style>
+                        .radio:first-child {
+                            margin-top: unset;
+                        }
+                    </style>
+
+                </fieldset>
+
+                <!--  <fieldset>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                                            <label>
+                                                <span style="color:red;width:5px;">*</span>Email trưởng dự án</label>
+                                        </div>
+                                        <div class="col-xs-8 col-sm-6 col-md-4">
+                                            <input class="form-control" type="text" placeholder="@ex: thanhnc@ominext.com"
+                                                   formControlName="project_manger2" (focus)="focusFuntion(1)"
+                                                   id="pemail2"
+                                                   (keyup)="focusOutFunctionblur(1,$event)"
+                                                   (focusout)="focusOutFunction(1)"
+                                                   maxlength="191"
+                                                   list="data-list-project_manger2"
+                                                   (input)="dataGlobalService.searchEmail($event.target.value)">
+                                            <datalist id="data-list-project_manger2">
+                                                <option *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">
+                                            </datalist>
+
+                                            <span *ngIf="focusOut1&&name1!==''"
+                                                  style="color: #d58512;margin-left: 18px">({{name1}})</span>
+                                            <span *ngIf="focusOut1&&name1===''&&!formTimeOffLate2.get('project_manger2').hasError('email')"
+                                                  class="text-danger">Email không tồn tại!</span>
+                                            <span class="help-block text-danger"
+                                                  *ngIf="formTimeOffLate2.get('project_manger2').hasError('required') && formTimeOffLate2.get('project_manger2').touched">Email không được bỏ trống.</span>
+                                            <span class="help-block text-danger"
+                                                  *ngIf="!formTimeOffLate2.get('project_manger2').hasError('required') &&formTimeOffLate2.get('project_manger2').hasError('email') && formTimeOffLate2.get('project_manger2').touched">Email không đúng định dạng.</span>
+
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                                            <label> <span style="color:red;width:5px;">*</span>Email trưởng phòng</label>
+                                        </div>
+
+                                        <div class="col-xs-8 col-sm-6 col-md-4">
+                                            <input class="form-control" type="text" placeholder="@ex: tinhvv@ominext.com"
+                                                   formControlName="team_leader2" (focus)="focusFuntion(2)"
+                                                   id="lemail2"
+                                                   (keyup)="focusOutFunctionblur(2,$event)"
+                                                   (focusout)="focusOutFunction(2)"
+                                                   maxlength="191"
+                                                   list="data-list-team_leader2"
+                                                   (input)="dataGlobalService.searchEmail($event.target.value)">
+                                            <datalist id="data-list-team_leader2">
+                                                <option *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">
+                                            </datalist>
+
+                                            <span *ngIf="focusOut2&&name2!==''"
+                                                  style="color: #d58512;margin-left: 18px">({{name2}})</span>
+                                            <span *ngIf="focusOut2&&name2===''&&!formTimeOffLate2.get('team_leader2').hasError('email')"
+                                                  class="text-danger">Email không tồn tại!</span>
+                                            <span class="help-block text-danger"
+                                                  *ngIf="formTimeOffLate2.get('team_leader2').hasError('required') && formTimeOffLate2.get('team_leader2').touched">Email không được bỏ trống.</span>
+                                            <span class="help-block text-danger"
+                                                  *ngIf="!formTimeOffLate2.get('team_leader2').hasError('required') &&formTimeOffLate2.get('team_leader2').hasError('email') && formTimeOffLate2.get('team_leader2').touched">Email không đúng định dạng.</span>
+
+                                        </div>
+                                    </div>
+
+                                </fieldset>-->
+
+                <fieldset *ngIf="this.formTimeOffLate2.get('status2').value!==4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Người làm thay công việc</label>
+                        </div>
+
+                        <div class="col-xs-8 col-sm-6 col-md-4">
+                            <input class="form-control" type="text" placeholder="@ex:phuongnv@ominext.com"
+                                   formControlName="backup_person2" (focus)="focusFuntion(3)"
+                                   id="bemail2"
+                                   (keyup)="focusOutFunctionblur(3,$event)"
+                                   (focusout)="focusOutFunction(3)"
+                                   maxlength="191"
+                                   list="data-list-backup_person2"
+                                   (input)="dataGlobalService.searchEmail($event.target.value)">
+                            <datalist id="data-list-backup_person2">
+                                <option *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">
+                            </datalist>
+
+                            <span *ngIf="focusOut3&&name3!==''"
+                                  style="color: #d58512;margin-left: 18px">({{name3}})</span>
+                            <span *ngIf="focusOut3&&name3===''&&!formTimeOffLate2.get('backup_person2').hasError('email')"
+                                  class="text-danger">Email không tồn tại!</span>
+                            <span class="help-block text-danger"
+                                  *ngIf="formTimeOffLate2.get('backup_person2').hasError('required') && formTimeOffLate2.get('backup_person2').touched">Email không được bỏ trống.</span>
+                            <span class="help-block text-danger"
+                                  *ngIf="!formTimeOffLate2.get('backup_person2').hasError('required')&&formTimeOffLate2.get('backup_person2').hasError('email') && formTimeOffLate2.get('backup_person2').touched">Email không đúng định dạng.</span>
+
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset *ngIf="this.formTimeOffLate2.get('status2').value!==4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Lý do vắng mặt</label>
+                        </div>
+                        <div class=" dropdown col-xs-8 col-sm-6 col-md-4">
+                            <a href="#" class="btn form-control dropdown-toggle custom " style="width: 100%"
+                               data-toggle="dropdown">
+                                <b style=" left: 15px;right: 15%!important;font-weight:  unset;float: left;
+                                text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{showAnTimOff.reason===undefined
+                                    ? listReason[0]:showAnTimOff.reason}}</b>
+
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu w-100">
+                                <li><a *ngFor="let reson of listReason"
+                                       (click)="setReason(reson)">{{reson}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                            <label *ngIf="!type4">
+                                <span style="color:red;width:5px;">*</span>Điền rõ lý do</label>
+                            <label *ngIf="type4">
+                                <span style="color:red;width:5px;">*</span>Lý do không check in/out</label>
+                        </div>
+
+                        <div class="col-sm-7" style="text-align: left;">
+                                    <textarea class="form-control" placeholder="Chi tiểt lý do vắng mặt" maxlength="191"
+                                              formControlName="detailed_reason2" rows="2">
+
+                                    </textarea>
+                            <span class="help-block text-danger"
+                                  *ngIf="formTimeOffLate2.get('detailed_reason2').hasError('required') && formTimeOffLate2.get('detailed_reason2').touched">Không thể bỏ trống.</span>
+
+
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.formTimeOffLate2.get('status2').value!==4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-4 align-left margin-left-15px">
+                            <input id="flow-ot2" type="radio" [value]="0" formControlName="flow_type2">
+                            <label for="flow-ot2">Trừ vào phép OT (Số ngày còn lại {{dayOffAccumulatedOtTemp}})</label>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.formTimeOffLate2.get('status2').value!==4">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-4 align-left margin-left-15px">
+                            <input id="flow-nghi-phep2" type="radio" [value]="1" formControlName="flow_type2">
+                            <label for="flow-nghi-phep2">Trừ vào phép năm ( Số ngày còn lại
+                                {{dayOffAccumulatedPermitTemp}})</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="listApproverEmail.trim()!==''">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1 align-left">
+                            <label>
+                                Người duyệt đơn</label>
+                        </div>
+                        <div class="radio control-label  col-xs-12 col-sm-8 align-left">
+                            <p>{{listApproverEmail}}</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+            </form>
+        </div>
+
+        <fieldset>
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-offset-3 " style="margin-bottom: 170px;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 margin-top-15" style="min-width: 150px"
+                             *ngIf="this.formTimeOffLate2.get('status2').value===4">
+                            <button class="btn btn-success btn-fill btn-block" (click)="submit()"
+                                    [disabled]="this.dataGlobalService.btnIsloading()
+                                    ||formTimeOffLate2.get('detailed_reason2').hasError('required')"
+                            >{{pramRouter.id===''? 'Gửi đơn': 'Gửi lại'}}
+                            </button>
+                        </div>
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 margin-top-15" style="min-width: 150px"
+                             *ngIf="this.formTimeOffLate2.get('status2').value!==4">
+                            <button class="btn btn-success btn-fill btn-block "
+                                    [disabled]="formTimeOffLate2.invalid || this.dataGlobalService.btnIsloading()||name3===''"
+                                    (click)="submit()">{{pramRouter.id===''? 'Gửi đơn': 'Gửi lại'}}
+                            </button>
+                        </div>
+                        <div class="col-xs-12 loader-custom-import margin-top-15"
+                             *ngIf="this.dataGlobalService.btnIsloading()"></div>
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 margin-top-15" style="min-width: 150px">
+                            <button class="btn btn-info btn-fill btn-block" (click)="deleteTimeOff()"
+                                    [disabled]="pramRouter.id===''||this.isDeleteTimeOff">Xóa
+                            </button>
+                        </div>
+                        <div class="col-xs-12 loader-custom-import margin-top-15" *ngIf="this.isDeleteTimeOff"></div>
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 margin-top-15 " style="min-width: 150px">
+                            <button class="btn btn-default btn-fill btn-block" (click)="goToBeforeScreen()">Bỏ qua
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+
+    </div>
+
+
+</div>

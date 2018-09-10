@@ -1,0 +1,208 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-8 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Thêm
+                            danh mục màn hình</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Nhóm màn hình</label>
+                        </div>
+                        <fieldset class="col-sm-5">
+
+                            <select class="form-control" id="select1"
+                                    style="width:85%;padding:8px 15px;float:left;margin-top:0px;border-radius:4px 0px 0px 4px;border-right:0px"
+                                    #selectElem (change)="setCategorySelect(selectElem.value)">
+                                <option *ngFor="let scategory of categorys"
+                                        [selected]="scategory.id === body.screen_category_id" [value]="scategory.id"
+                                        style="padding:8px 15px;">
+                                    {{scategory.name}}
+                                </option>
+                            </select>
+
+                            <button class="form-control"
+                                    style="width:15%; padding:0px;float:right;border-radius:0px 4px 4px 0px; border-left:0px;background-color:#E7E6E4"
+                                    data-toggle="modal" data-target="#myModal">
+                                Tùy chỉnh
+                            </button>
+
+
+                        </fieldset>
+
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Tên màn hình</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input class="form-control" [(ngModel)]="body.name" maxlength="50" name="screen-name"
+                                   maxlength="50" placeholder="@Example: Quản lý phân quyền"
+                                   type="text">
+
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span> Đường dẫn</label>
+                        </div>
+
+                        <fieldset class="col-sm-5">
+                            <input class="form-control" [(ngModel)]="body.url" name="screen-url" maxlength="191"
+                                   style="width:85%;float:left;margin-top:0px;border-radius:4px 0px 0px 4px;border-right:0px"
+                                   placeholder="@Example: danh-muc/them-danh-muc-man-hinh" type="text">
+
+                            <button class="form-control"
+                                    style="width:15%; padding:0px;float:right;border-radius:0px 4px 4px 0px; border-left:0px;background-color:#E7E6E4"
+                                    data-toggle="modal" data-target="#listUrl">
+                                Thêm
+                            </button>
+
+                        </fieldset>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label style="margin-left:5px">Mô tả</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-7 control-label col-sm-offset-1" style="text-align: left;">
+                                    <textarea class="form-control" maxlength="191"
+                                              placeholder="@Example: Quản lý phân quyền là màn hình mà cho phép admin có thể thêm các quyền cho một user"
+                                              [(ngModel)]="body.description" name="screen-des" rows="3"></textarea>
+
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-3 control-label col-sm-offset-1" style="text-align: left;">
+                            <span style="color:red">{{errorMsg}}</span>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-offset-1" style="margin-bottom: 20px">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="updateScreen()">Lưu thay
+                                        đổi
+                                    </button>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="onQuit()">Bỏ qua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Nhóm màn hình</h5>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" style="height:200px">
+                <div *ngIf="categorys.length===0" style="width:100%;height:100%;text-align:center">
+
+                    <h3 class="modal-title" style="margin-top:50px;color:rgb(185, 184, 184)">Chưa có nhóm màn hình nào
+                        được tạo !!</h3>
+                </div>
+
+                <div class="vertical-menu" *ngIf="categorys.length>0" style="height: 200px;">
+                    <ul class="list-group" style="margin:3px;" *ngFor="let scategory of categorys; let i = index">
+                        <li class="list-group-item" style="padding-left:50px;">{{scategory.name}}
+                            <a rel="tooltip" title="delete" style="float:right;text-align:right;"
+                               class="btn btn-danger btn-simple btn-xs" (click)="deleteScreenCategory(scategory)">
+                                <i class="fa fa-close" style="font-size: 15px"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" (click)="createScrCategory()">Tạo mới</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="listUrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Toàn bộ url</h5>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" style="height:400px">
+                <div *ngIf="urls.length===0" style="width:100%;height:100%;text-align:center">
+                    <h5 class="modal-title" style="margin-top:50px;color:rgb(185, 184, 184)">Chưa có Url !!</h5>
+                </div>
+
+                <div class="vertical-menu" *ngIf="urls.length>0" style="height: 400px;">
+                    <ul class="list-group" style="margin:3px;" *ngFor="let url of urls; let i = index">
+                        <li class="list-group-item" style="cursor:pointer;text-align:left" (click)="selectItem(url)"
+                            data-dismiss="modal">
+                            {{url}}
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

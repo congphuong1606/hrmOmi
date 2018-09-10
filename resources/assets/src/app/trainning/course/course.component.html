@@ -1,0 +1,180 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title col-xs-8 col-sm-6 col-md-4">Danh sách</h4>
+            <div class="dropdown col-xs-12 col-sm-4 col-md-3 col-lg-2 float-r" style="min-width: 250px;">
+                <a href="#" class="btn btn-success btn-fill dropdown-toggle w-100" data-toggle="dropdown">
+                    {{textDefault}}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu w-100">
+                    <li><a class="cusor-point" (click)="getData('&&own=1','Tất cả khóa học của tôi')">Tất cả khóa học
+                        của tôi </a>
+                    </li>
+                    <li><a class="cusor-point" (click)="getData('&&own=1&&completed=0', 'Chưa hoàn thành')">Chưa hoàn
+                        thành</a></li>
+                    <li><a class="cusor-point" (click)="getData('&&own=1&&completed=1', 'Đã hoàn thành')">Đã hoàn
+                        thành</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Tên khóa hoc</th>
+                    <th>Mô tả</th>
+                    <th>Phòng học</th>
+                    <th class="text-center">Tham gia/Tổng số buổi</th>
+                    <th>Điểm</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows" class="course-status-{{row.status?'1':'0'}}">
+                    <td style="padding-right: 0px;padding-left: 0px"><span *ngIf="row.status"
+                                                                           class="ti-check"
+                                                                           style="color: #68B3C8;margin-left: 5px"
+                                                                           rel="tooltip" title="Đã học"></span></td>
+                    <!--<td *ngIf="!row.status" style="color: #68B3C8;padding-right: 0px;padding-left: 0px"></td>-->
+                    <td> {{row.course_name}}</td>
+                    <td>{{row.description}}</td>
+                    <td>{{row.room_name}}</td>
+                    <td class="text-center">
+                        <span class="cusor-point" (click)="showModalSession(row)">{{row.required_session_number}}/{{row.sessions_number}}</span>
+                        <span (click)="showModalSession(row)"
+                              style="cursor: pointer;font-size: 18px;color: #68B3C8"
+                              rel="tooltip" title=""
+                              data-original-title="Xem chi tiết các buổi học"><i
+                                class="ti-eye"></i> </span>
+
+                    </td>
+                    <td>{{row.score!==''?row.score:'Chưa có điểm'}}</td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <fieldset class="pagination" *ngIf="total > perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray">Hiển thị
+                                {{dataRows.length}}
+                                trên {{total}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1)">
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="currentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(currentPage-1)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage"
+                             style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent"
+                                    *ngIf="pageIndex===currentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;"
+                                    *ngIf="pageIndex!==currentPage"
+                                    (click)="onChangPage(pageIndex)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+                        <button *ngIf="currentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(currentPage+1)">
+                            Tiếp
+                            <span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage)"
+                        >Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+
+</div>
+
+<div class="modal fade" id="sessionList">
+    <div class="modal-dialog" style=" width: 80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Các buổi học của khóa học</h5>
+            </div>
+            <div class="modal-body" style="height:400px">
+                <div class="table-responsive">
+                    <table class="table" style="padding:20px">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Người dạy</th>
+                            <th class="text-center">Nội dung</th>
+                            <th class="text-center">Lúc bắt đầu</th>
+                            <th class="text-center">Lúc kết thúc</th>
+                            <th class="text-center">Phải tham gia</th>
+                            <th class="text-center">Điểm danh</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let row of this.curentCourseSelected.sessions;let i=index">
+                            <td class="text-center"> {{row.trainer}}</td>
+                            <td class="text-center">{{row.content }}</td>
+                            <td class="text-center">{{dataService.convertDateTIme(row.start_datetime)}}</td>
+                            <td class="text-center">{{dataService.convertDateTIme(row.end_datetime)}}</td>
+                            <td class="text-center" *ngIf="row.required_session">Có
+                            </td>
+                            <td class="text-center" *ngIf="!row.required_session">Không
+                            </td>
+                            <td class="align-center w-180px" *ngIf="row.presence===1"><a
+                                    class="text-success"> <i class="ti-check"></i></a></td>
+                            <td class="align-center w-180px" *ngIf="row.presence===0"><a
+                                    class="text-danger"> <i class="ti-na"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info btn-fill" type="button" disabled
+                >Xin đổi buổi
+                </button>
+                <button class="btn  btn-default btn-fill" type="button"
+                        data-dismiss="modal">Đóng
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+

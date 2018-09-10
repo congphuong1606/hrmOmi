@@ -1,0 +1,241 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách đăng ký làm ngoài giờ</h4>
+
+        </div>
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th>Dự án</th>
+                    <th>Ngày tạo</th>
+                    <!--<th>Người đề xuất</th>-->
+                    <!--<th>Người duyệt</th>-->
+                    <th>Số người</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center">Tùy chỉnh</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="8">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="8">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows ; let i = index">
+                    <!-- {{dataRows.date}} -->
+                    <td>{{row.project_name}}</td>
+                    <td>{{row.created_at}}</td>
+                    <!--<td>{{row.proposer}}</td>-->
+                    <!--<td>{{row.approver}}</td>-->
+                    <td>{{row.amount}}</td>
+                    <td *ngIf="row.approved===1" style="padding:0px">Đã duyệt <br><span
+                            style="font-size: 10px;color: gray">{{row.updated_at}}</span>
+                    </td>
+                    <td *ngIf="row.approved===2" style="color:rgb(219, 28, 28);padding:0px">
+                        <button id="bt-rule" rel="tooltip" title="{{row.approved_reason}}"
+                                style="text-align: left;border:none;font: size 16px; background:transparent;
+                                        padding-left:0px;margin-left:0px;cursor: default;">Bị từ chối <br><span
+                                style="font-size: 10px;color: gray">{{row.updated_at}}</span>
+                        </button>
+                    </td>
+
+                    <td *ngIf="row.approved===0" style="color:rgb(160, 158, 158)">Chờ duyệt</td>
+
+
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem lại" class="btn btn-info btn-simple btn-xs"
+                           (click)="reviewOT(row.id)">
+                            <i class="ti-file" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Không thể sửa" class="btn btn-default btn-simple btn-xs"
+                           *ngIf="row.approved===1"
+                           style="cursor: default;"><i class="fa fa-pencil" style="font-size: 18px"></i>
+                        </a>
+                        <a rel="tooltip" title="Sửa" class="btn btn-success btn-simple btn-xs"
+                           *ngIf="row.approved===0||row.approved===2"
+                           (click)="gotoUpdate(row)">
+                            <i class="fa fa-pencil" style="font-size: 18px"></i>
+                        </a>
+                        <a rel="tooltip" title="Không thể xóa" class="btn btn-default btn-simple btn-xs"
+                           *ngIf="row.approved===1||row.approved===2">
+                            <i class="fa fa-trash" style="font-size: 18px;"></i>
+                        </a>
+
+                        <a rel="tooltip" title="Xóa" class="btn btn-danger btn-simple btn-xs" *ngIf="row.approved===0"
+                           (click)="delete(row)">
+                            <i class="fa fa-trash" style="font-size: 18px"></i>
+                        </a>
+
+
+                    </td>
+
+
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <fieldset class="pagination" *ngIf="total >perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray">Hiển thị {{perPage}} trên {{totalTimeOff}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1)"
+                                id="bt-show-advanced ">
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="curentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                id="bt-show-advanced" (click)="onChangPage(curentPage-1)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"
+                                    (click)="onChangPage(pageIndex)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+                        <button *ngIf="curentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(curentPage+1)">
+                            Tiếp
+                            <span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage)"
+                                id="bt-show-advanced ">Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="creatTimeOff()">Đăng ký</button>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="reviewOT">
+    <div class="modal-dialog" style="width: 90%" *ngIf="otInfor!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin làm ngoài giờ</h5>
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table class="w-100">
+                    <tbody>
+                    <tr class="align-center">
+                        <td>
+                            <p><strong>CÔNG TY CỔ PHẦN OMINEXT</strong></p>
+                            <p><strong>Dự án: {{otInfor.other_category.name}}</strong></p>
+                            <hr class="w-30 align-center">
+                        </td>
+                        <!--<td>-->
+                        <!--<p><strong>CÔNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong></p>-->
+                        <!--<p><strong>Độc lập - Tự do - Hạnh phúc</strong></p>-->
+                        <!--<hr class="w-30 align-left">-->
+                        <!--</td>-->
+                    </tr>
+                    </tbody>
+                </table>
+                <fieldset style="margin-left: 1%">
+                    <p><strong></strong></p>
+                    <p class="align-center"><strong style="font-size: 20px;">PHIẾU ĐĂNG KÝ LÀM NGOÀI GIỜ</strong></p>
+                    <p></p>
+                    <p>- Ngày đăng ký: {{otInfor.created_at}}.</p>
+                    <p *ngIf="otInfor.details!==undefined">- Số lượng nhân viên làm ngoài giờ:
+                        {{otInfor.details.length}} người</p>
+                    <p>- Nội dung chi tiết:</p>
+                </fieldset>
+
+                <fieldset style="margin-left: 1%">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+
+                            <tr>
+                                <th></th>
+                                <th>Họ tên</th>
+                                <th>Nội dung công việc</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                                <th>Tổng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of otInfor.details;let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{item.user.name}}</td>
+                                <td>{{item.content}}</td>
+                                <td>{{convertDateTime(item.start_datetime)}}</td>
+                                <td>{{convertDateTime(item.end_datetime)}}</td>
+                                <td>{{item.time}} giờ</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset style="margin-left: 1%">
+
+                    <label class="text-danger">Ghi chú:</label><br>
+                    <span> - Phiếu đăng ký làm ngoài giờ gửi về Phòng Hành chính – Nhân sự tổng hợp trước 16h hàng
+                                ngày.</span><br>
+                    <span> - Trong trường hợp phát sinh công việc ngoài kế hoạch, Lãnh đạo Phòng phải bổ sung và
+                                gửi về Phòng Hành chính – Nhân sự tổng hợp vào sáng ngày hôm sau. Những trường hợp làm
+                                ngoài giờ không có đăng ký thì không được tính ngoài giờ.</span><br>
+                    <span>- Phiếu yêu cầu làm ngoài giờ hợp lệ do Lãnh đạo phòng đăng ký và có phê duyệt của Giám
+                                đốc Công ty.</span>
+                </fieldset>
+
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-fill" type="button" data-dismiss="modal"
+                >Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

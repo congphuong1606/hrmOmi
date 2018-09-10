@@ -1,0 +1,272 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Lịch sử đăng ký</h4>
+
+        </div>
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <!---->
+                    <th>Loại đơn</th>
+                    <th>Từ lúc</th>
+                    <th>đến lúc</th>
+                    <th>Thời gian</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center">Tùy chỉnh</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows ; let i = index">
+                    <td *ngIf="row.status===4&&row.forget_type===0">Quên check-in</td>
+                    <td *ngIf="row.status===4&&row.forget_type===1">Quên check-out</td>
+                    <td *ngIf="row.status===5">Một ngày</td>
+                    <td *ngIf="row.status===6">Nhiều ngày</td>
+                    <td *ngIf="row.status!==4">{{row.from_date.split(' ')[0]}}</td>
+                    <td *ngIf="row.status!==4">{{row.to_date.split(' ')[0]}}</td>
+                    <td *ngIf="row.status===4">--- --- --- ---</td>
+                    <td *ngIf="row.status===4">--- --- --- ---</td>
+                    <td>{{row.status!==4? row.number_of_days : 'Ngày ' + row.from_date.split(' ')[0]}}</td>
+                    <td *ngIf="row.approved===0" style="color:rgb(160, 158, 158)">Chờ duyệt</td>
+                    <td *ngIf="row.approved===1" style="padding:0px">Đã duyệt <br><span
+                            style="font-size: 10px;color: gray">{{row.updated_at}}</span>
+                    </td>
+                    <td *ngIf="row.approved===2" style="color:rgb(219, 28, 28);padding:0px">
+                        <button id="bt-rule" rel="tooltip" title="{{row.approved_reason}}"
+                                style="text-align: left;border:none;font: size 16px; background:transparent;
+                                        padding-left:0px;margin-left:0px;cursor: default;">Bị từ chối <br><span
+                                style="font-size: 10px;color: gray">{{convertDateTime(row.updated_at)}}</span>
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem chi tiết" class="btn btn-info btn-simple btn-xs"
+                           (click)="showInforTimeOff(row)">
+                            <i class="ti-file" style="font-size: 15px"></i>
+                        </a>
+                        <a class="btn btn-default btn-simple btn-xs" style="cursor: default;" *ngIf="row.approved===1">
+                            <i class="fa fa-pencil" style="font-size: 18px"></i>
+                        </a>
+                        <a class="btn btn-success btn-simple btn-xs" *ngIf="row.approved===0||row.approved===2"
+                           (click)="gotoUpdate(row)">
+                            <i class="fa fa-pencil" style="font-size: 18px"></i>
+                        </a>
+                        <a class="btn btn-default btn-simple btn-xs" *ngIf="row.approved===1||row.approved===2">
+                            <i class="fa fa-trash" style="font-size: 18px;"></i>
+                        </a>
+                        <a class="btn btn-danger btn-simple btn-xs" (click)="delete(row)" *ngIf="row.approved===0">
+                            <i class="fa fa-trash" style="font-size: 18px"></i>
+                        </a>
+                    </td>
+
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <fieldset class="pagination" *ngIf="totalDayOff >perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray">Hiển thị {{perPage}} trên {{totalDayOff}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1,searchData)"
+                                id="bt-show-advanced ">
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="curentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                id="bt-show-advanced " (click)="onChangPage(curentPage-1,searchData)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"
+                                    (click)="onChangPage(pageIndex,searchData)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+
+                        <button *ngIf="curentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(curentPage+1,searchData)">
+                            Tiếp
+                            <span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage,searchData)"
+                                id="bt-show-advanced ">Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+
+</div>
+
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="creatTimeOff()">Đăng ký</button>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="inforDayOff">
+    <div class="modal-dialog" style="width:50%" *ngIf="timOffInfor!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin vắng mặt</h5>
+
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table width="100%">
+                    <tbody>
+
+                    <!--<tr class="info-time-off">-->
+                    <!--<td style="width: 10%"></td>-->
+                    <!--<td class="infor-lable">Họ tên</td>-->
+                    <!--<td class="infor-content">{{timOffInfor}}</td>-->
+                    <!--<td style="width: 10%"></td>-->
+                    <!--</tr>-->
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Trạng thái</td>
+                        <td class="infor-content" *ngIf="timOffInfor.approved===0">Đang chờ duyệt</td>
+                        <td class="infor-content" *ngIf="timOffInfor.approved===1">Đã được chấp nhận</td>
+                        <td class="infor-content" *ngIf="timOffInfor.approved===2">Đã bị từ chối</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.approved===2">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Thông báo từ chối</td>
+                        <td class="infor-content">{{timOffInfor.approved_reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <br>
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Kiểu loại</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===4&&timOffInfor.forget_type===0">Quên
+                            check-in
+                        </td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===4&&timOffInfor.forget_type===1">Quên
+                            check-out
+                        </td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===5">Một ngày</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===6">Nhiều ngày</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===1">Đi muộn</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===2">Về sớm</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===3">Ra ngoài</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4&&timOffInfor.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Từ lúc</td>
+                       <!-- <td class="infor-content">{{timOffInfor.from_date}}</td>-->
+                        <td class="infor-content">{{timOffInfor.status!==6? timOffInfor.from_date : timOffInfor.from_date.split(' ')[0]}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4&&timOffInfor.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Đến lúc</td>
+                        <td class="infor-content">{{timOffInfor.status!==6? timOffInfor.to_date : timOffInfor.to_date.split(' ')[0]}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status===4 || timOffInfor.status===5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Ngày</td>
+                        <td class="infor-content">{{timOffInfor.to_date.split(' ')[0]}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Loại lí do</td>
+                        <td class="infor-content">{{timOffInfor.reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Chi tiết lí do</td>
+                        <td class="infor-content">{{timOffInfor.detailed_reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Tổng thời gian</td>
+                        <td class="infor-content">{{timOffInfor.number_of_days}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Người làm thay công việc</td>
+                        <td class="infor-content">{{timOffInfor.backup_person}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <!--<tr class="info-time-off">-->
+                    <!--<td class="infor-lable">Tổng thời gian</td>-->
+                    <!--<td class="infor-content">{{timOffInfor.number_of_times}}</td>-->
+                    <!--</tr>-->
+
+                    </tbody>
+                    <style>
+                        td.infor-lable {
+                            width: 30%;
+                            color: #504b4b;
+                            font-weight: bold;
+                        }
+
+                        td.infor-content {
+                            width: 50%;
+                        }
+
+                    </style>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,798 @@
+<div class="col-md-12" id="statistics-screen">
+
+    <div class="card">
+        <div class="card-header" style="display: flow-root;">
+            <h4 class="card-title float-l header-timeoff">Danh sách thống kê ({{request.month}}/{{request.year}})</h4>
+            <h5 class="float-l" style="color: #e3e3e3;cursor: not-allowed;"
+                *ngIf="isImportFile||defaultType==='overtime'">Import</h5>
+            <h5 class="float-l" style="color: #b25825;cursor: pointer;text-decoration: underline;"
+                *ngIf="!isImportFile&&defaultType!=='overtime'"
+                (click)="showImportForm()">Import</h5>
+            <div class="dropdown col-xs-12  col-md-3 col-lg-2 float-r padding-right-0px "
+            >
+                <a href="#" class="btn btn-success btn-fill dropdown-toggle w-100 padding-left-0 padding-right-0px"
+                   id="lable-dropdown"
+                   data-toggle="dropdown">
+                    {{titleDropdownDefault}}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu w-100">
+                    <li><a class="cusor-point" (click)="refreshData('timeoff','Các đơn xin vắng mặt')">Các đơn xin
+                        vắng mặt</a>
+                    </li>
+                    <li><a class="cusor-point" (click)="refreshData('overtime', 'Các đơn làm ngoài giờ')">Các đơn
+                        làm ngoài giờ</a></li>
+                </ul>
+            </div>
+            <div class=" float-r padding-left-15px" style="margin-bottom: 5px">
+                <button class=" col-xs-12  col-md-3 col-lg-2 btn btn-primary btn-fill" (click)="showAdvancedFiltering()"
+                        style="min-width: 150px"
+                >Lọc nâng cao
+                </button>
+
+            </div>
+            <form class=" float-r padding-left-15px" (submit)="getDataRows()" style="margin-bottom: 5px">
+                <input class="col-xs-12  col-md-3 btn btn-info  btn-fill" type="text" placeholder="Tìm kiếm"
+                       name="search"
+                       style="border-radius: 20px 0px 0px 20px; background-color: #f9f9f9;cursor: text;color: gray!important;"
+                       id="search-input-request-statistics">
+                <button class="btn btn-info btn-fill" (click)="getDataRows()" id="btn-search-input-request-statistics">
+                    <i class="fa fa-search"></i></button>
+            </form>
+
+
+        </div>
+        <div class="margin-top-15 margin-left-15px padding-right-15px">
+            <fieldset *ngIf="isImportFile" class="form-import-file margin-bottom-15px">
+
+                <button type="button" class="close margin-5px" (click)="closeFormImport()">&times;</button>
+                <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get"
+                      novalidate="" [formGroup]="importFileTimeOffForm">
+                    <div class="form-group" class="margin-top-15 center-hori">
+                        <div class="col-xs-12 col-sm-6 col-md-4 align-right">
+                            <span>file định dạng exel, ex: file_name.xlxs <br>(max 8mb) </span><br>
+
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 input-group">
+                            <input class="form-control ng-untouched ng-pristine ng-valid" type="file"
+                                   formControlName="fileTimeOff">
+                            <span class="input-group-addon cusor-point" style="background-color: linen;"
+                                  (click)="importFileTimeOff()"> <i
+                                    class="ti-export  text-primary " style="margin-right: 5px"></i>Nhập</span>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4">
+                            <div *ngIf="this.dataGlobalService.btnIsloading()"
+                                 class="loader-custom-import col-xs-4"></div>
+                        </div>
+                    </div>
+                </form>
+                <div class=" form-group ">
+                    <div class="col-xs-12 col-sm-6 col-md-4 align-right">
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 form-group" style="margin-left: -20px">
+                        <a class="cusor-point " *ngIf="!showHistory" (click)="showHistoryImport()">Lịch sử nhập <i
+                                class="ti-angle-down"></i></a>
+                        <div *ngIf="showHistory">
+                            <a class="cusor-point text-danger" (click)="showHistoryImport()">Đóng lịch sử <i
+                                    class="ti-angle-up"></i></a>
+                            <fieldset class="col-xs-12 margin-top-15" *ngFor="let file of timeOffExcelFiles"
+                                      style="background-color:#f0f0f0;margin-top: 2px; padding: 5px">
+                                <span class="col-xs-6 padding-0px"
+                                      style="text-decoration: underline;">{{file.name}}</span>
+                                <span class="col-xs-4 padding-0px align-right">{{file.created_at}}</span>
+                                <span class="col-xs-2  padding-0px align-right text-danger cusor-point"
+                                      (click)="deleteFileExel(file.id)">Xóa dữ liệu</span>
+                            </fieldset>
+                        </div>
+
+
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4"></div>
+
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="table-responsive" *ngIf="defaultType==='timeoff'">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>Tên nhân viên</th>
+                    <th>Email</th>
+                    <th>Từ lúc</th>
+                    <th>Đến lúc</th>
+                    <th>Kiểu loại</th>
+                    <th>Lý do</th>
+                    <th class="text-center">Tùy chỉnh</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!loadingData" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="8">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="loadingData&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="8">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="loadingData">
+
+                <tr *ngFor="let row of dataRows; let i = index" class="tb-dropdown row-approver-{{row.approved}}">
+                    <td class="dropdown">
+                        <a class="text-info  margin-left-3px " href="#" data-toggle="dropdown"
+                           *ngIf="row.approved===0"
+                           (click)="changeApprovevalue(row.approved)"><i
+                                class="ti-reload"></i></a>
+                        <a class="text-success margin-left-3px " href="#" data-toggle="dropdown"
+                           *ngIf="row.approved===1" (click)="changeApprovevalue(row.approved)"><i
+                                class="ti-check"></i></a>
+                        <a class="text-danger margin-left-3px " href="#" data-toggle="dropdown"
+                           *ngIf="row.approved===2" (click)="changeApprovevalue(row.approved)"><i
+                                class="ti-na"></i></a>
+                        <ul class="dropdown-menu showinrow">
+                            <div class="div-header">
+                                <h5>Thay đổi trạng thái</h5>
+                            </div>
+
+                            <div class="list-group">
+                                <li class="list-group-item radio ">
+                                    <input class="trigger-row_approved" type="radio" id="{{'row_approved_1-' + i}}"
+                                           [value]="1"
+                                           [(ngModel)]="approvedStatus">
+                                    <label class="trigger-row_approved w-100" for="{{'row_approved_1-' + i}}">Đồng
+                                        ý</label>
+                                </li>
+                                <li class="list-group-item radio ">
+                                    <input class="trigger-row_approved" type="radio" id="{{'row_approved_2-' + i}}"
+                                           [value]="2"
+                                           [(ngModel)]="approvedStatus">
+                                    <label class="trigger-row_approved w-100" for="{{'row_approved_2-' + i}}">Từ
+                                        chối </label>
+                                </li>
+                                <li class="list-group-item btn-save radio  " *ngIf="approvedStatus!==row.approved"
+                                    (click)="changeApprovedStatus(row.id)">
+                                    <h5 class="trigger-row_approved cusor-point ">Áp dụng</h5>
+                                </li>
+                                <li class="trigger-row_approved list-group-item btn-save radio " style="cursor:no-drop"
+                                    *ngIf="approvedStatus===row.approved">
+                                    <h5 class=" trigger-row_approved  " style="color: rgba(156,161,163,0.18)">Áp
+                                        dụng</h5>
+                                </li>
+                            </div>
+                        </ul>
+                    </td>
+
+                    <td> {{row.full_name}}</td>
+                    <td> {{row.email}}</td>
+                    <td *ngIf="row.status==1||row.status==2||row.status==3">
+                        {{row.start_datetime | date :'HH:mm dd-MM-yyyy'}}
+                    </td>
+                    <td *ngIf="row.status==1||row.status==2||row.status==3">
+                        {{row.end_datetime | date :'HH:mm dd-MM-yyyy'}}
+                    </td>
+                    <td *ngIf="row.status==5||row.status==6"> {{row.start_datetime | date :'dd-MM-yyyy'}}</td>
+                    <td *ngIf="row.status==5||row.status==6">{{row.end_datetime | date :'dd-MM-yyyy'}}</td>
+                    <td *ngIf="row.status===4">--- --- --- ---</td>
+                    <td *ngIf="row.status===4">--- --- --- ---</td>
+                    <td *ngIf="row.status===4&&row.forget_type===0">Quên check-in
+                        <br>
+                        <span style="font-size: 10px;color: gray">Ngày {{row.start_datetime | date :'dd-MM-yyyy'}}</span>
+                    </td>
+                    <td *ngIf="row.status===4&&row.forget_type===1">Quên check-out
+                        <br>
+                        <span style="font-size: 10px;color: gray">Ngày {{row.start_datetime | date :'dd-MM-yyyy'}}</span>
+                    </td>
+                    <td *ngIf="row.status===5">Một ngày</td>
+                    <td *ngIf="row.status===6">Nhiều ngày</td>
+                    <td *ngIf="row.status===1">Đi muộn</td>
+                    <td *ngIf="row.status===2">Về sớm</td>
+                    <td *ngIf="row.status===3">Ra ngoài</td>
+                    <td>
+                        <button rel="tooltip" title="{{row.detailed_reason}}"
+                                style="text-align: left;
+                                border:none;font: size 16px;
+                                background:transparent;
+                                padding-left:0px;
+                                margin-left:0px;
+                                cursor: default;">
+                            {{row.reason}}
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem chi tiết" class="btn btn-info btn-simple btn-xs"
+                           (click)="showInforTimeOff(row)">
+                            <i class="ti-file" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Cập nhật" class="btn btn-success btn-simple btn-xs"
+                           (click)="goToUpdateTimeOff(row.id,row.status)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Xóa" class="btn btn-danger btn-simple btn-xs"
+                           (click)="deleteTimeOff(row.id)">
+                            <i class="fa fa-trash" style="font-size: 15px"></i>
+                        </a>
+
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="table-responsive" *ngIf="defaultType==='overtime'">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>Người đề xuất</th>
+                    <th>Email</th>
+                    <th>Dự án</th>
+                    <th>Số người OT</th>
+                    <th>Thời gian xin</th>
+                    <th class="text-center">Tùy chỉnh</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!loadingData" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="7">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="loadingData&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="7">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="loadingData">
+                <tr *ngFor="let row of dataRows ; let i = index" class="tb-dropdown row-approver-{{row.approved}}">
+                    <td class="dropdown">
+                        <a class="text-info margin-left-3px " href="#" data-toggle="dropdown"
+                           *ngIf="row.approved===0"
+                           (click)="changeApprovevalue(row.approved)"><i
+                                class="ti-reload"></i></a>
+                        <a class="text-success margin-left-3px " href="#" data-toggle="dropdown"
+                           *ngIf="row.approved===1" (click)="changeApprovevalue(row.approved)"><i
+                                class="ti-check"></i></a>
+                        <a class="text-danger margin-left-3px " href="#" data-toggle="dropdown"
+                           *ngIf="row.approved===2" (click)="changeApprovevalue(row.approved)"><i
+                                class="ti-na"></i></a>
+                        <ul class="dropdown-menu ">
+                            <div class="div-header">
+                                <h5>Thay đổi trạng thái</h5>
+                            </div>
+
+                            <div class="list-group">
+                                <li class="list-group-item radio ">
+                                    <input class="trigger-row_approved" type="radio" id="{{'overtime_approved_1-' + i}}"
+                                           [value]="1"
+                                           [(ngModel)]="approvedStatus">
+                                    <label class="trigger-row_approved w-100" for="{{'overtime_approved_1-' + i}}">Đồng
+                                        ý</label>
+                                </li>
+                                <li class="list-group-item radio ">
+                                    <input class="trigger-row_approved" type="radio" id="{{'overtime_approved_2-' + i}}"
+                                           [value]="2"
+                                           [(ngModel)]="approvedStatus">
+                                    <label class="trigger-row_approved w-100" for="{{'overtime_approved_2-' + i}}">Từ
+                                        chối </label>
+                                </li>
+                                <li class="list-group-item btn-save radio  " *ngIf="approvedStatus!==row.approved"
+                                    (click)="changeApprovedStatus(row.id)">
+                                    <h5 class="trigger-row_approved cusor-point ">Áp dụng</h5>
+                                </li>
+                                <li class="trigger-row_approved list-group-item btn-save radio " style="cursor:no-drop"
+                                    *ngIf="approvedStatus===row.approved">
+                                    <h5 class=" trigger-row_approved  " style="color: rgba(156,161,163,0.18)">Áp
+                                        dụng</h5>
+                                </li>
+                            </div>
+                        </ul>
+                    </td>
+                    <td>{{row.proposer}}</td>
+                    <td>{{row.proposer_email}}</td>
+                    <td> {{row.project_name}}</td>
+                    <td>{{row.amount}}</td>
+                    <td>{{row.created_at}}</td>
+
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem chi tiết" class="btn btn-info btn-simple btn-xs"
+                           (click)="showInforOT(row.id)">
+                            <i class="ti-file" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Cập nhật" class="btn btn-success btn-simple btn-xs"
+                           (click)="goToUpdateOverTime(row)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Xóa" class="btn btn-danger btn-simple btn-xs"
+                           (click)="deleteOvertime(row)">
+                            <i class="fa fa-trash" style="font-size: 15px"></i>
+                        </a>
+
+
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <fieldset class="pagination" *ngIf="totalTimeOff > perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray ">Hiển thị {{perPage}} trên {{totalTimeOff}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1,searchData)"
+                        >
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="curentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(curentPage-1,searchData)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"
+                                    (click)="onChangPage(pageIndex,searchData)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+                        <button *ngIf="curentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(curentPage+1,searchData)">
+                            Tiếp
+                            <span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage,searchData)"
+                                id="bt-show-advanced ">Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="col-md-12" style="margin-bottom: 120px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="inforAllOT">
+    <div class="modal-dialog" style="width: 90%" *ngIf="otInfor!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin làm ngoài giờ</h5>
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table class="w-100">
+                    <tbody>
+                    <tr class="align-center">
+                        <td>
+                            <p><strong>CÔNG TY CỔ PHẦN OMINEXT</strong></p>
+                            <p><strong>Dự án: {{otInfor.other_category.name}}</strong></p>
+                            <hr class="w-30 align-center">
+                        </td>
+                        <!--<td>-->
+                        <!--<p><strong>CÔNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong></p>-->
+                        <!--<p><strong>Độc lập - Tự do - Hạnh phúc</strong></p>-->
+                        <!--<hr class="w-30 align-left">-->
+                        <!--</td>-->
+                    </tr>
+                    </tbody>
+                </table>
+                <fieldset style="margin-left: 1%">
+                    <p><strong></strong></p>
+                    <p class="align-center"><strong style="font-size: 20px;">PHIẾU ĐĂNG KÝ LÀM NGOÀI GIỜ</strong></p>
+                    <p></p>
+                    <p>- Ngày đăng ký: {{otInfor.created_at}}.</p>
+                    <p *ngIf="otInfor.details!==undefined">- Số lượng nhân viên làm ngoài giờ:
+                        {{otInfor.details.length}} người</p>
+                    <p>- Nội dung chi tiết:</p>
+                </fieldset>
+
+                <fieldset style="margin-left: 1%">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+
+                            <tr>
+                                <th></th>
+                                <th>Họ tên</th>
+                                <th>Nội dung công việc</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                                <th>Thời gian</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of otInfor.details;let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{item.user.name}}</td>
+                                <td>{{item.content}}</td>
+                                <td>{{convertDateTIme(item.start_datetime)}}</td>
+                                <td>{{convertDateTIme(item.end_datetime)}}</td>
+                                <td>{{item.time}} giờ</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset style="margin-left: 1%">
+
+                    <label class="text-danger">Ghi chú:</label><br>
+                    <span> - Phiếu đăng ký làm ngoài giờ gửi về Phòng Hành chính – Nhân sự tổng hợp trước 16h hàng
+                                ngày</span><br>
+                    <span> - Trong trường hợp phát sinh công việc ngoài kế hoạch, Lãnh đạo Phòng phải bổ sung và
+                                gửi về Phòng Hành chính – Nhân sự tổng hợp vào sáng ngày hôm sau. Những trường hợp làm
+                                ngoài giờ không có đăng ký thì không được tính ngoài giờ.</span><br>
+                    <span>- Phiếu yêu cầu làm ngoài giờ hợp lệ do Lãnh đạo phòng đăng ký và có phê duyệt của Giám
+                                đốc Công ty.</span>
+                </fieldset>
+
+
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button"
+                            (click)="approve(otInfor.id)" *ngIf="otInfor.approved!==1">Phê duyệt
+                    </button>
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button"
+                            (click)="refuse(otInfor.id)" *ngIf="otInfor.approved!==2">Từ chối
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="advanced-filtering">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" (click)="unAdvanced()"
+                        style="color: #b25825;text-shadow: unset; opacity:unset;font-size: unset" data-dismiss="modal">
+                    Bỏ lọc
+                </button>
+                <h3 class="modal-title">Lọc kết quả</h3>
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <div>
+                    <div>
+                        <section>
+                            <div>
+                                <h4>Trạng thái đơn</h4>
+                                <ul class="list-group">
+                                    <li class="list-group-item radio ">
+                                        <input type="radio" name="radio1approved" id="approved_4"
+                                               [(ngModel)]="request.approved" [value]="''">
+                                        <label class="w-100" for="approved_4">Tất cả</label>
+                                    </li>
+                                    <li class="list-group-item radio ">
+                                        <input type="radio" name="radio1approved" id="approved_0" [value]="0"
+                                               [(ngModel)]="request.approved">
+                                        <label class="w-100" for="approved_0"> Chưa được duyệt</label>
+                                    </li>
+                                    <li class="list-group-item radio ">
+                                        <input type="radio" name="radio1approved" id="approved_1" [value]="1"
+                                               [(ngModel)]="request.approved">
+                                        <label class="w-100" for="approved_1"> Đã được đồng ý</label>
+                                    </li>
+                                    <li class="list-group-item radio ">
+                                        <input type="radio" name="radio1approved" id="approved_2" [value]="2"
+                                               [(ngModel)]="request.approved">
+                                        <label class="w-100" for="approved_2"> Bị từ chối </label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="defaultType=='timeoff'">
+                                <h4>Kiểu loại</h4>
+                                <ul class="list-group">
+                                    <li class="list-group-item checkbox ">
+                                        <input type="checkbox" name="checkbox1" id="status_1"
+                                               [checked]="statusTimeOff[0]" (change)="selectStatus(0)">
+                                        <label class="w-100" for="status_1"> Đi muộn</label>
+                                    </li>
+                                    <li class="list-group-item checkbox ">
+                                        <input type="checkbox" name="checkbox1" id="status_2"
+                                               [checked]="statusTimeOff[1]" (change)="selectStatus(1)">
+                                        <label class="w-100" for="status_2">Về sớm</label>
+                                    </li>
+                                    <li class="list-group-item checkbox ">
+                                        <input type="checkbox" name="checkbox1" id="status_3"
+                                               [checked]="statusTimeOff[2]" (change)="selectStatus(2)">
+                                        <label class="w-100" for="status_3"> Ra ngoài</label>
+                                    </li>
+                                    <li class="list-group-item checkbox ">
+                                        <input type="checkbox" name="checkbox1" id="status_4"
+                                               [checked]="statusTimeOff[3]" (change)="selectStatus(3)">
+                                        <label class="w-100" for="status_4"> Quên chấm công</label>
+                                    </li>
+                                    <li class="list-group-item checkbox ">
+                                        <input type="checkbox" name="checkbox1" id="status_5"
+                                               [checked]="statusTimeOff[4]" (change)="selectStatus(4)">
+                                        <label class="w-100" for="status_5"> Nghỉ một ngày</label>
+                                    </li>
+                                    <li class="list-group-item checkbox ">
+                                        <input type="checkbox" name="checkbox1" id="status_6"
+                                               [checked]="statusTimeOff[5]" (change)="selectStatus(5)">
+                                        <label class="w-100" for="status_6"> Nghỉ nhiều ngày</label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="defaultType=='overtime'">
+                                <h4>Dự án</h4>
+                                <ul class="list-group margin-top-15">
+                                    <li class="list-group-item">
+                                        <div class="radio" style="padding-left: 12px">
+                                            <input type="radio" name="radio_project" id="project_all"
+                                                   [(ngModel)]="projectOption" [value]="'all'">
+                                            <label for="project_all">Tất cả dự án</label>
+                                        </div>
+
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="radio" style="display: initial;padding-left: 12px">
+                                            <input type="radio" name="Radio_project" id="project_option"
+                                                   [(ngModel)]="projectOption" [value]="'one'">
+                                            <label for="project_option">chọn dự án</label>
+                                        </div>
+                                        <div class="dropdown padding-left-15px margin-left-15px"
+                                             style="display: initial" *ngIf="projects.length>0">
+                                            <a href="#" class="dropdown-toggle  padding-left-15px " style="width: 100%"
+                                               data-toggle="dropdown">
+                                                {{projects[0].name}}
+                                                <b class="caret"></b>
+                                            </a>
+                                            <ul class="dropdown-menu " style="width: 100% ">
+                                                <li style="    max-height: 270px;
+                                                       overflow: auto;"><a class="align-center"
+                                                                           *ngFor="let project of projects"
+                                                                           (click)="setProjectSelected(project)">{{project.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div>
+                                <h4>Thời gian</h4>
+                                <ul class="list-group margin-top-15">
+                                    <li class="list-group-item">
+                                        <div class="checkbox" style="    display: initial;padding-left: 12px;">
+                                            <input type="checkbox" name="checkbox1" id="time_option" value="0">
+                                            <label for="time_option"> Tùy chỉnh</label>
+                                        </div>
+                                        <div style="    display: initial;padding-left: 12px;float: right">
+                                            <span for="month" class="padding-left-15px">Tháng</span>
+                                            <select name="month" id="option-month" class="w-60px">
+                                                <option *ngFor="let month of ['1','2','3','4','5','6','7','8','9','10','11','12']"
+                                                        [selected]="month === monthRequest"
+                                                        value="{{month}}">{{month}}
+                                                </option>
+                                            </select>
+                                            <span for="year" class="padding-left-15px">Năm</span>
+                                            <select name="year" id="option-year" class="w-60px">
+                                                <option *ngFor="let indexYear  of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"
+                                                        [selected]=" (2011+indexYear) + '' === yearRequest"
+                                                        value="(2011+indexYear) + ''">
+                                                    {{(2011+indexYear) + ''}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                        </section>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info btn-fill" type="button" (click)="reloadData()" data-dismiss="modal"
+                >Áp dụng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="inforTimeOffStatics">
+    <div class="modal-dialog" style="width:50%" *ngIf="timOffInfor!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin vắng mặt</h5>
+                <!--<p class="modal-title text-danger">(CR 06/07/2018: Cần thêm thời gian để desgin giao diện)</p>-->
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table width="100%">
+                    <tbody>
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Người gửi đơn:</h5></td>-->
+                    <!--</tr>-->
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Họ tên</td>
+                        <td class="infor-content">{{timOffInfor.full_name}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Email</td>
+                        <td class="infor-content">{{timOffInfor.email}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <br>
+                    <!--<tr class="info-time-off">-->
+                    <!--<td class="infor-lable">Ngày sinh</td>-->
+                    <!--<td class="infor-content">{{timOffInfor.info.birth_day}}</td>-->
+                    <!--</tr>-->
+
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Thông tin đơn:</h5></td>-->
+                    <!--</tr>-->
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Kiểu loại</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===4&&timOffInfor.forget_type===0">Quên
+                            check-in
+                        </td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===4&&timOffInfor.forget_type===1">Quên
+                            check-out
+                        </td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===5">Một ngày</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===6">Nhiều ngày</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===1">Đi muộn</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===2">Về sớm</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===3">Ra ngoài</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status===4||timOffInfor.status===5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Ngày</td>
+                        <td class="infor-content">{{timOffInfor.start_datetime | date :'dd/MM/yyyy'}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4&&timOffInfor.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Từ lúc</td>
+                        <td class="infor-content">{{timOffInfor.start_datetime | date : timOffInfor.status!==6 ?  'HH:mm dd/MM/yyyy' : 'dd/MM/yyyy' }}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4 && timOffInfor.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Đến lúc</td>
+                        <td class="infor-content">{{timOffInfor.end_datetime | date : timOffInfor.status!==6 ?  'HH:mm dd/MM/yyyy' : 'dd/MM/yyyy'}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Loại lí do</td>
+                        <td class="infor-content">{{timOffInfor.reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Chi tiết lí do</td>
+                        <td class="infor-content">{{timOffInfor.detailed_reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Thời gian vắng mặt</h5></td>-->
+                    <!--</tr>-->
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Tổng thời gian</td>
+                        <td class="infor-content">{{timOffInfor.number_of_times}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Người làm thay công việc</td>
+                        <td class="infor-content">{{timOffInfor.backup_person}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <!--<tr class="info-time-off">-->
+                    <!--<td class="infor-lable">Tổng thời gian</td>-->
+                    <!--<td class="infor-content">{{timOffInfor.number_of_times}}</td>-->
+                    <!--</tr>-->
+
+                    </tbody>
+                    <style>
+                        td.infor-lable {
+                            width: 30%;
+                            color: #504b4b;
+                            font-weight: bold;
+                        }
+
+                        td.infor-content {
+                            width: 50%;
+                        }
+
+                    </style>
+                </table>
+            </div>
+
+
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button"
+                            (click)="approve(timOffInfor.id)" *ngIf="timOffInfor.approved!==1">Phê duyệt
+                    </button>
+                    <button class="btn btn-danger btn-fill " data-dismiss="modal" type="button"
+                            (click)="refuse(timOffInfor.id)" *ngIf="timOffInfor.approved!==2">Từ chối
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

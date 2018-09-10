@@ -1,0 +1,399 @@
+<div class="loader" *ngIf="numDate===undefined||check1||check2||check4||check3||check5">
+
+</div>
+<div class="col-md-12" *ngIf="numDate!==undefined&&check1&&check2&&check4&&check3&&check5">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate=""
+            >
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-xs-12 control-label col-sm-offset-1" *ngIf="paramOvertimeId===''"
+                               style="text-align: left; font-size: 25px">Đăng
+                            ký đơn làm ngoài giờ</label>
+                        <label class="col-xs-12 control-label col-sm-offset-1" *ngIf="paramOvertimeId!==''"
+                               style="text-align: left; font-size: 25px">Cập nhật đơn làm ngoài giờ</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-2 control-label col-sm-offset-1 align-left margin-top-15 col-md-1"
+                             style="padding-right: 0px;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Dự án</label>
+                        </div>
+                        <div class="dropdown col-xs-12 col-sm-8 col-md-5 margin-top-15" style="float: left">
+                            <a href="#" class="btn form-control dropdown-toggle custom " style="width: 100%"
+                               data-toggle="dropdown">
+                                {{textDefault}}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu " style="width: 100%">
+                                <!--<li><a class="align-center" style="color: #68B3C8" (click)="setData('')"> <i-->
+                                <!--class="ti-pencil"></i> Tùy chỉnh</a>-->
+                                <!--</li>-->
+                                <li><a class="align-center" *ngFor="let project of projects"
+                                       (click)="setData(project)">{{project.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <!--<div class="col-xs-12 col-sm-2 col-sm-offset-1  col-md-offset-0 control-label align-left margin-top-15"-->
+                             <!--style="padding-right: 0px;">-->
+                            <!--<label>-->
+                                <!--<span style="color:red;width:5px;">*</span>Người duyệt</label>-->
+                        <!--</div>-->
+
+                        <!--<form class=" col-xs-12 col-sm-8 col-md-4  margin-top-15" autocomplete="off">-->
+                            <!--<input class="form-control" type="text" [(ngModel)]="approver" name="approver"-->
+                                   <!--placeholder="@ex:tinhvv@ominext.com"-->
+                                   <!--id="input-email-approver"-->
+                                   <!--(keyup)="focusOutFunctionblur($event)"-->
+                                   <!--(focus)="focusFuntion()"-->
+                                   <!--(focusout)="focusOutFunction()"-->
+                                    <!--maxlength="191"-->
+                                    <!--list="datalist-email"-->
+                                   <!--(input)="dataGlobalService.searchEmail($event.target.value)" >-->
+                            <!--<datalist id="datalist-email">-->
+                                <!--<option  *ngFor="let email of dataGlobalService.datalistEmail" value="{{email.email}}">-->
+                            <!--</datalist>-->
+
+                            <!--<span *ngIf="focusOut&&approverName!==''" style="color: #d58512;margin-left: 18px;">({{approverName}})</span>-->
+                            <!--<span *ngIf="focusOut&&approverName===''" style="margin-left: 18px;"-->
+                                  <!--class="text-danger">Email không tồn tại!</span>-->
+
+                        <!--</form>-->
+                    </div>
+                </fieldset>
+
+
+                <fieldset>
+                    <div class="form-group" style="text-align: left;">
+                        <div class="control-label col-sm-offset-1"
+                             style="text-align: left;display: inline-block">
+                            <label style="margin-left:5px">Danh sách làm ngoài giờ</label>
+                        </div>
+                        <span>(</span>
+                        <span>{{userIds.length}}</span>
+                        <span>)</span>
+
+                        <a class="btn btn-info  btn-icon btn-fill btn-sm"
+                           style="margin-left:15px;margin-top: 0px;text-align: center"
+                           (click)="showModalAddUser()"
+                           rel="tooltip" title=""
+                           data-original-title="Tùy chỉnh">
+                            <i class="ti-pencil"></i>
+                        </a>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-11 control-label col-sm-offset-1">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+
+                                    <tr>
+                                        <th></th>
+                                        <th>Họ tên</th>
+                                        <th>Công việc</th>
+                                        <th></th>
+                                        <th class="text-center">Bắt đầu</th>
+                                        <th class="text-center">Kết thúc</th>
+                                        <th></th>
+                                        <th class="text-center">Xóa</th>
+                                        <th></th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr *ngIf="userSelecteds.length===0||userSelecteds.length===undefined">
+                                        <td style="text-align:center;color:gray" colspan="10">
+                                            <h5>Danh sách trống</h5>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                    <tbody *ngIf="userSelecteds.length>0">
+
+                                    <tr *ngFor="let row of userSelecteds;let i = index">
+                                        <td style="text-align: left"> {{i+1}}</td>
+                                        <td class="col-xs-6 col-sm-4 col-md-4 col-lg-2 text-left">{{row.name}}</td>
+                                        <td class="text-left " style="margin-right: 0px!important;">
+
+                                            <input type="text" id="input-content{{row.id}}"
+                                                   style="border-top: none;border-left: none;border-right: none;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;min-width: 250px"
+                                                   maxlength="191"
+                                                   (input)="removeError()"
+                                                   placeholder="................................................................................................"
+                                                   [(ngModel)]="row.work_content" name="rowcontent{{row.id}}">
+
+                                        </td>
+                                        <td style="padding-left: 0px!important;">
+                                            <a class="dropdown-copy cusor-point">
+                                                <span class="btn btn-primary btn-simple btn-xs dropbtn">
+                                                    <i class="fa ti-link" style="font-size: 18px"></i>
+                                                </span>
+                                                <span class="dropdown-copy-content cusor-point" style="left: -35px;">
+                                                    <span><i rel="tooltip" title="Dán lên" *ngIf="i>0"
+                                                             (click)="pasteContentWork(i,'up')"
+                                                             class="fa ti-angle-double-up"></i></span>
+                                                    <span><i rel="tooltip" title="Dán xuống"
+                                                             (click)="pasteContentWork(i,'down')"
+                                                             class="fa ti-angle-double-down"></i></span>
+                                                    <span><i rel="tooltip" title="Dán toàn bộ"
+                                                             (click)="pasteContentWork(i,'all')"
+                                                             *ngIf=" (i+1) <userSelecteds.length"
+                                                             class="fa ti-arrows-vertical"></i></span>
+                                                </span>
+                                            </a>
+                                        </td>
+
+
+                                        <td class="col-xs-12 col-sm-7 col-md-4 col-lg-2 text-right">
+                                            <input class="cusor-point align-right border-none"
+                                                   type="text"
+                                                   (click)="removeError()"
+                                                   value="{{row.start_datetime }}"
+                                                   id="start_datetime_{{row.id}}">
+                                            {{initDatePicker('start_datetime_'+ row.id)}}
+
+                                        </td>
+                                        <td class="col-xs-12 col-sm-7 col-md-4 col-lg-2 text-right">
+                                            <input class="cusor-point align-right border-none"
+                                                   type="text"
+                                                   (click)="removeError()"
+                                                   value="{{row.end_datetime}}"
+                                                   id="end_datetime_{{row.id}}">
+                                            {{initDatePicker('end_datetime_'+ row.id)}}
+                                        </td>
+                                        <td>
+                                            <a class="dropdown-copy cusor-point">
+                                                <span class="btn btn-primary btn-simple btn-xs dropbtn">
+                                                    <i class="fa ti-link" style="font-size: 18px"></i>
+                                                </span>
+                                                <span class="dropdown-copy-content cusor-point"
+                                                      style="left: -80px;    width: 180px;">
+                                                    <span><i rel="tooltip" title="Dán lên" *ngIf="i>0"
+                                                             (click)="pasteTime(row.id,i,'up')"
+                                                             class="fa ti-angle-double-up"></i></span>
+                                                    <span><i rel="tooltip" title="Dán xuống"
+                                                             (click)="pasteTime(row.id,i,'down')"
+                                                             class="fa ti-angle-double-down"></i></span>
+                                                    <span><i rel="tooltip" title="Dán toàn bộ"
+                                                             (click)="pasteTime(row.id,i,'all')"
+                                                             *ngIf=" (i+1) <userSelecteds.length"
+                                                             class="fa ti-arrows-vertical"></i></span>
+                                                    <span><i rel="tooltip" title="Sao chép"
+                                                             (click)="pasteTime(row.id,i,'copy')"
+                                                             class="fa ti-cut"></i></span>
+                                                    <span>
+                                                        <i
+                                                                rel="tooltip" title="Dán"
+                                                                (click)="pasteTime(row.id,i,'paste')"
+                                                                class="fa ti-pin"></i></span>
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td class="text-center" style="margin-right: 30px">
+                                            <a class="btn btn-danger btn-simple btn-xs"
+                                               (click)="deleteUserOfOT(row.id)" rel="tooltip"
+                                               title="Xóa">
+                                                <i class="fa fa-trash" style="font-size: 18px"></i>
+                                            </a>
+                                        </td>
+                                        <td width="30px"></td>
+                                        {{initTooltip()}}
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class=" control-label col-sm-offset-1" style="text-align: left;margin-top: 50px">
+                            <label class="text-danger">Ghi chú:</label><br>
+                            <span> - Phiếu đăng ký làm ngoài giờ gửi về Phòng Hành chính – Nhân sự tổng hợp trước 16h hàng
+                                ngày</span><br>
+                            <span> - Trong trường hợp phát sinh công việc ngoài kế hoạch, Lãnh đạo Phòng phải bổ sung và
+                                gửi về Phòng Hành chính – Nhân sự tổng hợp vào sáng ngày hôm sau.</span><br><span> Những trường hợp làm
+                                ngoài giờ không có đăng ký thì không được tính ngoài giờ.</span><br>
+                            <span>- Phiếu yêu cầu làm ngoài giờ hợp lệ do Lãnh đạo phòng đăng ký và có phê duyệt của Giám
+                                đốc Công ty.</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-xs-12 control-label col-sm-offset-1" style="text-align: left;">
+                            <span style="color:red">
+                                {{errorMsg}}
+                            </span>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-offset-1" style="margin-bottom: 20px">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-2 col-lg-1 margin-top-15" style="min-width: 150px">
+                                    <button class="btn btn-success btn-fill btn-block"
+                                            [disabled]="this.dataGlobalService.btnIsloading()"
+                                            (click)="saveOverTime()">{{paramOvertimeId===''? 'Gửi đơn': 'Cập nhật'}}
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 loader-custom-import margin-top-15"
+                                     *ngIf="this.dataGlobalService.btnIsloading()"></div>
+                                <div class="col-xs-12 col-sm-2  col-lg-1 margin-top-15" style="min-width: 150px">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="deleteOT()"
+                                            [disabled]="paramOvertimeId===''||isDeleteOT">Xóa
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 loader-custom-import margin-top-15" *ngIf="isDeleteOT"></div>
+                                <div class="col-xs-6 col-sm-2 col-lg-1 margin-top-15" style="min-width: 150px">
+                                    <button class="btn btn-default btn-fill btn-block" (click)="onBack()">Bỏ qua
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div id="modalSelectUser" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 75%">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm nhân sự làm ngoài giờ</h4>
+            </div>
+            <div class="modal-body">
+                <fieldset
+                        style="margin-left: 1%;margin-right: 1%;background-color: #f4f4f4 ;border: 1px solid #cacaca;border-radius: 5px;padding: 20px">
+
+                    <div class="dropdown col-xs-12 col-sm-6 col-md-4" style="float: left">
+                        <a href="#" class="btn form-control dropdown-toggle custom " style="width: 100%"
+                           data-toggle="dropdown">
+                            {{departmentsName}}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu " style="width: 100%">
+                            <li><a (click)="setDataOption('departments','')">Tất cả phòng ban</a>
+                            </li>
+                            <li><a *ngFor="let department of departments"
+                                   (click)="setDataOption('departments',department)">{{department.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown col-xs-12 col-sm-6 col-md-4" style="float: left">
+                        <a href="#" class="btn form-control dropdown-toggle custom" style="width: 100%"
+                           data-toggle="dropdown">
+
+                            {{officePositionName}}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu " style="width: 100%">
+                            <li><a (click)="setDataOption('positions','')">Tất cả chức danh</a>
+                            <li><a *ngFor="let positions of officePositions"
+                                   (click)="setDataOption('positions',positions)">{{positions.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4" style="float: left;">
+                        <form class="input-group" (submit)="actionSearchValue()">
+                            <input class="form-control " placeholder="Tìm kiếm" type="text " style=" background: #fff;"
+                                   (input)="onSearchValueChange($event.target.value)">
+                            <span class="input-group-addon" style="cursor: pointer;background: #fff;"
+                                  (click)="actionSearchValue()">
+                            <i class="fa fa-search ">
+                           </i>
+                            </span>
+                        </form>
+                    </div>
+
+                </fieldset>
+
+                <div class="table-responsive">
+                    <table class="table tableBodyScroll course" style="padding: 25px">
+                        <thead class="the">
+                        <tr class="tre">
+                            <th style="padding-left: 15px;">
+                            </th>
+
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Phòng ban</th>
+                            <th> Chức danh</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody *ngIf="!isLoadSuccess" style="width: 100%;height:100px">
+                        <tr class="tre">
+                            <td style="text-align:center;color:gray" colspan="5">
+                                <div class="loader"></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody *ngIf="isLoadSuccess&&dataRows.length==0"
+                               style="width: 100%;height:100px">
+                        <tr class="tre">
+                            <td style="text-align:center;color:gray" colspan="5">
+                                <h5>Danh sách trống</h5>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                        <tbody *ngIf="isLoadSuccess&&dataRows.length>0">
+                        <tr class="tre" *ngFor="let row of dataRows; let i=index ">
+                            <td class="col-md-1">
+                                <div class="checkbox checkbox-custom"
+                                     style="vertical-align: middle">
+                                    <input style="vertical-align: middle" type="checkbox" checked
+                                           *ngIf="row.is_selected"
+                                           (change)="selectItemEmployee(row)">
+                                    <input style="vertical-align: middle" type="checkbox" *ngIf="!row.is_selected"
+                                           (change)="selectItemEmployee(row)">
+                                    <label style="vertical-align: middle"></label>
+                                </div>
+                            </td>
+                            <td style="text-align: left;">{{row.name}}</td>
+                            <td style="text-align: left;">{{row.email}}</td>
+                            <td style="text-align: left;">{{row.department}}</td>
+                            <td style="text-align: left;">{{row.position}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-fill" data-dismiss="modal"
+                        (click)="saveUserSelected()">Lưu
+                    lại
+                </button>
+
+                <button type="button" class="btn btn-default btn-fill" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>

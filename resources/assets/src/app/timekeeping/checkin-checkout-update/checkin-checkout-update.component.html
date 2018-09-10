@@ -1,0 +1,69 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="" [formGroup]="checkInCheckOutForm">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Chi tiết File</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Tên</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" [value]="checkInCheckOut?.employee.full_name" readonly>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Mã nhân viên</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" [value]="checkInCheckOut?.employee.employee_code" readonly>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Check-in</label>
+                        <div class="col-sm-3">
+                            <datepicker-form-input-cmp formControlName="check_in" ngDefaultControl [format]="'HH:mm:ss'"></datepicker-form-input-cmp>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Check-out</label>
+                        <div class="col-sm-3">
+                            <datepicker-form-input-cmp formControlName="check_out" ngDefaultControl [format]="'HH:mm:ss'"></datepicker-form-input-cmp>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Thời gian OT</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" formControlName="ot">
+                            <span class="help-block text-danger" *ngIf="checkInCheckOutForm.get('ot').hasError('required') && checkInCheckOutForm.get('ot').touched">Thời gian OT không được bỏ trống.</span>
+                            <span class="help-block text-danger" *ngIf="checkInCheckOutForm.get('ot').hasError('isNumberFrom0') && checkInCheckOutForm.get('ot').touched && !checkInCheckOutForm.get('ot').hasError('required')">Thời gian OT phải là số</span>
+                            <span class="help-block text-danger" *ngIf="checkInCheckOutForm.get('ot').hasError('maxlength') && checkInCheckOutForm.get('ot').touched">Thời gian OT quá nhiều</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="submit()" [disabled]="checkInCheckOutForm.invalid">Cập nhật</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

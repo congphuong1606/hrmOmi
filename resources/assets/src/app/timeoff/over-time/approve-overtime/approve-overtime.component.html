@@ -1,0 +1,251 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header" style="height: 60px">
+            <h4 class="card-title float-l header-timeoff">Danh sách đơn làm ngoài giờ</h4>
+            <div class="dropdown col-xs-12 col-sm-4 col-md-3 col-lg-2 float-r " style="min-width: 250px;!important;">
+                <a href="#" class="btn btn-success btn-fill dropdown-toggle w-100 padding-left-0 padding-right-0px" style="margin-bottom: 10px"
+                   data-toggle="dropdown">
+                    {{titleDropdownDefault}}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu w-100">
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=0','Đơn OT chờ duyệt')">Đơn OT chờ
+                        duyệt</a>
+                    </li>
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=1', 'Đơn OT đã đồng ý')">Đơn OT đã
+                        đồng ý</a></li>
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=2', 'Đơn OT đã từ chối')">Đơn OT
+                        đã từ chối</a></li>
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=', 'Tất cả đơn OT')">Tất cả đơn
+                        OT</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-content" >
+            <div class="row" *ngIf="requestPram === '&&approved=0'">
+                <div class="col-xs-6 col-sm-3 col-md-2">
+                    <button class="btn btn-info btn-fill btn-block" [disabled]="!checkSelect()" (click)="approve(0)">Phê duyệt
+                    </button>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-2">
+                    <button class="btn btn-info btn-fill btn-block" [disabled]="!checkSelect()" (click)="refuseTimeOff(0)">Từ
+                        chối
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th *ngIf="requestPram === '&&approved=0'">
+                        <div class="checkbox" style="margin-bottom: 0px;padding-left: 30px;" *ngIf="dataRows.length>0">
+                            <input id="checkbox2" type="checkbox" (change)="selectAllItem()">
+                            <label style="margin-bottom: 0px;font-size: 0.9em;
+                                        font-weight: 300;"></label>
+                        </div>
+                    </th>
+                    <th>Người đề xuất</th>
+                    <th>Email</th>
+                    <th>Dự án</th>
+                    <th>Số người</th>
+                    <th>Thời gian</th>
+                    <th class="text-center">Chi tiết</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="7">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="7">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows ; let i = index" class="row-approver-{{row.approved}}">
+                    <td *ngIf="requestPram === '&&approved=0'">
+                        <div class="checkbox" style="margin-bottom: 0px;padding-left: 30px;">
+                            <input id="checkbox2" type="checkbox" *ngIf="checkStatusSelect(row.id)" checked
+                                   (change)="selectItem(row.id)">
+                            <input id="checkbox2" type="checkbox" *ngIf="!checkStatusSelect(row.id)"
+                                   (change)="selectItem(row.id)">
+                            <label for="checkbox2"></label>
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        {{row.proposer}}
+                    </td>
+                    <td>
+                        {{row.proposer_email}}
+                    </td>
+                    <td> {{row.project_name}}</td>
+                    <td>{{row.amount}}</td>
+                    <td>{{row.created_at}}</td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem chi tiết" class="btn btn-info btn-simple btn-xs"
+                           (click)="showInfor(row.id)">
+                            <i class="ti-file" style="font-size: 15px"></i>
+                        </a></td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <fieldset class="pagination" *ngIf="total > perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray ">Hiển thị {{perPage}} trên {{totalTimeOff}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1,searchData)"
+                                id="bt-show-advanced ">
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="curentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                id="bt-show-advanced " (click)="onChangPage(curentPage-1,searchData)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"
+                                    (click)="onChangPage(pageIndex,searchData)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+                        <button *ngIf="curentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(curentPage+1,searchData)">
+                            Tiếp
+                            <span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage,searchData)"
+                                id="bt-show-advanced ">Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+
+<div class="modal fade" id="inforOT">
+    <div class="modal-dialog" style="width:90%" *ngIf="otInfor!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin làm ngoài giờ</h5>
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table class="w-100">
+                    <tbody>
+                    <tr class="align-center">
+                        <td>
+                            <p><strong>CÔNG TY CỔ PHẦN OMINEXT</strong></p>
+                            <p><strong>Dự án: {{otInfor.other_category.name}}</strong></p>
+                            <hr class="w-30 align-center">
+                        </td>
+                        <!--<td>-->
+                            <!--<p><strong>CÔNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong></p>-->
+                            <!--<p><strong>Độc lập - Tự do - Hạnh phúc</strong></p>-->
+                            <!--<hr class="w-30 align-left">-->
+                        <!--</td>-->
+                    </tr>
+                    </tbody>
+                </table>
+                <fieldset style="margin-left: 1%">
+                    <p><strong></strong></p>
+                    <p class="align-center"><strong style="font-size: 20px;">PHIẾU ĐĂNG KÝ LÀM NGÒAI GIỜ</strong></p>
+                    <p></p>
+                    <p>- Ngày đăng ký: {{otInfor.created_at}}.</p>
+                    <p *ngIf="otInfor.details!==undefined">- Số lượng nhân viên làm ngoài giờ:
+                        {{otInfor.details.length}} người</p>
+                    <p>- Nội dung chi tiết:</p>
+                </fieldset>
+
+                <fieldset style="margin-left: 1%">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+
+                            <tr>
+                                <th class="col-md-1 "></th>
+                                <th class="col-md-3 ">Họ tên</th>
+                                <th class="col-md-2 ">Nội dung công việc</th>
+                                <th class="col-md-2 ">Bắt đầu</th>
+                                <th class="col-md-2 ">Kết thúc</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of otInfor.details;let i=index">
+                                <td class="col-md-1 ">{{i+1}}</td>
+                                <td class="col-md-3 ">{{item.user.name}}</td>
+                                <td class="col-md-2 ">{{item.content}}</td>
+                                <td class="col-md-2 ">{{dataGlobalService.convertDateTIme(item.start_datetime)}}</td>
+                                <td class="col-md-2 ">{{dataGlobalService.convertDateTIme(item.end_datetime)}}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset style="margin-left: 1%">
+
+                    <label class="text-danger">Ghi chú:</label><br>
+                    <span> - Phiếu đăng ký làm ngoài giờ gửi về Phòng Hành chính – Nhân sự tổng hợp trước 16h hàng
+                                ngày.</span><br>
+                    <span> - Trong trường hợp phát sinh công việc ngoài kế hoạch, Lãnh đạo Phòng phải bổ sung và
+                                gửi về Phòng Hành chính – Nhân sự tổng hợp vào sáng ngày hôm sau. Những trường hợp làm
+                                ngoài giờ không có đăng ký thì không được tính ngoài giờ.</span><br>
+                    <span>- Phiếu yêu cầu làm ngoài giờ hợp lệ do Lãnh đạo phòng đăng ký và có phê duyệt của Giám
+                                đốc Công ty.</span>
+
+
+                </fieldset>
+
+
+            </div>
+            <div class="modal-footer">
+                <div *ngIf="otInfor.approved===0">
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button" (click)="approve(1)">Phê duyệt
+                    </button>
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button" (click)="refuseTimeOff(1)">Từ chối
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

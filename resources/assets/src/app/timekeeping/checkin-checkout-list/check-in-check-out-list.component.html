@@ -1,0 +1,137 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Chi tiết File</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Chọn tháng</label>
+                        <div class="col-sm-3">
+                            <select [(ngModel)]="selectedMonth" class="form-control" id="select3" [ngModelOptions]="{standalone: true}" (change)="getTimeKeepingMonth()">
+                                <option *ngFor="let month of listMonths" [ngValue]="month">{{month}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Tên Nhân viên</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}">
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                            Mã Nhân viên</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" [(ngModel)]="employeeCode" [ngModelOptions]="{standalone: true}">
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="col-sm-2 col-md-offset-1">
+                        <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="getTimeKeepingMonth()">Tìm kiếm</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+        <div class="card-content">
+            <div class="table-responsive table-full-width" style="overflow-x:auto;">
+                <table class="table table-striped" id="table-timekeeping-file-detail" style="table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center; white-space: nowrap;">STT</th>
+                            <th style="width: 50px; text-align: center; white-space: nowrap;">Mã</th>
+                            <th style="width: 150px; text-align: left; white-space: nowrap;">Tên</th>
+                            <th style="width: 120px; text-align: left; white-space: nowrap;">Phòng ban</th>
+                            <th style="width: 120px; text-align: left; white-space: nowrap;">Chức danh</th>
+                            <th style="width: 100px; text-align: left; white-space: nowrap;">Ngày</th>
+                            <th style="width: 60px; text-align: left; white-space: nowrap;">Vào</th>
+                            <th style="width: 60px; text-align: left; white-space: nowrap;">Ra</th>
+                            <th style="width: 80px; text-align: left; white-space: nowrap;">Đi muộn</th>
+                            <th style="width: 80px; text-align: left; white-space: nowrap;">Về sớm</th>
+                            <th style="width: 70px; text-align: left; white-space: nowrap;">Công</th>
+                            <th style="width: 70px; text-align: left; white-space: nowrap;">Giờ</th>
+                            <th style="width: 80px; text-align: left; white-space: nowrap;">Sửa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let time of timekeepings; let i = index">
+                            <td style="text-align: center">{{i + 1}}</td>
+                            <td style="text-align: center">{{time.employee.employee_code}}</td>
+                            <td>{{time.employee.full_name}}</td>
+                            <td>{{time.employee.department.name === null || time.employee.department.name.length < 15 ? time.employee.department.name : time.employee.department.name.slice(0, 15) + '...'}}
+                            </td>
+                            <td>{{time.employee.position.name === null || time.employee.position.name.length < 15 ? time.employee.position.name : time.employee.position.name.slice(0, 15) + '...'}}
+                            </td>
+                                            <td>{{time.date | dateFormatVn}}</td>
+                                            <td>{{time.check_in | hourFormatWithoutSecond}}</td>
+                                            <td>{{time.check_out | hourFormatWithoutSecond}}</td>
+                                            <td>{{time.late}}</td>
+                                            <td>{{time.leave_early}}</td>
+                                            <td>{{time.working_time}}</td>
+                                            <td>{{time.hour}}</td>
+                                            <td>
+                                                <a (click)="openModalTime(time)" rel="tooltip" title="Sửa" class="btn btn-success btn-simple btn-xs">
+                                                    <i class="fa fa-pencil" style="font-size: 15px"></i>
+                                                </a>
+                                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row" style="padding: 20px">
+                <div class="col-md-12" style="margin-bottom: 20px">
+                    <div style="padding-left:10px;font-size: 15px">
+                        <div class="form-group">
+                            <div style="float:left;margin-left:10px">
+                                <label style="margin-left:10">Hiển thị mục</label>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="gotoFirstPage()">
+                                <span class="ti-angle-double-left" (click)="gotoFirstPage()"></span>Đầu tiên
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="prevPage()">
+                                <span class="ti-angle-left" (click)="prevPage()"></span>Trước
+                            </button>
+                            <div style="float:left">
+                                <button class="pagination-number" *ngFor="let pn of paginationListPage" (click)="paginate(pn)" [disabled]="pn === paginationCurrentPage"
+                                    style="background-color: transparent; border: none;" [ngClass]="paginationCurrentPage === pn ? 'pagination-number-disable' : ''">{{pn}}</button>
+                            </div>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="nextPage()">
+                                Tiếp
+                                <span class="ti-angle-right"></span>
+                            </button>
+                            <button class="pagination-page" id="bt-show-advanced" (click)="gotoLastPage()">Cuối cùng
+                                <span class="ti-angle-double-right"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<update-checkin-checkout-modal-cmp *ngIf="showIt" (close)="onCloseModalTime($event)" [currentSelected]="selectedTime"></update-checkin-checkout-modal-cmp>

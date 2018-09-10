@@ -1,0 +1,135 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label col-sm-offset-1" style="text-align: left; font-size: 25px">Thêm
+                            {{ this.typeCategory.category_name.replace('Các', '')}}</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Tên
+                                {{this.typeCategory.category_name.replace('Các', '')}}
+                            </label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input class="form-control" [(ngModel)]="bodyParam.name" maxlength="191" placeholder="@ex: Category name"
+                                   name="job-status-name" type="text">
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.typeCategory.category_type==='reasons'">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Buổi sáng
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control input-time " type="text"
+                                   placeholder="{{numDate | date :'HH:mm'}} " id="start-morning">
+                            {{initTimeInput('start-morning')}}
+                        </div>
+                        <div class="col-sm-1 control-label " style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Đến
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control input-time " type="text"
+                                   placeholder="{{numDate | date :'HH:mm'}} " id="end-morning">
+                            {{initTimeInput('end-morning')}}
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset *ngIf="this.typeCategory.category_type==='reasons'">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Buổi chiều
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control input-time " type="text"
+                                   placeholder="{{numDate | date :'HH:mm'}} " id="start-afternoon">
+                            {{initTimeInput('start-afternoon')}}
+                        </div>
+                        <div class="col-sm-1 control-label " style="text-align: left;">
+                            <label>
+                                <span style="color:red;width:5px;">*</span>Đến
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control input-time " type="text"
+                                   placeholder="{{numDate | date :'HH:mm'}} " id="end-afternoon">
+                            {{initTimeInput('end-afternoon')}}
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label col-sm-offset-1" style="text-align: left;">
+                            <label style="margin-left:5px">Mô tả</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-7 control-label col-sm-offset-1" style="text-align: left;">
+                                    <textarea class="form-control"
+                                              placeholder="Chi tiết về {{' '+ this.typeCategory.category_name}}"
+                                              maxlength="191" [(ngModel)]="bodyParam.description"
+                                              name="job-status-description" rows="3"></textarea>
+
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-sm-3 control-label col-sm-offset-1" style="text-align: left;">
+                            <span style="color:red">{{errorMsg}}</span>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-offset-1" style="margin-bottom: 20px">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="addCategory()"
+                                            [disabled]="this.dataGlobalService.btnIsloading()">Thêm mới
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 loader-custom-import"
+                                     *ngIf="this.dataGlobalService.btnIsloading()"></div>
+                                <div class="col-xs-6 col-sm-3 col-md-2">
+                                    <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Bỏ qua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+
+</div>

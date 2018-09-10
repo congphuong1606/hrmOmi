@@ -1,0 +1,306 @@
+<div class="col-md-12" id="traning-screen">
+    <div class="card">
+        <div class="card-content">
+            <fieldset class="form-horizontal ng-untouched ng-pristine ng-valid">
+
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-xs-12 control-label  align-center"
+                               style="font-size: 25px">Danh sách nhân viên tham gia khóa học</label>
+                    </div>
+
+                    <div class="center-hori">
+                        <button type="button" (click)="togglebtn('importScore')" [disabled]="isImportFile"
+                                class=" btn margin-5px col-xs-11 col-sm-5 col-md-2 col-lg-1 btn-success btn-fill padding-0px ">
+                            Nhập điểm
+                        </button>
+                        <button type="button" [disabled]="isSendResultPass"
+                                (click)="togglebtn('sendResultPass')"
+                                class="btn  margin-5px col-xs-11 col-sm-5 col-md-2 col-lg-1 btn-info  btn-fill padding-0px">
+                            Gửi kết quả
+                        </button>
+                        <div class="col-xs-12 loader-custom-import"
+                             style="width: 20px;  margin-left: 7px;margin-right: 7px;" *ngIf="isSendResultPass"></div>
+                        <!--<button type="button" (click)="togglebtn('sendResultFail')"-->
+                        <!--class="btn margin-5px col-xs-11 col-sm-5 col-md-2  col-lg-1 btn-primary  btn-fill padding-0px">-->
+                        <!--Học lại-->
+                        <!--</button>-->
+                        <button type="button"
+                                (click)="togglebtn('pdf-download')"
+                                class="btn margin-5px col-xs-11 col-sm-5 col-md-2  col-lg-1 btn-default  btn-fill padding-0px"
+                                [disabled]="this.dataService.btnIsloading()">
+                            Bản PDF
+                        </button>
+                        <div class="col-xs-12 loader-custom-import"
+                             style="width: 20px;  margin-left: 7px;margin-right: 7px;"
+                             *ngIf="this.dataService.btnIsloading()"></div>
+                    </div>
+
+
+                </fieldset>
+
+                <fieldset *ngIf="isImportFile" class="form-import-file">
+                    <button type="button" class="close margin-5px" (click)="closeFormIport()">&times;</button>
+                    <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get"
+                          novalidate="" [formGroup]="importFileForm">
+                        <div class="form-group" class="margin-top-15 center-hori">
+                            <div class="col-xs-12 col-sm-8 col-md-5 align-right"><span>file định dạng exel, ex: file_name.xlxs <br>(max 8mb) </span>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-7 input-group">
+                                <input class="form-control ng-untouched ng-pristine ng-valid" type="file"
+                                       formControlName="fileScore">
+                                <span class="input-group-addon cusor-point"
+                                      style="background-color: #68b3c8;color: #fff;" (click)="uploadFile()"> <i
+                                        class="ti-export " style="color:#fff"></i>Nhập</span>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-5">
+                                <div *ngIf="!loadingImport" class="loader-custom-import col-xs-4"></div>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+
+
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-xs-12 control-label">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Họ tên</th>
+                                        <th>Email</th>
+                                        <th class="align-center">Điểm danh</th>
+                                        <th class="align-center">Điểm
+                                            <i class="ti-pencil text-primary cusor-point"
+                                               style="font-size: 15px" *ngIf="!isEditCore" rel="tooltip"
+                                               title="Tùy chỉnh điểm"
+                                               (click)="changeEditScore(true)"> </i>
+                                            {{initTooltip()}}
+                                            <i class="ti-save text-info cusor-point " *ngIf="isEditCore" rel="tooltip"
+                                               title="Cập nhật điểm"
+                                               (click)="changeEditScore(false)"
+                                               style="font-size: 15px"></i>
+                                        </th>
+                                        <th class="align-center">Xếp loại</th>
+                                        <!--<th class="align-center"></th>-->
+                                    </tr>
+                                    </thead>
+                                    <tbody *ngIf="!isLoadSuccess" class="w-100" style="height:100px">
+                                    <tr>
+                                        <td class="align-center" style="color:gray" colspan="5">
+                                            <div class="loader"></div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tbody class="align-center" *ngIf="isLoadSuccess&& userOfCourses.length==0"
+                                           style="width: 100%;height:100px">
+                                    <tr>
+                                        <td class="align-center" style="color:gray" colspan="5">
+                                            <h5>Danh sách trống</h5>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                    <tbody *ngIf="isLoadSuccess&&userOfCourses.length>0">
+
+                                    <tr *ngFor="let row of userOfCourses;let i = index">
+                                        <td class="align-left"> {{i+1}}</td>
+                                        <td class="align-left"> {{row.name}}</td>
+                                        <td class="align-left">{{row.email}}</td>
+
+                                        <td class="align-center">
+                                            <a rel="tooltip" title="Đã học xong"
+                                               class=" btn btn-success btn-fill cusor-point"
+                                               *ngIf="row.presence.split('/')[0]===row.presence.split('/')[1]"
+                                               style=" padding: 3px 10px; width: 70px;"
+                                               (click)="showSesionPresence(row)">
+                                                {{row.presence}}</a>
+                                            <a rel="tooltip" title="Chưa học xong"
+                                               class=" btn btn-default btn-fill cusor-point"
+                                               *ngIf="row.presence.split('/')[0]!==row.presence.split('/')[1]"
+                                               style=" padding: 3px 10px; width: 70px;background-color: #999c9b; border-color: #999c9b;"
+                                               (click)="showSesionPresence(row)">
+                                                {{row.presence}}</a>
+                                        </td>
+                                        <td class="align-center ">
+
+                                            <span *ngIf="row.score===null&&!isEditCore">.....</span>
+                                            <span *ngIf="row.score!==null&&!isEditCore">{{row.score}}</span>
+                                            <input *ngIf="isEditCore" type="number" class="input_core align-center"
+                                                   min="0" max="10" step="0.5"
+                                                   placeholder="....."
+                                                   (input)="onScoreChangeValue($event.target.value,row)"
+                                                   value="{{row.score}}">
+                                            <span *ngIf="checkChangescore(row)" class="text-danger "><i
+                                                    class="ti-pencil"></i></span>
+
+                                        </td>
+
+                                        <td class=" align-center ">
+                                            <span class="text-danger"
+                                                  *ngIf="row.score<5&&row.score!==null">Failed</span>
+                                            <span *ngIf="row.score>=5&&row.score!==null">Pass</span>
+                                            <span *ngIf="row.score===null">.....</span>
+                                        </td>
+                                        <!--<td>-->
+                                        <!--<i class="ti-save text-info cusor-point" rel="tooltip" title="Lưu điểm"-->
+                                        <!--*ngIf="checkChangescore(row)" (click)="updateCoreRow(row)"-->
+                                        <!--style="font-size: 15px"></i>-->
+                                        <!--</td>-->
+                                        {{initTooltip()}}
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </fieldset>
+
+
+            </fieldset>
+        </div>
+    </div>
+</div>
+<div class="col-md-12" style="margin-bottom: 20px;">
+    <div class="form-group">
+        <fieldset>
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="view-presence">
+    <div class="modal-dialog">
+        <div class="modal-content" *ngIf="trainingDefautl!==undefined">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Điểm danh của {{trainingDefautl.name}}</h5>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="session-view-presence-header">
+                        <tr>
+                            <th class="align-center w-60px">STT</th>
+                            <th class="align-center w-180px">Bắt đầu</th>
+                            <th class="align-center w-180px">Kết thúc</th>
+                            <th class="align-center w-180px">Điểm danh</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="session-view-presence-body"
+                            *ngFor="let sp of sessionPresenceDefautl;let i_sp=index"
+                        >
+                            <td class="w-60px">{{i_sp+1}}</td>
+                            <td class="w-180px">{{sp.startTime}}</td>
+                            <td class="w-180px">{{sp.endTime}}</td>
+                            <td class="align-center w-180px" *ngIf="sp.sPresence===1"><a (click)="changePresence(sp)"
+                                                                                         class="btn btn-success btn-fill"
+                                                                                         style="    font-size: 12px;     padding: 3px 10px; width: 80px;">Đã
+                                học</a></td>
+                            <td class="align-center w-180px" *ngIf="sp.sPresence===0"><a (click)="changePresence(sp)"
+                                                                                         class="btn btn-default  btn-fill"
+                                                                                         style=" font-size: 12px;     padding: 3px 10px; width: 80px;">Chưa
+                                học</a></td>
+                        </tr>
+                        <!--<tr *ngIf="isChangePresence" class="btn-save-core" (click)="updatePresance()">-->
+                        <!--<td colspan="4">-->
+                        <!--<a class="align-center"-->
+                        <!--&gt; <i-->
+                        <!--class="ti-save"> </i> Lưu thay đổi</a>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div id="review-file-import" class="modal fade" role="dialog">
+
+    <div class="modal-dialog" style="width: 75%;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xem lại file điểm đã tải lên</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table" style="padding: 25px">
+                        <thead>
+                        <tr>
+
+
+                            <th>STT</th>
+                            <th>Họ tên</th>
+                            <th>Phòng ban</th>
+                            <th>Email</th>
+                            <th class="align-center">Điểm</th>
+                            <th class="align-center">Xếp loại</th>
+                            <th>Ghi chú</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody *ngIf="!reviewFileImport" style="width: 100%;height:100px">
+                        <tr>
+                            <td style="text-align:center;color:gray" colspan="7">
+                                <div class="loader"></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody *ngIf="reviewFileImport&&listDataImport.length==0"
+                               style="width: 100%;height:100px">
+                        <tr>
+                            <td style="text-align:center;color:gray" colspan="7">
+                                <h5>Dữ liệu trống</h5>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                        <tbody *ngIf="reviewFileImport&&listDataImport.length>0">
+                        <tr *ngFor="let row of listDataImport; let i=index ">
+                            <td class="align-left" *ngIf="i>0"> {{row[0]}}</td>
+                            <td class="align-left" *ngIf="i>0"> {{row[1]}}</td>
+                            <td class="align-left" *ngIf="i>0">{{row[2]}}</td>
+                            <td class="align-left" *ngIf="i>0"> {{row[3]}}</td>
+                            <td class="align-center" *ngIf="i>0"> {{row[4]}}</td>
+                            <td class="align-center" *ngIf="i>0">{{row[5]}}</td>
+                            <td class="align-left" *ngIf="i>0"> {{row[6]}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-fill" data-dismiss="modal"
+                        (click)="importFile()">Tiếp tục nhập
+                </button>
+
+                <button type="button" class="btn btn-finish btn-fill" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+
+    </div>
+</div>

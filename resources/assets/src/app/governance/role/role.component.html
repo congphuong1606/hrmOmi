@@ -1,0 +1,109 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách nhóm quyền</h4>
+
+        </div>
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th>Tên nhóm quyền</th>
+                    <th>Mô tả</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-center">Sửa</th>
+                    <th class="text-center">Xóa</th>
+                    <th class="text-center">Phân quyền</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows .length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows ; let i = index">
+                    <td>{{row.name}}</td>
+                    <td>{{row.description}}</td>
+
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem" *ngIf="allowViewUser" class="btn btn-info btn-simple btn-xs"
+                           (click)="showListUserOfRole(row)">
+                            {{row.user_count}}
+                            <i class="fa fa-eye" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Không có quyền" style="font-size: 15px;color:gray"
+                           *ngIf="!allowViewUser" class="btn btn-info btn-simple btn-xs">
+                            {{row.user_count}}
+                            <i class="fa fa-eye" style="font-size: 15px"></i>
+                        </a>
+                    </td>
+                    <td *ngIf="row.name==='ADMIN'||row.name==='team leader'||row.name==='bom'||row.name==='project manager'" class="text-center">
+                        <a rel="tooltip" title="Không thể sửa" class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-pencil" style="font-size: 15px;color:gray"></i>
+                        </a>
+                    </td>
+                    <td *ngIf="row.name!=='ADMIN'&&row.name!=='team leader'&&row.name!=='bom'&&row.name!=='project manager'" class="text-center">
+                        <a rel="tooltip" title="Cập nhật vai trò" *ngIf="allowUpdate"
+                           class="btn btn-success btn-simple btn-xs" (click)="edtRole(row)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Không có quyền" *ngIf="!allowUpdate"
+                           class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-pencil" style="font-size: 15px;color:gray"></i>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xóa vai trò" class="btn btn-danger btn-simple btn-xs"
+                           *ngIf="isAdmin&&row.name!=='ADMIN'&&row.name!=='team leader'&&row.name!=='bom'&&row.name!=='project manager'" (click)="deleteRole(row)">
+                            <i class="fa fa-trash" style="font-size: 18px"></i>
+                        </a>
+                        <a rel="tooltip" title="Không có quyền xóa" class="btn btn-danger btn-simple btn-xs"
+                           *ngIf="!isAdmin||row.name==='ADMIN'||row.name==='team leader'||row.name==='bom'||row.name==='project manager'">
+                            <i class="fa fa-trash" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+
+
+                    </td>
+                    <td *ngIf="row.name==='ADMIN'"
+                        class="text-center">
+
+                        <button style="text-align: left;border:none;color:rgb(153, 154, 155); background:transparent;padding-left:0px;margin-left:0px"
+                                id="bt-rule">Phân quyền
+                        </button>
+                    </td>
+                    <td *ngIf="row.name!=='ADMIN'" class="text-center">
+                        <button *ngIf="allowSettingPer"
+                                style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;padding-left:0px;margin-left:0px"
+                                (click)="ruleRole(row)" id="bt-rule">Phân quyền
+                        </button>
+                        <button *ngIf="!allowSettingPer"
+                                style="text-align: left;border:none;color:rgb(153, 154, 155); background:transparent;padding-left:0px;margin-left:0px"
+                                id="bt-rule">Phân quyền
+                        </button>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" [disabled]="!allowAdd" (click)="addRoleAction()">Thêm mới
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+        <div class="table-responsive">
+            <table class="table sticky-header" style="padding:20px">
+                <thead >
+                <tr>
+                    <th>{{tableData.headerRow[0]}}</th>
+                    <th >{{tableData.headerRow[1]}}</th>
+                    <th >{{tableData.headerRow[2]}}</th>
+                    <th >{{tableData.headerRow[3]}}</th>
+                    <th class="text-center" >{{tableData.headerRow[4]}}</th>
+                    <th class="text-center" >{{tableData.headerRow[5]}}</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&this.tableData.dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="6">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of tableData.dataRows">
+                    <td>{{row.category.name}}</td>
+                    <td>{{row.name}}</td>
+                    <td>{{row.description}}</td>
+                    <td>{{row.url}}</td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Cập nhật màn hình" *ngIf="allowUpdate"
+                           class="btn btn-success btn-simple btn-xs" (click)="updateScreenCategory(row)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Bạn không có quyền sửa mục này" *ngIf="!allowUpdate"
+                           class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-pencil" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+
+                    </td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xóa màn hình" class="btn btn-danger btn-simple btn-xs" *ngIf="isAdmin"
+                           (click)="delete(row)">
+                            <i class="fa fa-trash" style="font-size: 18px"></i>
+                        </a>
+                        <a rel="tooltip" title="Không có quyền xóa" class="btn btn-danger btn-simple btn-xs"
+                           *ngIf="!isAdmin">
+                            <i class="fa fa-trash" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+
+                    </td>
+                </tr>
+
+                {{pinThead()}}
+                </tbody>
+            </table>
+            <style>
+                .table.sticky-header tbody{
+                    padding-top:100px;
+                }
+                table.floatThead-table {
+                    border-top: none;
+                    border-bottom: none;
+                    background-color: #fff;
+                }
+            </style>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" [disabled]="!allowAdd" (click)="addScreenCategory()">Thêm
+                mới
+            </button>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+

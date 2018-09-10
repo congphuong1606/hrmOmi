@@ -1,0 +1,134 @@
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-content table-responsive table-full-width" style="margin-left:2%">
+            <div class="row" style="margin-top:1%">
+                <h4 class="card-title" style="float:left">Danh sách {{roleName}}</h4>
+
+
+                <a class="btn btn-info  btn-fill" style="float:left; margin-left:15px"
+                   *ngIf="checkPemision('/quan-tri/them-nguoi-dung-trong-vai-tro')"
+                   (click)="addUserOfRole()">
+                    Thêm user
+                </a>
+
+                <div class="col-md-3 " style="float:left ">
+                    <form class="input-group " (submit)="actionSearch()">
+                        <input class="form-control " placeholder="Tìm kiếm" value=" " type="text "
+                               (input)="onSearchChange($event.target.value)">
+                        <span class="input-group-addon" style="cursor: pointer;"
+                              (click)="actionSearch()">
+                                    <i class="fa fa-search "></i>
+                                </span>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table" style="padding:20px">
+                    <thead>
+
+                    <tr>
+                        <th class="col-md-1 ">STT</th>
+                        <th class="col-md-3 ">Mã nhân viên</th>
+                        <th class="col-md-3 ">Email đăng nhập</th>
+                        <th class="col-md-3 ">Tên nhân viên</th>
+                        <th class="col-md-2 ">Xóa</th>
+
+                    </tr>
+                    </thead>
+                    <tbody *ngIf="!check" style="width: 100%;height:100px">
+                    <tr>
+                        <td style="text-align:center;color:gray" colspan="5">
+                            <div class="loader"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody *ngIf="check&&UserTableData.dataRows.length==0" style="width: 100%;height:100px">
+                    <tr>
+                        <td style="text-align:center;color:gray" colspan="5">
+                            <h5>Danh sách trống</h5>
+                        </td>
+                    </tr>
+
+
+                    </tbody>
+                    <tbody *ngIf="check&&UserTableData.dataRows.length>0">
+                    <tr *ngFor="let row of UserTableData.dataRows;let i = index">
+                        <td class="col-md-1 ">{{(curentPage-1)* perPage + i+1}}</td>
+                        <td class="col-md-3 ">{{row.employee_code}}</td>
+                        <td class="col-md-3 ">{{row.email}}</td>
+                        <td class="col-md-3 ">{{row.name}}</td>
+                        <td class="col-md-2">
+                            <a class="btn btn-danger btn-simple btn-xs" (click)="deleteUserOfRole(row)" rel="tooltip"
+                               title="Hủy quyền {{roleName}}">
+                                <i class="fa fa-trash" style="font-size: 18px"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <fieldset class="pagination" *ngIf="totalUser > perPage">
+                <div class="col-md-12 " style="margin-bottom: 20px ">
+                    <div style="padding-left:10px;font-size: 15px ">
+                        <div class="form-group ">
+                            <div style="float:left;margin-left:10px ">
+
+                                <p style="margin-right:10px;color:gray">Hiển thị {{perPage}} trên {{totalUser}} mục</p>
+                            </div>
+                            <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                    (click)="onChangPage(1,searchData)"
+                                    id="bt-show-advanced ">
+                                <span class="ti-angle-double-left "></span>Đầu tiên
+                            </button>
+                            <button *ngIf="curentPage!==1"
+                                    style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                    id="bt-show-advanced " (click)="onChangPage(curentPage-1,searchData)">
+                                <span class="ti-angle-left "></span>Trước
+                            </button>
+
+                            <div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">
+                                <button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">
+                                    <span style="color:gray">{{pageIndex}}</span>
+                                </button>
+                                <button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"
+                                        (click)="onChangPage(pageIndex,searchData)">
+                                    <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                                </button>
+
+                            </div>
+                            <button *ngIf="curentPage!==lastPage"
+                                    style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                    (click)="onChangPage(curentPage+1,searchData)">
+                                Tiếp
+                                <span class="ti-angle-right "></span>
+                            </button>
+                            <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                    (click)="onChangPage(lastPage,searchData)"
+                                    id="bt-show-advanced ">Cuối cùng
+                                <span class="ti-angle-double-right "></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+<div class="col-md-12" style="margin-bottom: 20px;">
+    <div class="form-group">
+        <fieldset>
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+
+
+

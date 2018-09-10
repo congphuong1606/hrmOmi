@@ -1,0 +1,83 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th>Tên trạng thái</th>
+                    <th>Mô tả</th>
+                    <th class="text-center">Tùy chỉnh</th>
+
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="3">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="3">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows">
+                    <td>{{row.name}}</td>
+                    <td>{{row.description}}</td>
+                    <td class="text-center" *ngIf="row.code!==null&&row.code!==''&&row.code!==undefined">
+
+                        <a rel="tooltip" title="Mục này không thể xóa"
+                           class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-pencil" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+                        <a rel="tooltip" title="Mục này không thể xóa"
+                           class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-trash" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+
+
+                    </td>
+                    <td class="text-center" *ngIf="row.code===undefined||row.code===null||row.code===''">
+                        <a rel="tooltip" title="Cập nhật" class="btn btn-success btn-simple btn-xs"
+                           (click)="updateJobStatus(row)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Xóa" class="btn btn-danger btn-simple btn-xs"
+                           (click)="deleteJobStatus(row)">
+                            <i class="fa fa-trash" style="font-size: 15px"></i>
+                        </a>
+
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" [disabled]="!allowAdd" (click)="addJobStatusAction()">Thêm
+                mới
+            </button>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+

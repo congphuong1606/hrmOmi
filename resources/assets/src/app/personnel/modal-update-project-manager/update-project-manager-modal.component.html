@@ -1,0 +1,96 @@
+<!-- Modal -->
+<div class="modal" role="dialog" #modal style="display: block; background-color: rgba(0, 0, 0, 0.3)">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="border-radius: 0">
+            <div class="modal-body">
+                <div>
+                    <form class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label col-sm-offset-1" style="text-align: center; font-size: 25px; margin-left: 0;">Chọn quản lý dự án</label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Tên</label>
+                                <div class="col-sm-3" style="padding-top: 12px">
+                                    <span>{{currentSelected.full_name}}</span>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Tìm kiếm</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control col-sm-3" type="text" name="project-manager-search" [(ngModel)]="searchText" (ngModelChange)="search()">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label" style="text-align: right; margin-right: 15px;">
+                                    Người quản lý</label>
+                                <div class="col-sm-6" style="padding-top: 12px">
+                                        <span>{{selected === null ? 'Chưa chọn' : selected.full_name}} <i *ngIf="selected !== null" class="fa fa-remove" style="margin-left: 10px" (click)="unselectProjectManager()"></i></span>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
+                                        <table class="table table-striped table-project-manager">
+                                            <thead>
+                                                <tr>
+                                                    <th>Chọn</th>
+                                                    <th>STT</th>
+                                                    <th>Tên</th>
+                                                    <th>Phòng ban</th>
+                                                    <th>Chức danh</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let projectManager of projectManagers; let i = index" [ngClass]="{'tr-project-manager-selected': selected == projectManager, 'searched-project-manager': projectManager.searched}">
+                                                    <td>
+                                                            <input type="radio" name="project-manager" class="form-control" [value]="projectManager" [(ngModel)]="selected">
+                                                    </td>
+                                                    <td>
+                                                        {{i + 1}}
+                                                    </td>
+                                                    <td>
+                                                        {{projectManager.full_name}}
+                                                    </td>
+                                                    <td rel="tooltip" title="{{projectManager.department !== null ? projectManager.department.name : ''}}" data-container="body">
+                                                        {{projectManager.department !== null ? projectManager.department.code : ''}}
+                                                    </td>
+                                                    <td rel="tooltip" title="{{projectManager.position !== null ? projectManager.position.name : ''}}" data-container="body">
+                                                        {{projectManager.position !== null ? projectManager.position.code : ''}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="col-sm-12 control-label" style="text-align: center;">
+                                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="submit()">Cập nhật</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

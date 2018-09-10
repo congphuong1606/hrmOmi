@@ -1,0 +1,482 @@
+<div class="col-md-12" style="text-align: center; margin-bottom: 30px">
+    <span style="font-size: 25px">Thông tin thay đổi</span>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-content form-change">
+            <div class="row">
+                <div class="col-md-5">
+                    <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid form-personnel-detail" method="get" novalidate="">
+                        <div class="col-sm-12 m-t m-b">
+                            <span>Thông tin cũ</span>
+                        </div>
+                        <div class="col-sm-12 m-t m-b">
+                            <div style="border: 1px solid black; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center">
+                                <img [src]="change.employee.avatar" style="max-width: 100px; height: auto" alt="Ảnh đại diện" *ngIf="change.employee">
+                                <img [src]="" style="max-width: 100px; height: auto" alt="Ảnh đại diện" *ngIf="!change.employee">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.employee_code != change.employee_code)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Mã Nhân viên</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.employee_code}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.personal_email != change.personal_email)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Email</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.personal_email}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee === null || change.employee.full_name != change.full_name)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Họ tên</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.full_name}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.department_id != change.department_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Phòng ban</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.department === null ? '' : change.employee.department.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.position_id != change.position_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Vị trí / Chức danh</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.position === null ? '' : change.employee.position.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.job_status_id != change.job_status_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Trạng thái công việc</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.job_status === null ? '' : change.employee.job_status.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.working_status_id != change.working_status_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Tình trạng làm việc</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.working_status === null ? '' : change.employee.working_status.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.late_reason_id != change.late_reason_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Đăng kí đi muộn</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.late_reason == null ? '' : change.employee.late_reason.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.update_date != change.update_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày cập nhật hồ sơ</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.update_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.check_in_date != change.check_in_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày checkin</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.check_in_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.training_date != change.training_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày thử việc</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.training_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.official_date != change.official_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày chính thức</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.official_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Kỹ năng chuyên môn</label>
+                            <div class="col-sm-6" *ngIf="change.employee">
+                                <span class="help-block" *ngFor="let skill of change.employee.specialized_skills">{{skill.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                File đính kèm</label>
+                            <div class="col-sm-6" *ngIf="change.employee">
+                                <span class="help-block" *ngFor="let file of change.employee.attach_files">{{file.name}}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.birth_day != change.birth_day)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày tháng năm sinh</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.birth_day}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.identification_number != change.identification_number)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Số CMT</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.identification_number}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.identification_date != change.identification_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày cấp</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.identification_date}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.identification_place_of != change.identification_place_of)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Nơi cấp</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.identification_place_of}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.tax_code != change.tax_code)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Mã số thuế TNCN</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.tax_code}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.permanent_address != change.permanent_address)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Địa chỉ thường trú</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.permanent_address}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.temporary_address != change.temporary_address)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Địa chỉ hiện tại</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.temporary_address}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.bank_number != change.bank_number)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Số tài khoản</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.bank_number}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.bank_name != change.bank_name)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngân hàng</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.bank_name}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.phone_number != change.phone_number)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                SĐT</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.phone_number}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.personal_email != change.personal_email)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Email cá nhân</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.personal_email}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.chatwork_account != change.chatwork_account)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Chatwork</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.chatwork_account}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.skype_account != change.skype_account)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Skype</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.employee.skype_account}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.facebook_link != change.facebook_link)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Facebook</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.facebook_link}}</span>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="col-md-5 col-md-offset-1">
+                    <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid form-personnel-detail" method="get" novalidate="">
+                        <div class="col-sm-12 m-t m-b">
+                            <span>Thông tin mới</span>
+                        </div>
+                        <div class="col-sm-12 m-t m-b">
+                            <div style="border: 1px solid black; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center">
+                                <img [src]="change.avatar" style="max-width: 100px; height: auto" alt="Ảnh đại diện">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.employee_code != change.employee_code)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Mã Nhân viên</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee_code}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.personal_email != change.personal_email)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Email</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.personal_email}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.full_name != change.full_name)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Họ tên</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.full_name}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.department_id != change.department_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Phòng ban</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.department === null ? '' : change.department.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.position_id != change.position_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Vị trí / Chức danh</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.position === null ? '' : change.position.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.job_status_id != change.job_status_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Trạng thái công việc</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.employee.job_status === null ? '' : change.job_status.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.working_status_id != change.working_status_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Tình trạng làm việc</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.working_status === null ? '' : change.working_status.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.late_reason_id != change.late_reason_id)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Đăng kí đi muộn</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.late_reason == null ? '' : change.late_reason.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.update_date != change.update_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày cập nhật hồ sơ</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.update_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.check_in_date != change.check_in_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày checkin</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.check_in_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.training_date != change.training_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày thử việc</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.training_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.official_date != change.official_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày chính thức</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.official_date}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Kỹ năng chuyên môn</label>
+                            <div class="col-sm-6" *ngIf="change.employee">
+                                <span class="help-block" *ngFor="let skill of change.employee.specialized_skills">{{skill.name}}</span>
+                                <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                File đính kèm</label>
+                            <div class="col-sm-6" *ngIf="change.employee">
+                                <span class="help-block" *ngFor="let file of change.employee.attach_files">{{file.name}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.birth_day != change.birth_day)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày tháng năm sinh</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.birth_day}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.identification_number != change.identification_number)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Số CMT</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.identification_number}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.identification_date != change.identification_date)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngày cấp</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.identification_date}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.identification_place_of != change.identification_place_of)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Nơi cấp</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.identification_place_of}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.tax_code != change.tax_code)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Mã số thuế TNCN</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.tax_code}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.permanent_address != change.permanent_address)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Địa chỉ thường trú</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.permanent_address}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.temporary_address != change.temporary_address)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Địa chỉ hiện tại</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.temporary_address}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.bank_number != change.bank_number)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Số tài khoản</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.bank_number}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.bank_name != change.bank_name)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Ngân hàng</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.bank_name}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.phone_number != change.phone_number)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                SĐT</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.phone_number}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.personal_email != change.personal_email)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Email cá nhân</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.personal_email}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.chatwork_account != change.chatwork_account)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Chatwork</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.chatwork_account}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.skype_account != change.skype_account)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Skype</label>
+                            <div class="col-sm-6">
+
+                                <span class="help-block">{{change.skype_account}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12" [ngClass]="{'change-color': (change.employee.facebook_link != change.facebook_link)}">
+                            <label class="col-sm-4 control-label" style="text-align: left;">
+                                Facebook</label>
+                            <div class="col-sm-6">
+                                <span class="help-block">{{change.facebook_link ? '' : change.facebook_link}}</span>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+            <div class="row" style="padding: 20px">
+                <div style="padding: 0; float: left;">
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="approve()">Phê duyệt</button>
+                </div>
+                <div style="padding: 0; float: left; margin-left: 20px">
+                    <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="reject()">Từ chối</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

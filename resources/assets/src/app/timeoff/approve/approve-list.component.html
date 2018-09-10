@@ -1,0 +1,345 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header" style="height: 60px">
+            <h4 class="card-title float-l header-timeoff">Danh sách đơn xin nghỉ phép</h4>
+            <div class="dropdown col-xs-12 col-sm-4 col-md-3 col-lg-2 float-r " style="min-width: 250px;!important;">
+                <a href="#"
+                   class="btn btn-success btn-fill dropdown-toggle w-100 padding-left-0 padding-right-0px"
+                   style="margin-bottom: 10px"
+                   data-toggle="dropdown">
+                    {{titleDropdownDefault}}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu w-100">
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=0','Đơn xin phép chờ duyệt')">Đơn xin
+                        phép chờ duyệt</a>
+                    </li>
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=1', 'Đơn xin phép đã đồng ý')">Đơn xin
+                        phép đã đồng ý</a></li>
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=2', 'Đơn xin phép đã từ chối')">Đơn xin
+                        phép đã từ chối</a></li>
+                    <li><a class="cusor-point" (click)="refreshData('&&approved=', 'Tất cả đơn xin phép')">Tất cả đơn
+                        xin phép</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-content ">
+            <div class="row " *ngIf="requestPram === '&&approved=0'">
+                <div class="col-xs-6 col-sm-3 col-md-2">
+                    <button class="btn btn-info btn-fill btn-block" [disabled]="!checkSelect()" (click)="approve(0)">Phê
+                        duyệt
+                    </button>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-2">
+                    <button class="btn btn-info btn-fill btn-block" [disabled]="!checkSelect()"
+                            (click)="refuseTimeOff(0)">Từ
+                        chối
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th *ngIf="requestPram === '&&approved=0'">
+                        <div class="checkbox approver"
+                             *ngIf="dataRows.length>0">
+                            <input type="checkbox" (change)="selectAllItem()">
+                            <label></label>
+                        </div>
+                    </th>
+                    <th>Nhân viên</th>
+                    <th>Từ lúc</th>
+                    <th>Đến lúc</th>
+                    <!--<th>Thời gian</th>-->
+                    <th>Kiểu loại</th>
+                    <th>Lý do</th>
+                    <th class="text-center">Chi tiết</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="7">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="7">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows ; let i = index" class="row-approver-{{row.approved}}">
+                    <td *ngIf=" requestPram === '&&approved=0'">
+                        <div class="checkbox approver">
+                            <input id="checkbox2" type="checkbox" *ngIf="checkStatusSelect(row.id)" checked
+                                   (change)="selectItem(row.id)">
+                            <input id="checkbox2" type="checkbox" *ngIf="!checkStatusSelect(row.id)"
+                                   (change)="selectItem(row.id)">
+                            <label for="checkbox2"></label>
+                        </div>
+                    </td>
+
+
+                    <td>
+                        <button id="bt-rule" rel="tooltip" title="{{row.info.email}}-{{row.info.birth_day}}" style="text-align: left;border:none;font: size 16px; background:transparent;
+                                     padding-left:0px;margin-left:0px;cursor: default;">{{row.info.full_name}}
+                        </button>
+
+                    </td>
+                    <td *ngIf="row.status!==4&&row.status!==5&&row.status!==6">
+                        {{dataGlobalService.convertDateTIme(row.from_time)}}
+                    </td>
+                    <td *ngIf="row.status!==4&&row.status!==5&&row.status!==6">
+                        {{dataGlobalService.convertDateTIme(row.to_time)}}
+                    </td>
+                    <td *ngIf="row.status===5 || row.status===6">
+                        {{dataGlobalService.convertDate(row.from_time)}}
+                    </td>
+                    <td *ngIf="row.status===5 || row.status===6">
+                        {{dataGlobalService.convertDate(row.to_time)}}
+                        <!--  {{dataGlobalService.convertDateTIme(row.to_time)}}-->
+                    </td>
+                    <!-- <td *ngIf="row.status!==4">{{row.status!==6 ? row.from_date: row.from_date.split(' ')[0]}}</td>
+                     <td *ngIf="row.status!==4">{{row.status!==6 ? row.to_date: row.to_date.split(' ')[0]}}</td>-->
+                    <td *ngIf="row.status===4">--- --- --- ---</td>
+                    <td *ngIf="row.status===4">--- --- --- ---</td>
+                    <!--<td>{{row.number_of_times}}</td>-->
+                    <td *ngIf="row.status===4&&row.forget_type===0">Quên check-in
+                        <br>
+                        <span style="font-size: 10px;color: gray">Ngày {{dataGlobalService.convertDateTIme(row.from_time).split(' ')[0]}}</span>
+                    </td>
+                    <td *ngIf="row.status===4&&row.forget_type===1">Quên check-out
+                        <br>
+                        <span style="font-size: 10px;color: gray">Ngày {{dataGlobalService.convertDateTIme(row.from_time).split(' ')[0]}}</span>
+                    </td>
+                    <td *ngIf=" row.status===5">Một ngày
+                    </td>
+                    <td *ngIf="row.status===6">Nhiều ngày</td>
+                    <td *ngIf="row.status===1">Đi muộn</td>
+                    <td *ngIf="row.status===2">Về sớm</td>
+                    <td *ngIf="row.status===3">Ra ngoài</td>
+                    <td>
+                        <button rel="tooltip" title="{{row.detailed_reason}}" style="text-align: left;border:none;font: size 16px; background:transparent;
+                                        padding-left:0px;margin-left:0px;cursor: default;">
+                            {{row.reason}}
+                        </button>
+
+                    </td>
+                    <td class="text-center">
+                        <a rel="tooltip" title="Xem chi tiết" class="btn btn-info btn-simple btn-xs"
+                           (click)="showInforTimeOff(row)">
+                            <i class="ti-file" style="font-size: 15px"></i>
+                        </a></td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <fieldset class="pagination" *ngIf="totalTimeOff > perPage">
+            <div class="col-md-12 " style="margin-bottom: 20px ">
+                <div style="padding-left:10px;font-size: 15px ">
+                    <div class="form-group ">
+                        <div style="float:left;margin-left:10px ">
+
+                            <p style="margin-right:10px;color:gray ">Hiển thị {{perPage}} trên {{totalTimeOff}} mục</p>
+                        </div>
+                        <button style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(1,searchData)"
+                                id="bt-show-advanced ">
+                            <span class="ti-angle-double-left "></span>Đầu tiên
+                        </button>
+                        <button *ngIf="curentPage!==1"
+                                style="border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                id="bt-show-advanced " (click)="onChangPage(curentPage-1,searchData)">
+                            <span class="ti-angle-left "></span>Trước
+                        </button>
+
+                        <div *ngFor="let pageIndex of arrayPage" style="float:left;margin-left:10px">
+                            <button style="border:none;   background:transparent" *ngIf="pageIndex===curentPage">
+                                <span style="color:gray">{{pageIndex}}</span>
+                            </button>
+                            <button style="border:none; background:transparent;" *ngIf="pageIndex!==curentPage"
+                                    (click)="onChangPage(pageIndex,searchData)">
+                                <span style="color:rgb(0, 126, 199);">{{pageIndex}}</span>
+                            </button>
+
+                        </div>
+                        <button *ngIf="curentPage!==lastPage"
+                                style=" border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px"
+                                (click)="onChangPage(curentPage+1,searchData)">Tiếp<span class="ti-angle-right "></span>
+                        </button>
+                        <button style="text-align: left;border:none;color:rgb(0, 126, 199); background:transparent;float:left;margin-left:5px "
+                                (click)="onChangPage(lastPage,searchData)"
+                                id="bt-show-advanced ">Cuối cùng
+                            <span class="ti-angle-double-right "></span>
+                        </button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </div>
+</div>
+<!--<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px" *ngIf="requestPram === '&&approved=0'">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-6 col-sm-3 col-md-2">-->
+<!--<button class="btn btn-info btn-fill btn-block" [disabled]="!checkSelect()" (click)="approve()">Phê duyệt-->
+<!--</button>-->
+<!--</div>-->
+<!--<div class="col-xs-6 col-sm-3 col-md-2">-->
+<!--<button class="btn btn-info btn-fill btn-block" [disabled]="!checkSelect()" (click)="refuseTimeOff()">Từ-->
+<!--chối-->
+<!--</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+
+<div class="modal fade" id="inforTimeOff">
+    <div class="modal-dialog" style="width:50%" *ngIf="timOffInfor!==undefined">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Thông tin đơn xin vắng mặt</h5>
+                <!--<p class="modal-title text-danger">(CR 06/07/2018: Cần thêm thời gian để desgin giao diện)</p>-->
+
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body align-left" style="margin: 3%;">
+                <table width="100%">
+                    <tbody>
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Người gửi đơn:</h5></td>-->
+                    <!--</tr>-->
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Họ tên</td>
+                        <td class="infor-content">{{timOffInfor.info.full_name}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Email</td>
+                        <td class="infor-content">{{timOffInfor.info.email}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <br>
+
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Thông tin đơn:</h5></td>-->
+                    <!--</tr>-->
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Kiểu loại</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===4&&timOffInfor.forget_type===0">Quên
+                            check-in
+                        </td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===4&&timOffInfor.forget_type===1">Quên
+                            check-out
+                        </td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===5">Một ngày</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===6">Nhiều ngày</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===1">Đi muộn</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===2">Về sớm</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===3">Ra ngoài</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4&&timOffInfor.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Từ lúc</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status!==6">{{timOffInfor.from_time}}</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===6">{{timOffInfor.from_time.split(' ')[0]}}
+                        </td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4&&timOffInfor.status!==5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Đến lúc</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status!==6">{{timOffInfor.to_time}}</td>
+                        <td class="infor-content" *ngIf="timOffInfor.status===6">{{timOffInfor.to_time.split(' ')[0]}}
+                        </td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status===4 || timOffInfor.status===5">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Ngày</td>
+                        <td class="infor-content">{{timOffInfor.to_time.split(' ')[0]}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Loại lí do</td>
+                        <td class="infor-content">{{timOffInfor.reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Chi tiết lí do</td>
+                        <td class="infor-content">{{timOffInfor.detailed_reason}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    <!--<tr>-->
+                    <!--<td colspan="2"><h5>Thời gian vắng mặt</h5></td>-->
+                    <!--</tr>-->
+
+                    <tr class="info-time-off">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Tổng thời gian</td>
+                        <td class="infor-content">{{timOffInfor.number_of_times}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr class="info-time-off" *ngIf="timOffInfor.status!==4">
+                        <td style="width: 10%"></td>
+                        <td class="infor-lable">Người làm thay công việc</td>
+                        <td class="infor-content">{{timOffInfor.backup_person}}</td>
+                        <td style="width: 10%"></td>
+                    </tr>
+
+                    </tbody>
+                    <style>
+                        td.infor-lable {
+                            width: 30%;
+                            color: #504b4b;
+                            font-weight: bold;
+                        }
+
+                        td.infor-content {
+                            width: 50%;
+                        }
+
+                    </style>
+                </table>
+            </div>
+
+
+            <div class="modal-footer">
+                <div *ngIf="timOffInfor.approved===0">
+                    <button class="btn btn-info btn-fill " data-dismiss="modal" type="button" (click)="approve(1)">Phê
+                        duyệt
+                    </button>
+                    <button class="btn btn-danger btn-fill " data-dismiss="modal" type="button"
+                            (click)="refuseTimeOff(1)">Từ chối
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

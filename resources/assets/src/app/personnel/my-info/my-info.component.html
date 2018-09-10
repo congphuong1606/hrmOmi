@@ -1,0 +1,261 @@
+<div class="col-md-12" *ngIf="!isAdvancedAdmin">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Hồ sơ của tôi</h4>
+
+        </div>
+        <div class="card-content" style="padding-left: 0; padding-right: 0">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid form-personnel-detail" method="get" novalidate="">
+                <div class="col-sm-12" style="background-color: #429cb6; color: white; padding: 10px">
+                    <span>Thông tin cơ bản</span>
+                </div>
+                <div class="col-sm-12 m-t m-b col-md-offset-1">
+                    <img style="border: 1px solid black; width: 80px; height: 80px;" [src]="employee.avatar">
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Mã Nhân viên</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.employee_code}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Email</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.email}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Họ tên</label>
+                    <div class="col-sm-4">
+                        <span class="help-block">{{employee.full_name}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Phòng ban</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.department.name}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Vị trí / Chức danh</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.position.name}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Kỹ năng chuyên môn</label>
+                    <div class="col-sm-3">
+                        <span class="help-block" *ngFor="let skill of employee.specialized_skills">{{skill.name}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày cập nhật hồ sơ</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.update_date | dateFormatVn}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày check in</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.check_in_date | dateFormatVn}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày thử việc</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.training_date | dateFormatVn}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày chính thức</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.official_date | dateFormatVn}}</span>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Đăng ký đi muộn</label>
+                    <div class="col-sm-3">
+                        <div class="help-block" *ngIf="employee.late_reasons.length">
+                            <div *ngFor="let late of employee.late_reasons" style="display: block">
+                                <span>{{late.name}}</span>
+                            </div>
+                        </div>
+                        <div class="help-block" *ngIf="!employee.late_reasons.length">
+                            <span>Không</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        File đính kèm</label>
+                    <div class="col-sm-3">
+                        <div class="help-block">
+                            <div *ngFor="let file of employee.attach_files" style="display: block">
+                                <a [href]="'/api/employees/files/download?token=' + token + '&file=' + file.name" target="_blank" *ngIf="file.saved_name === ''">
+                                    <span>{{file.name}}</span>
+                                </a>
+                                <a [href]="'/api/employees/files/download?token=' + token + '&file=' + file.saved_name" target="_blank" *ngIf="file.saved_name !== ''">
+                                    <span>{{file.name}}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-12 m-b" style="background-color: #429cb6; color: white; padding: 10px">
+                    <span>Thông tin cá nhân</span>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày tháng năm sinh</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.birth_day | dateFormatVn}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Số CMT</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.identification_number}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày cấp</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.identification_date | dateFormatVn}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Nơi cấp</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.identification_place_of}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Mã số thuế TNCN</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.tax_code}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Địa chỉ thường trú</label>
+                    <div class="col-sm-4">
+                        <span class="help-block">{{employee.permanent_address}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Địa chỉ hiện tại</label>
+                    <div class="col-sm-4">
+                        <span class="help-block">{{employee.temporary_address}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Thông tin người thân</label>
+                    <div class="col-sm-4">
+                        <span class="help-block">{{employee.contact_user}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Số tài khoản</label>
+                    <div class="col-sm-2">
+                        <span class="help-block">{{employee.bank_number}}</span>
+                    </div>
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngân hàng</label>
+                    <div class="col-sm-2">
+                        <span class="help-block">{{employee.bank_name}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Tên chủ thẻ</label>
+                    <div class="col-sm-2">
+                        <span class="help-block">{{employee.bank_user_name}}</span>
+                    </div>
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Chi nhánh</label>
+                    <div class="col-sm-2">
+                        <span class="help-block">{{employee.bank_branch}}</span>
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-12 m-b" style="background-color: #429cb6; color: white; padding: 10px">
+                    <span>Thông tin liên hệ</span>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        SĐT</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.phone_number}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Email cá nhân</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.personal_email}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Chatwork</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.chatwork_account}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Skype</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.skype_account}}</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Facebook</label>
+                    <div class="col-sm-3">
+                        <span class="help-block">{{employee.facebook_link}}</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row" style="padding: 20px">
+            <div class="col-sm-2" style="padding: 0">
+                <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="goBack()">Trở lại</button>
+            </div>
+
+        </div>
+    </div>
+</div>

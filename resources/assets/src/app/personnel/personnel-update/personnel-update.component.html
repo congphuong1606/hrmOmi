@@ -1,0 +1,445 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Thêm nhân sự</h4>
+        </div>
+        <div class="card-content" style="padding-left: 0; padding-right: 0">
+            <form action="/" class="form-horizontal ng-untouched ng-pristine ng-valid" method="get" novalidate="" [formGroup]="personnelForm">
+                <div class="col-sm-12" style="background-color: #429cb6; color: white; padding: 10px">
+                    <span>Thông tin cơ bản</span>
+                </div>
+                <div class="col-sm-12 m-t m-b col-md-offset-1">
+                    <div style="border: 1px solid black; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center">
+                        <img [src]="avatarUrl | safeBase64" style="max-width: 100px; height: auto" alt="Ảnh đại diện">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Upload ảnh</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="file" formControlName="avatar" accept="image/*">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('avatar').hasError('required') && personnelForm.get('avatar').touched">avatar không được bỏ trống.</span>
+                        <div *ngIf="personnelForm.get('avatar').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('avatar').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Mã Nhân viên</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="employee_code">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('employee_code').hasError('required') && personnelForm.get('employee_code').touched">Mã nhân viên không được bỏ trống.</span>
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('employee_code').hasError('isEmployeeCodeExistUpdate') && personnelForm.get('employee_code').touched && !personnelForm.get('employee_code').hasError('required')">Mã nhân viên đã tồn tại.</span>
+                        <div *ngIf="personnelForm.get('employee_code').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('employee_code').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="isAdmin">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Email</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="email">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('email').hasError('required') && personnelForm.get('email').touched">Email không được bỏ trống.</span>
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('email').hasError('email') && personnelForm.get('email').touched && !personnelForm.get('email').hasError('required')">Email không đúng định dạng.</span>
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('email').hasError('isEmailExistUpdate') && personnelForm.get('email').touched && !personnelForm.get('email').hasError('required') && !personnelForm.get('email').hasError('email')">Email đã tồn tại.</span>
+                        <div *ngIf="personnelForm.get('email').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('email').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Họ tên</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="full_name">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('full_name').hasError('required') && personnelForm.get('full_name').touched">Tên không được bỏ trống.</span>
+                        <div *ngIf="personnelForm.get('full_name').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('full_name').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Giới tính</label>
+                    <div class="col-sm-3">
+                        <select [(ngModel)]="gender" class="form-control" id="selectGender" formControlName="gender">
+                            <option *ngFor="let ge of listGenders" [ngValue]="ge">{{ge.name}}</option>
+                        </select>
+                        <div *ngIf="personnelForm.get('gender').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('gender').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Phòng ban</label>
+                    <div class="col-sm-3">
+                        <select [(ngModel)]="department" class="form-control" id="select3" formControlName="department">
+                            <option *ngFor="let de of listDepartments" [ngValue]="de">{{de.name}}</option>
+                        </select>
+                        <!-- <select multiple class="selectpicker" data-style="" data-size="7" id="department" name="department">
+                                <option *ngFor="let department of departments" [value]="department.id">{{ department.name }}</option>
+                        </select> -->
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('department').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('department_id').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Vị trí / Chức danh</label>
+                    <div class="col-sm-3">
+                        <select [(ngModel)]="position" class="form-control" id="select4" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let pos of listPositions" [ngValue]="pos">{{pos.name}}</option>
+                        </select>
+                        <div *ngIf="personnelForm.get('position').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('position').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Trạng thái công việc</label>
+                    <div class="col-sm-3">
+                        <select [(ngModel)]="job_status" class="form-control" id="select1" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let job of listJobStatus" [ngValue]="job">{{job.name}}</option>
+                        </select>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('job_status').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('job_status').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" formArrayName="late_reasons">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Đăng ký đi muộn</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div *ngFor="let ls of late_reasons.controls; let i=index">
+                                <div [formGroupName]="i">
+                                    <div class=" col-sm-3">
+                                        <select formControlName="late_reason" class="form-control">
+                                            <option *ngFor="let lateReason of listLateReasons" [ngValue]="lateReason">{{lateReason.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class=" col-sm-3">
+                                        <datepicker-form-input-cmp formControlName="start_date" ngDefaultControl></datepicker-form-input-cmp>
+                                    </div>
+                                    <div class="col-sm-1" style="text-align: center;
+                                            margin-top: 8px;">~</div>
+                                    <div class=" col-sm-3">
+                                        <datepicker-form-input-cmp formControlName="end_date" ngDefaultControl></datepicker-form-input-cmp>
+                                    </div>
+                                    <div class="col-sm-1" style="text-align: center">
+                                        <div>
+                                            <button class="btn btn-default" (click)="removeLateReasons(i)">
+                                                <i class="fa fa-remove"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-default" (click)="addLateReasons()">Thêm</button>
+                        </div>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('late_reason').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('late_reason').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> Tình trạng làm việc</label>
+                    <div class="col-sm-3">
+                        <select [(ngModel)]="working_status" class="form-control" id="select2" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let working of listWorkingStatus" [ngValue]="working">{{working.name}}</option>
+                        </select>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('working_status').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('working_status').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Kỹ năng chuyên môn</label>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <textarea class="form-control" placeholder="Chưa có kỹ năng chuyên môn" aria-describedby="basic-addon2" [value]="skillsString"
+                                rows="4" readonly="readonly"></textarea>
+                            <span class="input-group-addon" id="basic-addon2" (click)="openModalSkill()">+</span>
+                        </div>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <!-- <div *ngIf="personnelForm.get('skills').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('skills').getError('server')">{{err}}</span>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="form-group" style="position:relative;">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày cập nhật hồ sơ</label>
+                    <div class="col-sm-3">
+                        <!-- <input class="form-control datepicker" type="text"> -->
+                        <datepicker-form-input-cmp formControlName="update_date" ngDefaultControl></datepicker-form-input-cmp>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('update_date').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('update_date').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày check in</label>
+                    <div class="col-sm-3">
+                        <datepicker-form-input-cmp formControlName="check_in_date" ngDefaultControl></datepicker-form-input-cmp>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('check_in_date').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('check_in_date').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày thử việc</label>
+                    <div class="col-sm-3">
+                        <datepicker-form-input-cmp formControlName="training_date" ngDefaultControl></datepicker-form-input-cmp>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('training_date').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('training_date').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày chính thức</label>
+                    <div class="col-sm-3">
+                        <datepicker-form-input-cmp formControlName="official_date" ngDefaultControl></datepicker-form-input-cmp>
+                        <!-- <span class="help-block">A block of help text that breaks onto a new line.</span> -->
+                        <div *ngIf="personnelForm.get('official_date').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('official_date').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        File đính kèm</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="file" multiple id="attach-file">
+                        <span class="help-block">Mỗi file dung lượng nhỏ hơn 5MB</span>
+                        <div class="help-block">
+                            <div *ngFor="let file of employee.attach_files" style="display: block">
+                                <a [href]="'/api/employees/files/download?token=' + token + '&file=' + file.name" target="_blank" *ngIf="file.saved_name === ''">
+                                    <span *ngIf="file.deleted" style="color: red">{{file.name}}</span>
+                                    <span *ngIf="!file.deleted">{{file.name}}</span>
+                                </a>
+                                <a [href]="'/api/employees/files/download?token=' + token + '&file=' + file.saved_name" target="_blank" *ngIf="file.saved_name !== ''">
+                                    <span *ngIf="file.deleted" style="color: red">{{file.name}}</span>
+                                    <span *ngIf="!file.deleted">{{file.name}}</span>
+                                </a>
+                                <i class="fa fa-remove" (click)="removeCurrentAttachFiles(file)" style="cursor: pointer;" *ngIf="!file.deleted"></i>
+                                <i class="fa fa-refresh" (click)="restoreCurrentAttachFiles(file)" style="cursor: pointer;" *ngIf="file.deleted"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12 m-b" style="background-color: #429cb6; color: white; padding: 10px">
+                    <span>Thông tin cá nhân</span>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày tháng năm sinh</label>
+                    <div class="col-sm-3">
+                        <datepicker-form-input-cmp formControlName="birth_day" ngDefaultControl></datepicker-form-input-cmp>
+                        <div *ngIf="personnelForm.get('birth_day').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('birth_day').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Số CMT</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="identification_number">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('identification_number').hasError('isNumberFrom0Nullable') && personnelForm.get('identification_number').touched">Số CMT phải là số</span>
+                        <div *ngIf="personnelForm.get('identification_number').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('identification_number').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngày cấp</label>
+                    <div class="col-sm-3">
+                        <datepicker-form-input-cmp formControlName="identification_date" ngDefaultControl></datepicker-form-input-cmp>
+                        <div *ngIf="personnelForm.get('identification_date').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('identification_date').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Nơi cấp</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="identification_place_of">
+                        <div *ngIf="personnelForm.get('identification_place_of').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('identification_place_of').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Mã số thuế TNCN</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="tax_code">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('tax_code').hasError('isNumberFrom0Nullable') && personnelForm.get('tax_code').touched">Mã số thuế phải là số</span>
+                        <div *ngIf="personnelForm.get('tax_code').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('tax_code').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Địa chỉ thường trú</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" formControlName="permanent_address">
+                        <div *ngIf="personnelForm.get('permanent_address').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('permanent_address').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Địa chỉ hiện tại</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" formControlName="temporary_address">
+                        <div *ngIf="personnelForm.get('temporary_address').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('temporary_address').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Thông tin người thân</label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control" type="text" formControlName="contact_user" rows="4"></textarea>
+                        <div *ngIf="personnelForm.get('contact_user').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('contact_user').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Số tài khoản</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="text" formControlName="bank_number">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('bank_number').hasError('isNumberFrom0Nullable') && personnelForm.get('bank_number').touched">Số tài khoản phải là số</span>
+                        <div *ngIf="personnelForm.get('bank_number').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('bank_number').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Ngân hàng</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="text" formControlName="bank_name">
+                        <div *ngIf="personnelForm.get('bank_name').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('bank_name').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Tên chủ thẻ</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="text" formControlName="bank_user_name">
+                        <div *ngIf="personnelForm.get('bank_user_name').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('bank_user_name').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Chi nhánh</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="text" formControlName="bank_branch">
+                        <div *ngIf="personnelForm.get('bank_branch').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('bank_branch').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 m-b" style="background-color: #429cb6; color: white; padding: 10px">
+                    <span>Thông tin liên hệ</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        <span class="required-validate">*</span> SĐT</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="phone_number">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('phone_number').hasError('required') && personnelForm.get('phone_number').touched">SĐT không được bỏ trống.</span>
+                        <div *ngIf="personnelForm.get('phone_number').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('phone_number').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Email cá nhân</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="personal_email">
+                        <span class="help-block text-danger" *ngIf="personnelForm.get('personal_email').hasError('emailNullable') && personnelForm.get('personal_email').touched">Email cá nhân không đúng định dạng.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Chatwork</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="chatwork_account">
+                        <div *ngIf="personnelForm.get('chatwork_account').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('chatwork_account').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Skype</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="skype_account">
+                        <div *ngIf="personnelForm.get('skype_account').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('skype_account').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label col-md-offset-1" style="text-align: left;">
+                        Facebook</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" formControlName="facebook_link">
+                        <div *ngIf="personnelForm.get('facebook_link').hasError('server')">
+                            <span class="help-block text-danger" *ngFor="let err of personnelForm.get('facebook_link').getError('server')">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row" style="padding: 20px">
+            <div style="padding: 0; float: left;">
+                <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="submit()" [disabled]="personnelForm.invalid">Cập nhật</button>
+            </div>
+            <div style="padding: 0; margin-left: 20px; float: left;">
+                <button class="btn btn-info btn-fill btn-wd" style="min-width: 200px" (click)="goBack()">Danh sách</button>
+            </div>
+        </div>
+    </div>
+    <personnel-skill-modal-cmp *ngIf="showIt" (close)="onCloseModalSkill($event)" [currentSelected]="selectedSkills"></personnel-skill-modal-cmp>
+</div>

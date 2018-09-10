@@ -1,0 +1,98 @@
+<div class="col-md-12" style="padding-left: 15px;">
+    <div class="card">
+        <form action="#" method="#" novalidate="" class="ng-untouched ng-pristine ng-valid" style="padding:10px">
+            <div class="card-header">
+                <h4 class="card-title">
+                    Thiết lập quyền {{role.name}}
+                </h4>
+            </div>
+            <div class="card-content">
+                <div class="vertical-menu">
+                    <div *ngFor="let category of listCategory.screen_categories; let i = index">
+                        <button [class]="getClassName(i,'P')" (click)="clickItem(i,'P')"
+                                id="{{'click-funt'+i+'.P'}}"> {{category.name}}
+                        </button>
+                        <fieldset *ngIf="getIsShow(i,'P')" style="margin-left:40px">
+                            <div *ngFor="let screen of listCategory.screen_categories[i].screens; let j = index">
+                                <div class="checkbox" *ngIf="checkSelect(screen.id)">
+                                    <input id="{{'checkbox'+screen.id}}" type="checkbox"
+                                           (change)="selectItem($event,screen)" checked="">
+                                    <label for="{{'checkbox'+screen.id}}">
+                                        {{screen.name}}
+                                    </label>
+                                </div>
+                                <div class="checkbox" *ngIf="!checkSelect(screen.id)">
+                                    <input id="{{'checkbox'+screen.id}}" type="checkbox"
+                                           (change)="selectItem($event,screen)">
+                                    <label for="{{'checkbox'+screen.id}}">
+                                        {{screen.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                        <!-- <fieldset *ngIf="getIsShow(i,'P')" style="margin-left:40px">
+                            <div *ngFor="let screen of listCategory.screen_categories[i].screens; let j = index">
+                                <button [class]="getClassName(i,j)" (click)="clickItem(i,j)" id="{{'click-funt'+i+'.'+j}}"> {{screen.name}}</button>
+                                <fieldset *ngIf="getIsShow(i,j)" style="margin-left:40px">
+                                    <div *ngFor="let per of listCategory.screen_categories[i].screens[j].permissions; let a = index">
+                                        <div class="checkbox" *ngIf="checkSelect(per.id)">
+                                            <input id="{{'checkbox'+per.id}}" type="checkbox" (change)="selectItem($event,per)" checked="">
+                                            <label for="{{'checkbox'+per.id}}">
+                                                {{per.display_name}}
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" *ngIf="!checkSelect(per.id)">
+                                                <input id="{{'checkbox'+per.id}}" type="checkbox" (change)="selectItem($event,per)" >
+                                                <label for="{{'checkbox'+per.id}}">
+                                                  {{per.display_name}}
+                                                </label>
+                                        </div>
+                                    </div>
+
+
+                                </fieldset>
+                            </div>
+                        </fieldset> -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="col-md-6" style="display:none">
+    <div class="card">
+        <form action="#" method="#" novalidate="" class="ng-untouched ng-pristine ng-valid" style="padding:10px">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {{"Danh sách quyền đã chọn cho" +""}}
+                </h4>
+            </div>
+            <div class="card-content">
+                <div class="vertical-menu" style="margin-left:15px">
+                    <div class="checkbox" *ngFor="let s of selects; let i = index">
+                        <input id="{{'checkbox'+i}}" type="checkbox" checked="" disabled="">
+                        <label for="{{'checkbox'+i}}" style="color:rgb(48, 47, 47)">
+                            {{s.name}}
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="col-md-12" style="margin-bottom: 20px; margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2" *ngIf="checkChange()">
+            <button class="btn btn-info btn-fill btn-block" (click)="updateRuleRole()">Lưu thay đổi</button>
+        </div>
+
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>

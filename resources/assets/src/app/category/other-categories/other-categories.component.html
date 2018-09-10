@@ -1,0 +1,98 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Danh sách</h4>
+
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" style="padding:20px">
+                <thead>
+                <tr>
+                    <th>{{this.typeCategory.category_name}}</th>
+                    <th>Mô tả</th>
+                    <th *ngIf="this.typeCategory.category_type==='reasons'">Bắt đầu</th>
+                    <th *ngIf="this.typeCategory.category_type==='reasons'">Nghỉ trưa</th>
+                    <th *ngIf="this.typeCategory.category_type==='reasons'">Hết Nghỉ trưa</th>
+                    <th *ngIf="this.typeCategory.category_type==='reasons'">Kết thúc</th>
+                    <th class="text-center">Tùy chỉnh</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="!isLoadSuccess()" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="3"
+                        *ngIf="this.typeCategory.category_type!=='reasons'">
+                        <div class="loader"></div>
+                    </td>
+                    <td style="text-align:center;color:gray" colspan="7"
+                        *ngIf="this.typeCategory.category_type==='reasons'">
+                        <div class="loader"></div>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()&&dataRows.length==0" style="width: 100%;height:100px">
+                <tr>
+                    <td style="text-align:center;color:gray" colspan="4"
+                        *ngIf="this.typeCategory.category_type!=='reasons'">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                    <td style="text-align:center;color:gray" colspan="8"
+                        *ngIf="this.typeCategory.category_type==='reasons'">
+                        <h5>Danh sách trống</h5>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="isLoadSuccess()">
+                <tr *ngFor="let row of dataRows">
+                    <td>{{row.name}}</td>
+                    <td>{{row.description}}</td>
+                    <td *ngIf="this.typeCategory.category_type==='reasons'">{{row.start_morning}}</td>
+                    <td *ngIf="this.typeCategory.category_type==='reasons'">{{row.end_morning}}</td>
+                    <td *ngIf="this.typeCategory.category_type==='reasons'">{{row.start_afternoon}}</td>
+                    <td *ngIf="this.typeCategory.category_type==='reasons'">{{row.end_afternoon}}</td>
+
+
+                    <td class="text-center" *ngIf="row.code!==null&&row.code!==''&&row.code!==undefined">
+
+                        <a rel="tooltip" title="Mục này không thể xóa"
+                           class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-pencil" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+                        <a rel="tooltip" title="Mục này không thể xóa"
+                           class="btn btn-success btn-simple btn-xs">
+                            <i class="fa fa-trash" style="font-size: 15px;color:dimgray"></i>
+                        </a>
+
+
+                    </td>
+                    <td class="text-center" *ngIf="row.code===undefined||row.code===null||row.code===''">
+                        <a rel="tooltip" title="Cập nhật" class="btn btn-success btn-simple btn-xs"
+                           (click)="updateDepartment(row)">
+                            <i class="fa fa-pencil" style="font-size: 15px"></i>
+                        </a>
+                        <a rel="tooltip" title="Xóa" class="btn btn-danger btn-simple btn-xs"
+                           (click)="deleteDepartment(row)">
+                            <i class="fa fa-trash" style="font-size: 15px"></i>
+                        </a>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-md-12" style="margin-bottom: 20px;margin-left:15px">
+    <div class="row">
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" [disabled]="!allowAdd" (click)="addDepartment()">Thêm mới
+            </button>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-2">
+            <button class="btn btn-info btn-fill btn-block" (click)="onBack()">Quay lại</button>
+        </div>
+    </div>
+</div>
+
